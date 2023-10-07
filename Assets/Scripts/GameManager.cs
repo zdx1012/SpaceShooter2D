@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using Assets.Scripts.Factories;
 using Assets.Scripts.GamePlay;
@@ -96,8 +96,14 @@ public class GameManager : MonoBehaviour
     private void UpdateUI()
     {
         ScoreText.text = Game.Current.Score.ToString();
-        ShieldText.text = Game.Current.Player.ShieldPower.ToString();
-        HealthText.text = Game.Current.Player.Health.ToString();
+        if (ShieldText)
+        {
+            ShieldText.text = Game.Current.Player.ShieldPower.ToString();
+        }
+        if (HealthText)
+        {
+            HealthText.text = Game.Current.Player.Health.ToString();
+        }
 
     }
 }

@@ -24,6 +24,7 @@ namespace Assets.Scripts.Factories
             Debug.Log($"found templates: {templates.Length}");
             foreach (var template in templates)
             {
+                Debug.Log($"name={template.name}");
                 var key = GetKey(template);
 
                 var isPredefinedEnemy = key != null;
@@ -51,7 +52,7 @@ namespace Assets.Scripts.Factories
             if (!_templates.TryGetValue(type, out var template))
                 return null;
 
-            //Debug.Log($"creating obj {type}/{position}...");
+            Debug.Log($"creating obj {type}/{position}...");
             return GameObject.Instantiate(template, position, Quaternion.identity);
         }
 
