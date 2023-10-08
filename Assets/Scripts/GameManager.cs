@@ -13,6 +13,7 @@ public class EnemyWave
     public EnemyWaveSet[] Sets;
     public float Delay = 2;
     public bool HasPowerUp;
+    public int PowupCount = 1;
     public PowerUpType PowerUp = PowerUpType.Shooting;
 }
 
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
 
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
+        Debug.Log($"zzz EnemyWaves = {EnemyWaves.Length}");
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
@@ -72,19 +74,25 @@ public class GameManager : MonoBehaviour
         }
 
         _waveManager.ExecuteCurrentWave();
+
+        // 生成 升级技能点《可拾取》
         if (_waveManager.CurrentWave.Ended)
         {
             // handle wave powerUp if present
+            // ???????????????
             if (_waveManager.CurrentWave.Definition.HasPowerUp)
             {
-                var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
-                var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
-                _powerUpFactory.Create(powerUpType, pos);
+                for(int i =0;i<_waveManager.CurrentWave.Definition.PowupCount;i++){
+                    var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
+                    var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
+                    _powerUpFactory.Create(powerUpType, pos);
+                }
+
             }
 
             _waveManager.MoveNext();
         }
-
+        // 生成小行星
         if (_difficultyManager.CanCreateAsteroid())
         {
             _difficultyManager.NotifyEnemyTypeSelected(EnemyType.Asteroid1);

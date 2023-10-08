@@ -171,7 +171,7 @@ MonoBehaviour:
   ScoreValue: 20
   CanShoot: 1
   ShootRate: 0.5
-  BulletTemplate: {fileID: 6382252670245963048, guid: 1aca0e7ab99503141b023b83e9c9c836,
+  BulletTemplate: {fileID: 6382252670245963048, guid: 468bf9b1c999b2e45ac297b203ef3621,
     type: 3}
 --- !u!82 &345468219238230288
 AudioSource:

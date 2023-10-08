@@ -4,4 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/_Scenes/Main-no-light.unity
+    guid: 7140ecb58cfa0b7458b19717159b2900
+  m_configObjects: {}

@@ -8,7 +8,7 @@ public class PlayerController : GamePlayObject
 {
     private const float SHIELD_USAGE_POWER = 0.20f;
     private const float SHIELD_MAX_POWER = 1f;
-    private const int SHOOT_MAX_POWER = 4;
+    private const int SHOOT_MAX_POWER = 6;
     private const int HEALTH_MAX_POINTS = 99;
 
     private Rigidbody2D _rb;
@@ -29,6 +29,8 @@ public class PlayerController : GamePlayObject
         { 2, new [] { 1, 2 } },
         { 3, new [] { 0, 1, 2 } },
         { 4, new [] { 0, 1, 2, 3, 4 } },
+        { 5, new [] { 0, 1, 2, 3, 4, 5, 6 } },
+        { 6, new [] { 0, 1, 2, 3, 4, 5, 6, 7, 8 } },
     };
     private readonly HashSet<string> _nonHittableTags = new HashSet<string> { ObjectTags.PlayerBullet, ObjectTags.PowerUp };
 
@@ -109,6 +111,7 @@ public class PlayerController : GamePlayObject
         var points = _shootingPointsPerPower[_shootingPower];
         foreach (var point in points)
         {
+            Debug.Log($"zzz point={point} _bulletPoints={_bulletPoints.Length}");
             var bulletPoint = _bulletPoints[point];
             var bullet = Instantiate(BulletTemplate, bulletPoint.transform.position, bulletPoint.transform.rotation);
             bullet.GetComponent<BulletController>().SetAsPlayerBullet();

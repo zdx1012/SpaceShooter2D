@@ -31,7 +31,9 @@ namespace Assets.Scripts.GamePlay
         }
 
         //public bool CanCreateEnemy() => Time.time - _lastCreationTime >= GetCreationTimeRate(mode);
-        public bool CanCreateEnemy(EnemyMode mode) => Time.time - _lastCreationTime >= GetCreationTimeRate(mode);
+        public bool CanCreateEnemy(EnemyMode mode){
+            return Time.time - _lastCreationTime >= GetCreationTimeRate(mode);
+        } 
 
         public bool CanCreateAsteroid() => Time.time - _asteroidLastCreationTime >= _asteroidsCreationRate[Difficulty];
 

@@ -59,6 +59,7 @@ namespace Assets.Scripts.GamePlay
 
         protected virtual void OnHit(Collider2D other)
         {
+            Debug.Log($"On Hit {other.name}");
         }
 
         protected void MakeInvulnerable(float duration = 2f)
@@ -75,6 +76,9 @@ namespace Assets.Scripts.GamePlay
             Debug.Log($"{gameObject.name} invulnerable until {_invulnerableTime}");
         }
 
+
+
+        // 被撞击后，闪烁效果
         protected virtual void PlayHitEffect(Collider2D other)
         {
             if (HitTemplate == null)
@@ -84,6 +88,7 @@ namespace Assets.Scripts.GamePlay
             Destroy(hit, hit.GetComponent<ParticleSystem>().main.duration);
         }
 
+        // 对象死亡，触发爆炸效果
         protected virtual void Die()
         {
             Destroyed = true;
