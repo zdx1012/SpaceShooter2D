@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
     public Text ScoreText;
     public Text ShieldText;
     public Text HealthText;
+    public Text LevelText;
 
     private EnemyFactory _enemyFactory;
     private PowerUpFactory _powerUpFactory;
@@ -111,6 +112,9 @@ public class GameManager : MonoBehaviour
         if (HealthText)
         {
             HealthText.text = Game.Current.Player.Health.ToString();
+        }
+        if (LevelText){
+            LevelText.text = Game.Current.Player.ShootingPower.ToString();
         }
 
     }

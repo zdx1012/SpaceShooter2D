@@ -59,7 +59,6 @@ namespace Assets.Scripts.GamePlay
 
         protected virtual void OnHit(Collider2D other)
         {
-            Debug.Log($"On Hit {other.name}");
         }
 
         protected void MakeInvulnerable(float duration = 2f)

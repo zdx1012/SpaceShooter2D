@@ -7,7 +7,7 @@ using UnityEngine;
 public class PlayerController : GamePlayObject
 {
     private const float SHIELD_USAGE_POWER = 0.20f;
-    private const float SHIELD_MAX_POWER = 1f;
+    private const float SHIELD_MAX_POWER = 3f;
     private const int SHOOT_MAX_POWER = 6;
     private const int HEALTH_MAX_POINTS = 99;
 
@@ -22,7 +22,7 @@ public class PlayerController : GamePlayObject
     private bool _canShoot;
     private bool _shielded;
     private float _nextShootTime;
-    private int _shootingPower = 1;
+    public int ShootingPower = 1;
     private readonly Dictionary<int, int[]> _shootingPointsPerPower = new Dictionary<int, int[]>
     {
         { 1, new [] { 0 } },
@@ -71,13 +71,14 @@ public class PlayerController : GamePlayObject
 
         // attack
         _canShoot = Time.time >= _nextShootTime;
-        _shootPressed = Input.GetKey(KeyCode.Space);
+        _shootPressed = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0);
         if (_canShoot && _shootPressed)
         {
             Shoot();
         }
 
-        var shieldPressed = Input.GetKey(KeyCode.Z);
+        // 使用保护罩
+        var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton1);
         _shielded = shieldPressed && ShieldPower >= 0 && !IsInvulnerable();
         ProcessShieldDefense();
     }
@@ -85,15 +86,13 @@ public class PlayerController : GamePlayObject
     void FixedUpdate()
     {
         // movement
-        _movement.x = Input.GetAxis("Horizontal");
-        _movement.y = Input.GetAxis("Vertical");
+        _movement.x = Input.GetAxis("Horizontal") + Input.GetAxis("CrossX");
+        _movement.y = Input.GetAxis("Vertical") + Input.GetAxis("CrossY");
         _rb.velocity = _movement * Speed;                           //Add Velocity to the player ship rigidbody
 
         // animation
         _animator.SetFloat("DirectionX", _movement.x);
         _rb.position = transform.EnsurePositionInScreenBoundaries(_rb.position);
-
-
     }
 
     // methods
@@ -108,7 +107,7 @@ public class PlayerController : GamePlayObject
     public void Shoot()
     {
         // shoot accordingly with power 
-        var points = _shootingPointsPerPower[_shootingPower];
+        var points = _shootingPointsPerPower[ShootingPower];
         foreach (var point in points)
         {
             Debug.Log($"zzz point={point} _bulletPoints={_bulletPoints.Length}");
@@ -129,10 +128,10 @@ public class PlayerController : GamePlayObject
         switch (powerUp)
         {
             case PowerUpType.Shooting:
-                _shootingPower = Mathf.Clamp(_shootingPower + 1, 1, SHOOT_MAX_POWER);
+                ShootingPower = Mathf.Clamp(ShootingPower + 1, 1, SHOOT_MAX_POWER);
                 break;
             case PowerUpType.Shield:
-                ShieldPower = Mathf.Clamp(ShieldPower + 0.33f, 0, SHIELD_MAX_POWER);
+                ShieldPower = Mathf.Clamp(ShieldPower + 1f, 0, SHIELD_MAX_POWER);
                 break;
             case PowerUpType.Health:
                 Health = Mathf.Clamp(Health + 1, 1, HEALTH_MAX_POINTS);
@@ -150,6 +149,8 @@ public class PlayerController : GamePlayObject
         if (_shielded)
         {
             ShieldPower -= Mathf.Clamp(SHIELD_USAGE_POWER * Time.deltaTime, 0, SHIELD_MAX_POWER);
+            if ( ShieldPower < 0 ) ShieldPower = 0;
+            // ShieldPower = float.Parse(ShieldPower.ToString("F2"));
         }
     }
 
