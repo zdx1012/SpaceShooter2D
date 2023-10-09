@@ -35,19 +35,21 @@ namespace Assets.Scripts.GamePlay
             if (_currentWave.IsFullyCreated) return;
             if (_currentWave.Delaying) return;
 
-            // handle all wave sets
-            foreach (var set in _currentWave.Definition.Sets)
+            // 循环生成每一波的敌人
+            foreach (var obj in _currentWave.Definition.Sets)
             {
-                if (_currentWave.IsSetFullyCreated(set))
+                if (_currentWave.IsSetFullyCreated(obj))
                     continue;
 
-                var enemyGO = CreateEnemy(set);
+                var enemyGO = CreateEnemy(obj);
                 if (enemyGO != null)
                 {
                     var enemy = enemyGO.GetComponent<Enemy>();
-                    SetMovementMode(enemy, set);
+
+                    // 设置移动模式
+                    SetMovementMode(enemy, obj);
                     // 生成成功后，记录已经成功的数量
-                    _currentWave.AddEnemyCreate(enemy, set);
+                    _currentWave.AddEnemyCreate(enemy, obj);
                 }
             }
         }
@@ -55,7 +57,6 @@ namespace Assets.Scripts.GamePlay
         public void MoveNext()
         {
             var nextWaveIndex = _currentWave.Index + 1;
-            Debug.Log($"zzz nextWaveIndex = {nextWaveIndex}， _waves.Length = {_waves.Length}");
             Ended = nextWaveIndex >= _waves.Length;
             // 生成6波 升级技能后，将下标置0，才能重新生成 Enemy
             if (Ended){
@@ -71,6 +72,7 @@ namespace Assets.Scripts.GamePlay
         // helper
         private void SetMovementMode(Enemy enemy, EnemyWaveSet set)
         {
+            // 设置移动模式
             enemy.Spawn(_difficultyManager.Difficulty, set.ToEnemyMode());
         }
 

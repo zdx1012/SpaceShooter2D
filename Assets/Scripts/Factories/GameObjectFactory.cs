@@ -24,7 +24,6 @@ namespace Assets.Scripts.Factories
             Debug.Log($"found templates: {templates.Length}");
             foreach (var template in templates)
             {
-                Debug.Log($"name={template.name}");
                 var key = GetKey(template);
 
                 var isPredefinedEnemy = key != null;

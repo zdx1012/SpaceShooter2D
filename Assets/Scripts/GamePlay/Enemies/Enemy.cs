@@ -26,9 +26,12 @@ public abstract class Enemy : GamePlayObject
     {
         base.Update();
 
+        Debug.Log($"zzz {gameObject.name} {ModeOpts.IsValidPathMode}");
+        // 设置按指定路径移动的位置
         if (ModeOpts.IsValidPathMode)
         {
             _distanceTraveled += Speed * Time.deltaTime;
+            // 移动
             transform.position = ModeOpts.Path.path.GetPointAtDistance(_distanceTraveled, ModeOpts.EndOfPathMode);
         }
     }
@@ -36,7 +39,6 @@ public abstract class Enemy : GamePlayObject
     // methods
     public virtual void Spawn(DifficultyLevel difficulty, EnemyModeOptions mode)
     {
-        Debug.Log($"Spawn triggered on {name}");
         ModeOpts = mode;
     }
 

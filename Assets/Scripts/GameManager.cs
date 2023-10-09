@@ -58,7 +58,6 @@ public class GameManager : MonoBehaviour
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
 
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
-        Debug.Log($"zzz EnemyWaves = {EnemyWaves.Length}");
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
@@ -69,7 +68,7 @@ public class GameManager : MonoBehaviour
     {
         UpdateUI();
 
-        if (Input.GetKey("r"))
+        if (Input.GetKey(KeyCode.R) || Input.GetKey(KeyCode.JoystickButton2))
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }

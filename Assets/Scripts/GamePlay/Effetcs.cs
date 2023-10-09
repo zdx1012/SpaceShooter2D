@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Assets.Scripts.GamePlay
 {
+    // 使用DOTween 创造玩家闪烁效果
     public static class Effetcs
     {
         private static Shader _whiteShader = null;

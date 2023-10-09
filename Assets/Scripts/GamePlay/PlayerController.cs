@@ -4,6 +4,7 @@ using Assets.Scripts.GamePlay;
 using DG.Tweening;
 using UnityEngine;
 
+// 控制玩家移动，攻击，防御，升级
 public class PlayerController : GamePlayObject
 {
     private const float SHIELD_USAGE_POWER = 0.20f;
@@ -110,7 +111,6 @@ public class PlayerController : GamePlayObject
         var points = _shootingPointsPerPower[ShootingPower];
         foreach (var point in points)
         {
-            Debug.Log($"zzz point={point} _bulletPoints={_bulletPoints.Length}");
             var bulletPoint = _bulletPoints[point];
             var bullet = Instantiate(BulletTemplate, bulletPoint.transform.position, bulletPoint.transform.rotation);
             bullet.GetComponent<BulletController>().SetAsPlayerBullet();

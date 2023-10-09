@@ -66,6 +66,7 @@ namespace Assets.Scripts.GamePlay
             if (IsInvulnerable())
                 return;
 
+            // 制造闪烁效果
             _invulnerableEffect = Effetcs.StartInvulnerableEffect(_renderer, duration);
 
             _invulnerableTime = Time.time + duration;

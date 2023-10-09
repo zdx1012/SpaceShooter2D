@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 414277711029259477}
   - component: {fileID: 2677559023757213337}
   m_Layer: 0
-  m_Name: Circle
+  m_Name: Circle-Path
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -73,7 +73,7 @@ MonoBehaviour:
       - 0
       globalNormalsAngle: 0
       flipNormals: 0
-    vertexPathUpToDate: 0
+    vertexPathUpToDate: 1
     vertexPathMaxAngleError: 0.3
     vertexPathMinVertexSpacing: 0.01
     showTransformTool: 1
