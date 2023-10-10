@@ -8,6 +8,7 @@ public class BoundaryObjectDetroyer : MonoBehaviour
 
     void Start()
     {
+        Debug.Log($"Camera.main.orthographicSize = {Camera.main.orthographicSize}");
         var factor = IsTopBoundary ? -1 : 1;
         transform.position = new Vector3(0, (Camera.main.orthographicSize + 3) * factor, 0);
         transform.localScale = new Vector3(ScreenHelper.GetOrthographicXRate() * 2 + 1, 1);

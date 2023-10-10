@@ -80,7 +80,7 @@ public class PlayerController : GamePlayObject
 
         // 使用保护罩
         var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton1);
-        _shielded = shieldPressed && ShieldPower >= 0 && !IsInvulnerable();
+        _shielded = shieldPressed && ShieldPower > 0 && !IsInvulnerable();
         ProcessShieldDefense();
     }
 
@@ -159,6 +159,7 @@ public class PlayerController : GamePlayObject
         var changed = ShieldEffect.activeInHierarchy != _shielded;
         if (changed)
         {
+            // 渐变颜色
             ShieldEffect.GetComponentsInChildren<Component>()
                         .Select(c => c.GetComponent<SpriteRenderer>())
                         .Where(c => c != null)

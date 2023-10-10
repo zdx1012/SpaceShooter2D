@@ -22,6 +22,7 @@ public class SpaceShipEnemy : Enemy
     protected override void Start()
     {
         base.Start();
+        // 查找当前对象的子物体
         _bulletPoint = gameObject.FindComponentInChildWithTag<Component>(ObjectTags.BulletPoints).gameObject;
         _bulletAudio = GetComponent<AudioSource>();
     }

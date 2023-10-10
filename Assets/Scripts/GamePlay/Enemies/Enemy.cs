@@ -26,7 +26,6 @@ public abstract class Enemy : GamePlayObject
     {
         base.Update();
 
-        Debug.Log($"zzz {gameObject.name} {ModeOpts.IsValidPathMode}");
         // 设置按指定路径移动的位置
         if (ModeOpts.IsValidPathMode)
         {

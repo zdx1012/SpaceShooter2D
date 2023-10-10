@@ -35,9 +35,16 @@ public class GameManager : MonoBehaviour
 {
     public DifficultyLevel Difficulty = DifficultyLevel.Normal;
     //public bool IncreaseDifficultyOverTime = true;
+    [Header("提供生成敌人的Y坐标")]
     public GameObject EnemySpawnPoint;
+
+    [Header("提供生成敌人类型《给Factory使用》")]
     public GameObject[] EnemiesTemplates;
+
+    [Header("提供生成 升级技能 的类型 《给Factory使用》")]
     public GameObject[] PowerUpsTemplates;
+
+    [Header("提供生成每一波敌人的相关设置")]
     public EnemyWave[] EnemyWaves;
     public Text ScoreText;
     public Text ShieldText;
@@ -103,7 +110,9 @@ public class GameManager : MonoBehaviour
 
     private void UpdateUI()
     {
-        ScoreText.text = Game.Current.Score.ToString();
+        if(ScoreText){
+            ScoreText.text = Game.Current.Score.ToString();
+        }
         if (ShieldText)
         {
             ShieldText.text = Game.Current.Player.ShieldPower.ToString();
