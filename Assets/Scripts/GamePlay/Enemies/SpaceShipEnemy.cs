@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.GamePlay;
+﻿using System.Linq;
+using Assets.Scripts.GamePlay;
 using PathCreation;
 using UnityEngine;
 
@@ -22,7 +23,7 @@ public class SpaceShipEnemy : Enemy
     protected override void Start()
     {
         base.Start();
-        // 查找当前对象的子物体
+        // 查找当前对象的子物体,即敌人子弹的发射位置
         _bulletPoint = gameObject.FindComponentInChildWithTag<Component>(ObjectTags.BulletPoints).gameObject;
         _bulletAudio = GetComponent<AudioSource>();
     }
@@ -39,7 +40,10 @@ public class SpaceShipEnemy : Enemy
 
     public void Shoot()
     {
-        var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, _bulletPoint.transform.rotation);
+        Debug.Log($"{_bulletPoint.transform.rotation}  {_bulletPoint.name}");
+        // 初始化 敌人的子弹，根据敌人的位置和方向 确定子弹的位置和方向
+        var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, _bulletPoint.transform.rotation); // rotation.z为1，即-180度，
+        // var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, Quaternion.identity);
         bullet.GetComponent<BulletController>().SetAsEnemyBullet();
         _bulletAudio.Play();
 

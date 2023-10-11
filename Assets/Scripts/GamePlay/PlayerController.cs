@@ -77,9 +77,13 @@ public class PlayerController : GamePlayObject
         {
             Shoot();
         }
+        // 按下Y键或者JoystickButton1时，销毁所有敌人
+        if(Input.GetKey(KeyCode.Y) || Input.GetKey(KeyCode.JoystickButton1) ){
+            DestroyAllEnemy();
+        }
 
         // 使用保护罩
-        var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton1);
+        var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton2);
         _shielded = shieldPressed && ShieldPower > 0 && !IsInvulnerable();
         ProcessShieldDefense();
     }
@@ -179,6 +183,25 @@ public class PlayerController : GamePlayObject
         var pos = _rb.position + _movement * Speed * Time.fixedDeltaTime;
         pos = transform.EnsurePositionInScreenBoundaries(pos);
         _rb.MovePosition(pos);
+    }
+
+
+    private void DestroyAllEnemy(){
+        // 通过实例控制销毁
+        var enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
+        var enemies = enemyObjects.Select(obj => obj.GetComponent<Enemy>()).OfType<Enemy>().ToArray();
+        for (int i = 0; i < enemies.Length; i++)
+        {
+            enemies[i].SelfDestroy();
+        }
+
+        // 通过脚本控制销毁子弹
+        // var enemyBulletObjects = GameObject.FindGameObjectsWithTag("EnemyBullet").ToList();
+        // var enemyBullets = enemyBulletObjects.Select(obj => obj.GetComponent<BulletController>()).OfType<BulletController>().ToArray();
+        // for (int i = 0; i < enemyBullets.Length; i++)
+        // {
+        //     enemyBullets[i].readyDestroy = true;  // 在子弹脚本中，添加该属性
+        // }
     }
 
 }

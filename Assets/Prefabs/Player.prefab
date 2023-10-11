@@ -49,7 +49,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a23eef5e20ff8cb46adf33491fc443fb, type: 2}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -302,7 +302,7 @@ SpriteRenderer:
   m_SortingOrder: 1
   m_Sprite: {fileID: -2441551552760128943, guid: 6639199608bcaca45ad8efd4c0f46163,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.6431373, g: 0.8235294, b: 0.9137255, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -402,6 +402,7 @@ MonoBehaviour:
   ExplosionTemplate: {fileID: 100008, guid: e9fd47bd83d954547a096ac63024c3a9, type: 3}
   HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
     type: 3}
+  ShootingPower: 1
   CanTakeDamage: 0
   ShootRate: 4
   ShieldPower: 1
@@ -409,6 +410,7 @@ MonoBehaviour:
   ShieldColor: {r: 0.40583837, g: 0.9056604, b: 0.8895371, a: 1}
   BulletTemplate: {fileID: 6382252670245963048, guid: 52181cba447de6142aa77fc8e2932cb0,
     type: 3}
+  ShieldEasyFX: 1
 --- !u!82 &4720415378665836522
 AudioSource:
   m_ObjectHideFlags: 0

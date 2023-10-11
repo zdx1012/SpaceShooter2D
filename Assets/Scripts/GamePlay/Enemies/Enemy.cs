@@ -49,6 +49,9 @@ public abstract class Enemy : GamePlayObject
         Game.Current.EnemyKilled(this);
         base.Die();
     }
+    public override void SelfDestroy(){
+        Die();
+    }
 }
 
 public class EnemyModeOptions

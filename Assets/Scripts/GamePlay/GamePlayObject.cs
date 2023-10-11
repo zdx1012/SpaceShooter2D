@@ -97,5 +97,7 @@ namespace Assets.Scripts.GamePlay
             Destroy(explosionFX, explosionFX.GetComponent<ParticleSystem>().main.duration);
             Destroy(gameObject);
         }
+
+        public virtual void SelfDestroy(){}
     }
 }
