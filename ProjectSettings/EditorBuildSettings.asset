@@ -8,4 +8,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/Main-no-light.unity
     guid: 7140ecb58cfa0b7458b19717159b2900
+  - enabled: 1
+    path: Assets/_Scenes/Part2.unity
+    guid: 8a3fc99682a5e7e4ca45d75ef88c9a77
   m_configObjects: {}

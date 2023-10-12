@@ -1901,6 +1901,21 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - target: {fileID: 5466640331806264658, guid: d46ab652169c8c24ab298b608958d1b5,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5466640331806264658, guid: d46ab652169c8c24ab298b608958d1b5,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.x
+      value: 1.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 5466640331806264658, guid: d46ab652169c8c24ab298b608958d1b5,
+        type: 3}
+      propertyPath: m_SpriteTilingProperty.oldSize.y
+      value: 1.57
+      objectReference: {fileID: 0}
     - target: {fileID: 8612084358199219089, guid: d46ab652169c8c24ab298b608958d1b5,
         type: 3}
       propertyPath: m_Layer

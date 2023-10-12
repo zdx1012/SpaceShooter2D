@@ -46,10 +46,14 @@ public class GameManager : MonoBehaviour
 
     [Header("提供生成每一波敌人的相关设置")]
     public EnemyWave[] EnemyWaves;
+    [Header("UI提示文本")]
     public Text ScoreText;
     public Text ShieldText;
     public Text HealthText;
     public Text LevelText;
+
+    [Header("读取已存储的玩家生命值，子弹等级等信息")]
+    public bool ReadPlayerHistroyData = false;
 
     private EnemyFactory _enemyFactory;
     private PowerUpFactory _powerUpFactory;
@@ -69,6 +73,26 @@ public class GameManager : MonoBehaviour
 
         Effetcs.Load();
         Game.Current.StartNew();
+        // 删除所有已存储的数据
+        // PlayerPrefs.DeleteAll();
+        // 读取历史数据
+        if (ReadPlayerHistroyData) Game.Current.ReadHistroyData();
+    }
+
+    // 保存所有数据
+    void SavePlayerData(){
+            PlayerPrefs.SetInt(SavePlayerDataType.Score.ToString(),Game.Current.Score);
+            PlayerPrefs.SetInt(SavePlayerDataType.Healthy.ToString(),Game.Current.Player.Health);
+            PlayerPrefs.SetInt(SavePlayerDataType.ShootingPower.ToString(),Game.Current.Player.ShootingPower);
+            PlayerPrefs.SetFloat(SavePlayerDataType.ShieldPower.ToString(),Game.Current.Player.ShieldPower);
+            Debug.Log($"zzz Player save historyScore = {Game.Current.Score}, historyHealthy = {Game.Current.Player.Health}, historyShootingPower = {Game.Current.Player.ShootingPower}, historyShieldPower = {Game.Current.Player.ShieldPower}");
+            
+            int historyScore = PlayerPrefs.GetInt(SavePlayerDataType.Score.ToString(), 0);
+            int historyHealthy = PlayerPrefs.GetInt(SavePlayerDataType.Healthy.ToString(), 0);
+            int historyShootingPower = PlayerPrefs.GetInt(SavePlayerDataType.ShootingPower.ToString(), 0);
+            float historyShieldPower = PlayerPrefs.GetFloat(SavePlayerDataType.ShieldPower.ToString(), 0f);
+            Debug.Log($"Read historyScore = {historyScore}, historyHealthy = {historyHealthy}, historyShootingPower = {historyShootingPower}, historyShieldPower = {historyShieldPower}");
+
     }
 
     void Update()
@@ -86,7 +110,6 @@ public class GameManager : MonoBehaviour
         if (_waveManager.CurrentWave.Ended)
         {
             // handle wave powerUp if present
-            // ???????????????
             if (_waveManager.CurrentWave.Definition.HasPowerUp)
             {
                 for(int i =0;i<_waveManager.CurrentWave.Definition.PowupCount;i++){

@@ -3,6 +3,7 @@ using System.Linq;
 using Assets.Scripts.GamePlay;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 // 控制玩家移动，攻击，防御，升级
 public class PlayerController : GamePlayObject
