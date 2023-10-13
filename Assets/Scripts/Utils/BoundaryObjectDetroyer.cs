@@ -11,7 +11,7 @@ public class BoundaryObjectDetroyer : MonoBehaviour
         Debug.Log($"Camera.main.orthographicSize = {Camera.main.orthographicSize}");
         var factor = IsTopBoundary ? -1 : 1;
         transform.position = new Vector3(0, (Camera.main.orthographicSize + 3) * factor, 0);
-        transform.localScale = new Vector3(ScreenHelper.GetOrthographicXRate() * 2 + 1, 1);
+        transform.localScale = new Vector3(ScreenHelper.GetOrthographicXRate() * 2 + 12, 1);
     }
 
     void OnTriggerEnter2D(Collider2D other)

@@ -790,6 +790,21 @@ PrefabInstance:
       propertyPath: Health
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 998409616262641844, guid: d46ab652169c8c24ab298b608958d1b5,
+        type: 3}
+      propertyPath: ShieldColor.r
+      value: 0.40392157
+      objectReference: {fileID: 0}
+    - target: {fileID: 998409616262641844, guid: d46ab652169c8c24ab298b608958d1b5,
+        type: 3}
+      propertyPath: ShieldColor.g
+      value: 0.90588236
+      objectReference: {fileID: 0}
+    - target: {fileID: 998409616262641844, guid: d46ab652169c8c24ab298b608958d1b5,
+        type: 3}
+      propertyPath: ShieldColor.b
+      value: 0.8901961
+      objectReference: {fileID: 0}
     - target: {fileID: 1041373102357715331, guid: d46ab652169c8c24ab298b608958d1b5,
         type: 3}
       propertyPath: m_IsActive
@@ -809,6 +824,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 3515990905901153107, guid: d46ab652169c8c24ab298b608958d1b5,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3515990905901153108, guid: d46ab652169c8c24ab298b608958d1b5,
         type: 3}

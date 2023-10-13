@@ -26,6 +26,7 @@ namespace Assets.Scripts.GamePlay
 
         protected virtual void Update()
         {
+            // Debug.Log($"_renderer.color={_renderer.color}");
             if (IsInvulnerable())
             {
                 var invulnerabilityExpired = Time.time > _invulnerableTime;
@@ -66,7 +67,7 @@ namespace Assets.Scripts.GamePlay
             if (IsInvulnerable())
                 return;
 
-            // 制造闪烁效果
+            // 显示无敌时的闪烁效果
             _invulnerableEffect = Effetcs.StartInvulnerableEffect(_renderer, duration);
 
             _invulnerableTime = Time.time + duration;
