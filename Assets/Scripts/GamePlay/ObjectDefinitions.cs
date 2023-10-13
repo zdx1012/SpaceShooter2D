@@ -17,6 +17,7 @@
         SpaceShip1,
         SpaceShip2,
         SpaceShip3,
+        SpaceShip4,
     }
 
     public enum EnemyMode
