@@ -7,6 +7,8 @@ using System.Linq;
 
 public class ScrollViewListener : MonoBehaviour
 {
+    [Header("隐藏未开发的关卡显示")]
+    public bool HiddenOtherPart = true;
     private Button[] btnList;
     private int gamePartNum = 0;
     // Start is called before the first frame update
@@ -22,6 +24,7 @@ public class ScrollViewListener : MonoBehaviour
             if (index + 1 > gamePartNum)
             {
                 btnList[i].interactable = false;
+                if (HiddenOtherPart) btnList[i].gameObject.SetActive(false);
             }
         }
     }
@@ -37,6 +40,7 @@ public class ScrollViewListener : MonoBehaviour
         // 第一个场景为选择关卡，后续的场景为关卡
         if (index + 1 <= gamePartNum){
             Debug.Log("Button clicked: " + clickedObject.name + " index = " + index  + " gamePartNum = " + gamePartNum);
+            SceneManager.LoadScene(index + 1);
              // 在这里可以执行特定的操作，例如打开一个窗口、加载一个场景、改变游戏状态等。
         }
     }
