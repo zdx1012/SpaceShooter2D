@@ -23,6 +23,7 @@ TagManager:
   - PlayerBullet
   - EnemyBullet
   - PowerUp
+  - ListButton
   layers:
   - Default
   - TransparentFX

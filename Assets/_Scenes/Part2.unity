@@ -1679,12 +1679,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1287857926}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1388073599 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3161933220104020665, guid: 15058c6201f3eef44bfee0ebb92646ea,
-    type: 3}
-  m_PrefabInstance: {fileID: 614700641}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1505786860
 GameObject:
   m_ObjectHideFlags: 0
@@ -2090,15 +2084,9 @@ MonoBehaviour:
   EnemyWaves:
   - Sets:
     - Mode: 0
-      EnemyType: 1
+      EnemyType: 4
       EnemyCount: 3
       Path: {fileID: 0}
-      IsInverted: 0
-      EndOfPathMode: 0
-    - Mode: 1
-      EnemyType: 4
-      EnemyCount: 6
-      Path: {fileID: 1388073599}
       IsInverted: 0
       EndOfPathMode: 0
     Delay: 3
