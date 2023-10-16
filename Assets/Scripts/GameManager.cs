@@ -6,6 +6,7 @@ using PathCreation;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections;
 
 [Serializable]
 public class EnemyWave
@@ -60,6 +61,10 @@ public class GameManager : MonoBehaviour
     private DifficultyManager _difficultyManager;
     private WaveManager _waveManager;
 
+    private GameObject _gameOverImage;
+    private GameObject _gameSucessImage;
+    private bool _waveIsOver = false;
+
     void Awake()
     {
         _enemyFactory = EnemyFactory.Instance;
@@ -79,19 +84,29 @@ public class GameManager : MonoBehaviour
         if (ReadPlayerHistroyData) Game.Current.ReadHistroyData();
     }
 
+    void Start()
+    {
+        _gameSucessImage = GameObject.Find("GameSuccessImage").gameObject;
+        _gameSucessImage.SetActive(false);
+
+        _gameOverImage = GameObject.Find("GameOverImage").gameObject;
+        _gameOverImage.SetActive(false);
+    }
+
     // 保存所有数据
-    void SavePlayerData(){
-            PlayerPrefs.SetInt(SavePlayerDataType.Score.ToString(),Game.Current.Score);
-            PlayerPrefs.SetInt(SavePlayerDataType.Healthy.ToString(),Game.Current.Player.Health);
-            PlayerPrefs.SetInt(SavePlayerDataType.ShootingPower.ToString(),Game.Current.Player.ShootingPower);
-            PlayerPrefs.SetFloat(SavePlayerDataType.ShieldPower.ToString(),Game.Current.Player.ShieldPower);
-            Debug.Log($"zzz Player save historyScore = {Game.Current.Score}, historyHealthy = {Game.Current.Player.Health}, historyShootingPower = {Game.Current.Player.ShootingPower}, historyShieldPower = {Game.Current.Player.ShieldPower}");
-            
-            int historyScore = PlayerPrefs.GetInt(SavePlayerDataType.Score.ToString(), 0);
-            int historyHealthy = PlayerPrefs.GetInt(SavePlayerDataType.Healthy.ToString(), 0);
-            int historyShootingPower = PlayerPrefs.GetInt(SavePlayerDataType.ShootingPower.ToString(), 0);
-            float historyShieldPower = PlayerPrefs.GetFloat(SavePlayerDataType.ShieldPower.ToString(), 0f);
-            Debug.Log($"Read historyScore = {historyScore}, historyHealthy = {historyHealthy}, historyShootingPower = {historyShootingPower}, historyShieldPower = {historyShieldPower}");
+    void SavePlayerData()
+    {
+        PlayerPrefs.SetInt(SavePlayerDataType.Score.ToString(), Game.Current.Score);
+        PlayerPrefs.SetInt(SavePlayerDataType.Healthy.ToString(), Game.Current.Player.Health);
+        PlayerPrefs.SetInt(SavePlayerDataType.ShootingPower.ToString(), Game.Current.Player.ShootingPower);
+        PlayerPrefs.SetFloat(SavePlayerDataType.ShieldPower.ToString(), Game.Current.Player.ShieldPower);
+        Debug.Log($"zzz Player save historyScore = {Game.Current.Score}, historyHealthy = {Game.Current.Player.Health}, historyShootingPower = {Game.Current.Player.ShootingPower}, historyShieldPower = {Game.Current.Player.ShieldPower}");
+
+        int historyScore = PlayerPrefs.GetInt(SavePlayerDataType.Score.ToString(), 0);
+        int historyHealthy = PlayerPrefs.GetInt(SavePlayerDataType.Healthy.ToString(), 0);
+        int historyShootingPower = PlayerPrefs.GetInt(SavePlayerDataType.ShootingPower.ToString(), 0);
+        float historyShieldPower = PlayerPrefs.GetFloat(SavePlayerDataType.ShieldPower.ToString(), 0f);
+        Debug.Log($"Read historyScore = {historyScore}, historyHealthy = {historyHealthy}, historyShootingPower = {historyShootingPower}, historyShieldPower = {historyShieldPower}");
 
     }
 
@@ -99,9 +114,32 @@ public class GameManager : MonoBehaviour
     {
         UpdateUI();
 
-        if (Input.GetKey(KeyCode.R) || Input.GetKey(KeyCode.JoystickButton2))
+        if ((Input.GetKey(KeyCode.R) || Input.GetKey(KeyCode.JoystickButton2)) && !_waveIsOver)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
+
+        // 所有敌人生成完毕后,检测是否还有敌人，没有则提示游戏结束
+        if (_waveIsOver)
+        {
+            if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
+            {
+                _gameSucessImage.SetActive(true);
+                SavePlayerData();
+                if (Input.anyKey)
+                {
+                    StartCoroutine(GotoGameLevel());
+                }
+                return;
+            }
+            if (Game.Current.Player.Health == 0)
+            {
+                _gameOverImage.SetActive(true);
+                if (Input.anyKey)
+                {
+                    StartCoroutine(GotoGameLevel());
+                }
+            }
         }
 
         _waveManager.ExecuteCurrentWave();
@@ -112,7 +150,8 @@ public class GameManager : MonoBehaviour
             // handle wave powerUp if present
             if (_waveManager.CurrentWave.Definition.HasPowerUp)
             {
-                for(int i =0;i<_waveManager.CurrentWave.Definition.PowupCount;i++){
+                for (int i = 0; i < _waveManager.CurrentWave.Definition.PowupCount; i++)
+                {
                     var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
                     var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
                     _powerUpFactory.Create(powerUpType, pos);
@@ -120,7 +159,7 @@ public class GameManager : MonoBehaviour
 
             }
 
-            _waveManager.MoveNext();
+            _waveIsOver = !_waveManager.MoveNext();
         }
         // 生成小行星
         if (_difficultyManager.CanCreateAsteroid())
@@ -131,9 +170,11 @@ public class GameManager : MonoBehaviour
         }
     }
 
+
     private void UpdateUI()
     {
-        if(ScoreText){
+        if (ScoreText)
+        {
             ScoreText.text = Game.Current.Score.ToString();
         }
         if (ShieldText)
@@ -144,9 +185,17 @@ public class GameManager : MonoBehaviour
         {
             HealthText.text = Game.Current.Player.Health.ToString();
         }
-        if (LevelText){
+        if (LevelText)
+        {
             LevelText.text = Game.Current.Player.ShootingPower.ToString();
         }
 
+    }
+
+    IEnumerator GotoGameLevel()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene(0);
+        yield break;
     }
 }

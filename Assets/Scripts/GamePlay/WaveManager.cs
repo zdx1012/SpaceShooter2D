@@ -54,19 +54,20 @@ namespace Assets.Scripts.GamePlay
             }
         }
 
-        public void MoveNext()
+        public bool MoveNext()
         {
             var nextWaveIndex = _currentWave.Index + 1;
             Ended = nextWaveIndex >= _waves.Length;
             // 生成6波 升级技能后，将下标置0，才能重新生成 Enemy
             if (Ended){
-                _currentWave = new CurrentWave(0, _waves[0]);
-                Debug.Log($" _currentWave.IsFullyCreated = {_currentWave.IsFullyCreated} , _currentWave.Delaying = {_currentWave.Delaying}");
+                // _currentWave = new CurrentWave(0, _waves[0]);
+                // Debug.Log($" _currentWave.IsFullyCreated = {_currentWave.IsFullyCreated} , _currentWave.Delaying = {_currentWave.Delaying}");
                 Ended = false;
-                return;
+                return false;
             }
                 
             _currentWave = new CurrentWave(nextWaveIndex, _waves[nextWaveIndex]);
+            return true;
         }
 
         // helper

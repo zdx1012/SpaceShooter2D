@@ -40,6 +40,8 @@ namespace Assets.Scripts.GamePlay
             if (Health <= 0)
             {
                 Die();
+                Debug.Log("Destroy Player all Saved Data");
+                PlayerPrefs.DeleteAll();
             }
         }
 
