@@ -84,7 +84,7 @@ public class PlayerController : GamePlayObject
         }
 
         // 使用保护罩
-        var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton2);
+        var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton3);
         _shielded = shieldPressed && ShieldPower > 0 && !IsInvulnerable();
         ProcessShieldDefense();
     }
