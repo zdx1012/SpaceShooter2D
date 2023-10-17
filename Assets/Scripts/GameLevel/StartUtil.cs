@@ -14,8 +14,18 @@ public class StartUtil : MonoBehaviour
 
     [Header("长时间未操作，自动播放视频（S）")]
     public int waitVideoTime = 10;
+
+    [Header("关卡选中时的放大倍数")]
+    public float scaleMultiplier = 1.2f; // 放大倍数
     private Button[] btnList;
+
+    private Vector3 btnOriginalScale;
+
+    private float lastModifyTime = 0;
+
+    private Vector2 _movement;
     private int gamePartNum = 0;
+    private int curSelectBtnIndex = 0;
     private GameObject gameLevel;
     private GameObject videoPlayer;
     private VideoPlayer vp;
@@ -28,7 +38,7 @@ public class StartUtil : MonoBehaviour
         videoPlayer = GameObject.FindGameObjectWithTag("VideoPlay");
         Debug.Assert(videoPlayer != null, "can't find VideoPlay");
         vp = videoPlayer.GetComponent<VideoPlayer>();
-        
+
 
         gameLevel = GameObject.Find("GameLevels");
         Debug.Assert(gameLevel != null, "can't find gameLevels");
@@ -58,6 +68,7 @@ public class StartUtil : MonoBehaviour
                 if (HiddenOtherPart) btnList[index].gameObject.SetActive(false);
             }
         }
+        btnOriginalScale = btnList[0].transform.localScale;
     }
 
     // Update is called once per frame
@@ -67,13 +78,31 @@ public class StartUtil : MonoBehaviour
         {
             pressKeyTime = Time.time;
             showVideoPlayer(false);
-        }else if (Time.time - pressKeyTime > waitVideoTime && !vp.isPlaying)
+        }
+        else if (Time.time - pressKeyTime > waitVideoTime && !vp.isPlaying)
         {
             showVideoPlayer(true);
+        }
+        _movement.x = Input.GetAxisRaw("Horizontal") + Input.GetAxisRaw("CrossX");
+        // Debug.Log("_movement.x = " + _movement.x);
+        if (Mathf.Abs(_movement.x) == 1 && Time.time - lastModifyTime > 0.5f)
+        {
+            curSelectBtnIndex += 1 * (_movement.x > 0 ? 1 : -1);
+            if (curSelectBtnIndex >= gamePartNum) curSelectBtnIndex = gamePartNum - 1;
+            if (curSelectBtnIndex < 0) curSelectBtnIndex = 0;
+            setBtnStatus();
         }
 
     }
 
+    void setBtnStatus()
+    {
+
+        for (int i = 0; i < gamePartNum; i++)
+        {
+            btnList[i].transform.localScale = (i == curSelectBtnIndex ? btnOriginalScale * scaleMultiplier : btnOriginalScale);
+        }
+    }
     void OnClick(Button clickedObject, int index)
     {
         // 第一个场景为选择关卡，后续的场景为关卡

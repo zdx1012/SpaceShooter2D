@@ -132,13 +132,14 @@ public class GameManager : MonoBehaviour
                 }
                 return;
             }
-            if (Game.Current.Player.Health == 0)
+        }
+        
+        if (Game.Current.Player.Health == 0)
+        {
+            _gameOverImage.SetActive(true);
+            if (Input.anyKey)
             {
-                _gameOverImage.SetActive(true);
-                if (Input.anyKey)
-                {
-                    StartCoroutine(GotoGameLevel());
-                }
+                StartCoroutine(GotoGameLevel());
             }
         }
 
