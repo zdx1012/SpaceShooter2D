@@ -24,6 +24,7 @@ TagManager:
   - EnemyBullet
   - PowerUp
   - ListButton
+  - VideoPlay
   layers:
   - Default
   - TransparentFX
