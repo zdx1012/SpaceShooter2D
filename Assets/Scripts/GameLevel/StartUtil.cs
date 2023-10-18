@@ -128,6 +128,7 @@ public class StartUtil : MonoBehaviour
             if (vp.isPlaying) vp.Pause();
             gameLevel.SetActive(true);
             videoPlayer.gameObject.SetActive(false);
+            // vp.audioOutputMode = false ? VideoAudioOutputMode.Direct : VideoAudioOutputMode.None;
         }
     }
 }
