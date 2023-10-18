@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System.Linq;
 using UnityEngine.Video;
 using UnityEngine.Assertions;
+using UnityEngine.EventSystems;
 
 public class StartUtil : MonoBehaviour
 {
@@ -17,6 +18,11 @@ public class StartUtil : MonoBehaviour
 
     [Header("关卡选中时的放大倍数")]
     public float scaleMultiplier = 1.2f; // 放大倍数
+
+    [Header("声音控制的图标")]
+    public Sprite soundSprite;
+    public Sprite silentSprite;
+
     private Button[] btnList;
 
     private Vector3 btnOriginalScale;
@@ -29,6 +35,8 @@ public class StartUtil : MonoBehaviour
     private GameObject gameLevel;
     private GameObject videoPlayer;
     private VideoPlayer vp;
+    private Button volumeButton;
+    private bool hasVolume = true;
 
     private float pressKeyTime;
     // Start is called before the first frame update
@@ -42,6 +50,12 @@ public class StartUtil : MonoBehaviour
 
         gameLevel = GameObject.Find("GameLevels");
         Debug.Assert(gameLevel != null, "can't find gameLevels");
+
+        volumeButton = GameObject.Find("Volume").GetComponent<Button>();
+        Debug.Assert(volumeButton != null, "can't find volumeButton");
+        volumeButton.onClick.AddListener(setVolumeStatus);
+
+
 
 
         btnList = GameObject.FindGameObjectsWithTag("ListButton")
@@ -74,33 +88,35 @@ public class StartUtil : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.anyKey)
+        if (Input.anyKey || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             pressKeyTime = Time.time;
             showVideoPlayer(false);
+            setBtnStatus();
         }
         else if (Time.time - pressKeyTime > waitVideoTime && !vp.isPlaying)
         {
             showVideoPlayer(true);
         }
-        _movement.x = Input.GetAxisRaw("Horizontal") + Input.GetAxisRaw("CrossX");
-        // Debug.Log("_movement.x = " + _movement.x);
-        if (Mathf.Abs(_movement.x) == 1 && Time.time - lastModifyTime > 0.5f)
-        {
-            curSelectBtnIndex += 1 * (_movement.x > 0 ? 1 : -1);
-            if (curSelectBtnIndex >= gamePartNum) curSelectBtnIndex = gamePartNum - 1;
-            if (curSelectBtnIndex < 0) curSelectBtnIndex = 0;
-            setBtnStatus();
-        }
+        // _movement.x = Input.GetAxisRaw("Horizontal") + Input.GetAxisRaw("CrossX");
+        // // Debug.Log("_movement.x = " + _movement.x);
+        // if (Mathf.Abs(_movement.x) == 1 && Time.time - lastModifyTime > 0.5f)
+        // {
+        //     curSelectBtnIndex += 1 * (_movement.x > 0 ? 1 : -1);
+        //     if (curSelectBtnIndex >= gamePartNum) curSelectBtnIndex = gamePartNum - 1;
+        //     if (curSelectBtnIndex < 0) curSelectBtnIndex = 0;
+        //     setBtnStatus();
+        // }
 
     }
 
     void setBtnStatus()
     {
-
+        // 如果没有任何可交互组件选中，设置默认选中音量
+        if (EventSystem.current.currentSelectedGameObject == null) EventSystem.current.SetSelectedGameObject(volumeButton.gameObject); ;
         for (int i = 0; i < gamePartNum; i++)
         {
-            btnList[i].transform.localScale = (i == curSelectBtnIndex ? btnOriginalScale * scaleMultiplier : btnOriginalScale);
+            btnList[i].transform.localScale = (EventSystem.current.currentSelectedGameObject == btnList[i].gameObject ? btnOriginalScale * scaleMultiplier : btnOriginalScale);
         }
     }
     void OnClick(Button clickedObject, int index)
@@ -128,7 +144,23 @@ public class StartUtil : MonoBehaviour
             if (vp.isPlaying) vp.Pause();
             gameLevel.SetActive(true);
             videoPlayer.gameObject.SetActive(false);
-            // vp.audioOutputMode = false ? VideoAudioOutputMode.Direct : VideoAudioOutputMode.None;
+        }
+    }
+
+    private void setVolumeStatus()
+    {
+        hasVolume = !hasVolume;
+        if (hasVolume)
+        {
+            volumeButton.GetComponent<Image>().sprite = soundSprite;
+            volumeButton.GetComponent<AudioSource>().volume = 1;
+            vp.audioOutputMode = VideoAudioOutputMode.Direct;
+        }
+        else
+        {
+            volumeButton.GetComponent<Image>().sprite = silentSprite;
+            volumeButton.GetComponent<AudioSource>().volume = 0;
+            vp.audioOutputMode = VideoAudioOutputMode.None;
         }
     }
 }
