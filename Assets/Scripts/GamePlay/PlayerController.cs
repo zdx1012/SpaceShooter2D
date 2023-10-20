@@ -79,7 +79,7 @@ public class PlayerController : GamePlayObject
             Shoot();
         }
         // 按下Y键或者JoystickButton1时，销毁所有敌人
-        if(Input.GetKey(KeyCode.Y) || Input.GetKey(KeyCode.JoystickButton1) ){
+        if(Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.JoystickButton1) ){
             DestroyAllEnemy();
         }
 

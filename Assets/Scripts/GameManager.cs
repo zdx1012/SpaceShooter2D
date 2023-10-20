@@ -64,6 +64,8 @@ public class GameManager : MonoBehaviour
     private GameObject _gameOverImage;
     private GameObject _gameSucessImage;
     private bool _waveIsOver = false;
+    // 是否暂停，0-暂停，1-正常
+    private int _timeScale = 1;
 
     void Awake()
     {
@@ -112,9 +114,22 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        
+
+        // Select 键 暂停
+        if (Input.GetKeyDown(KeyCode.Pause))
+        {
+            _timeScale = _timeScale == 1 ? 0 : 1;
+            Time.timeScale = _timeScale;
+        }
+        // Select + Start 键 关卡选择界面
+        if (Input.GetKey(KeyCode.Pause) && Input.GetKey(KeyCode.Return)){
+            SceneManager.LoadScene(0);
+        }
+
         UpdateUI();
 
-        if ((Input.GetKey(KeyCode.R) || Input.GetKey(KeyCode.JoystickButton2)) && !_waveIsOver)
+        if ((Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton2)) && !_waveIsOver)
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
@@ -133,7 +148,7 @@ public class GameManager : MonoBehaviour
                 return;
             }
         }
-        
+
         if (Game.Current.Player.Health == 0)
         {
             _gameOverImage.SetActive(true);
