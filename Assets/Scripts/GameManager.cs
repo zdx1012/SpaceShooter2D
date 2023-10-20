@@ -149,7 +149,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        if (Game.Current.Player.Health == 0)
+        if (Game.Current.Player.Health <= 0)
         {
             _gameOverImage.SetActive(true);
             if (Input.anyKey)
