@@ -100,11 +100,17 @@ public class StartUtil : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // 读取串口数据
-        if (Config.isAndroid)
-        {
-            Uart.GetInstance().Run();
-        }
+        Debug.Log("start util update " + Config.isAndroid);
+        // // 读取串口数据
+        // if (Config.isAndroid)
+        // {
+        //     Uart.GetInstance().Run();
+        // }
+        // else
+        // {
+        //     // 不调用，则获取不到键盘的方向键
+        //     InputUtil.instance.Run(); 
+        // }
         // 获取币数
         currentCoinNum = InputUtil.instance.GetCoinNum();
         if (currentCoinNum.ToString() != coinNumText.text.ToString())
@@ -122,6 +128,7 @@ public class StartUtil : MonoBehaviour
         if (InputUtil.instance.AnyAxisPressed())
         {
             pressKeyTime = Time.time;
+            Debug.Log("showVideoPlayer");
             showVideoPlayer(false);
             setBtnStatus();
         }

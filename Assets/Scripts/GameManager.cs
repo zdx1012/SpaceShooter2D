@@ -117,22 +117,22 @@ public class GameManager : MonoBehaviour
         
 
         // Select 键 暂停
-        if (Input.GetKeyDown(KeyCode.Pause))
-        {
-            _timeScale = _timeScale == 1 ? 0 : 1;
-            Time.timeScale = _timeScale;
-        }
-        // Select + Start 键 关卡选择界面
-        if (Input.GetKey(KeyCode.Pause) && Input.GetKey(KeyCode.Return)){
-            SceneManager.LoadScene(0);
-        }
+        // if (Input.GetKeyDown(KeyCode.Pause))
+        // {
+        //     _timeScale = _timeScale == 1 ? 0 : 1;
+        //     Time.timeScale = _timeScale;
+        // }
+        // // Select + Start 键 关卡选择界面
+        // if (Input.GetKey(KeyCode.Pause) && Input.GetKey(KeyCode.Return)){
+        //     SceneManager.LoadScene(0);
+        // }
 
         UpdateUI();
 
-        if ((Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton2)) && !_waveIsOver)
-        {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        }
+        // if ((Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton2)) && !_waveIsOver)
+        // {
+        //     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        // }
 
         // 所有敌人生成完毕后,检测是否还有敌人，没有则提示游戏结束
         if (_waveIsOver)

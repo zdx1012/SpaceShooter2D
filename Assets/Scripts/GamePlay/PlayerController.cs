@@ -73,18 +73,20 @@ public class PlayerController : GamePlayObject
 
         // attack
         _canShoot = Time.time >= _nextShootTime;
-        _shootPressed = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0);
+        // _shootPressed = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0);
+        _shootPressed = InputUtil.instance.isStartPressed();
         if (_canShoot && _shootPressed)
         {
             Shoot();
         }
         // 按下Y键或者JoystickButton1时，销毁所有敌人
-        if(Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.JoystickButton1) ){
-            DestroyAllEnemy();
-        }
+        // if(Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.JoystickButton1) ){
+        //     DestroyAllEnemy();
+        // }
 
         // 使用保护罩
-        var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton3);
+        var shieldPressed = false;
+        // var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton3);
         _shielded = shieldPressed && ShieldPower > 0 && !IsInvulnerable();
         ProcessShieldDefense();
     }
@@ -92,8 +94,10 @@ public class PlayerController : GamePlayObject
     void FixedUpdate()
     {
         // movement
-        _movement.x = Input.GetAxis("Horizontal") + Input.GetAxis("CrossX");
-        _movement.y = Input.GetAxis("Vertical") + Input.GetAxis("CrossY");
+        // _movement.x = Input.GetAxis("Horizontal") + Input.GetAxis("CrossX");
+        // _movement.y = Input.GetAxis("Vertical") + Input.GetAxis("CrossY");
+        _movement.x = InputUtil.instance.GetHorizontalAxis();
+        _movement.y = InputUtil.instance.GetVerticalAxis();
         _rb.velocity = _movement * Speed;                           //Add Velocity to the player ship rigidbody
 
         // animation
@@ -154,7 +158,7 @@ public class PlayerController : GamePlayObject
         if (_shielded)
         {
             ShieldPower -= Mathf.Clamp(SHIELD_USAGE_POWER * Time.deltaTime, 0, SHIELD_MAX_POWER);
-            if ( ShieldPower < 0 ) ShieldPower = 0;
+            if (ShieldPower < 0) ShieldPower = 0;
             // ShieldPower = float.Parse(ShieldPower.ToString("F2"));
         }
     }
@@ -187,7 +191,8 @@ public class PlayerController : GamePlayObject
     }
 
 
-    private void DestroyAllEnemy(){
+    private void DestroyAllEnemy()
+    {
         // 通过实例控制销毁
         var enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
         var enemies = enemyObjects.Select(obj => obj.GetComponent<Enemy>()).OfType<Enemy>().ToArray();
