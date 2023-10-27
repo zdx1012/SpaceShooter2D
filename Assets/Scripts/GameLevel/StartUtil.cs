@@ -7,6 +7,9 @@ using System.Linq;
 using UnityEngine.Video;
 using UnityEngine.Assertions;
 using UnityEngine.EventSystems;
+using UnityEngine.Networking;
+using System.IO;
+using System;
 
 public class StartUtil : MonoBehaviour
 {
@@ -41,6 +44,10 @@ public class StartUtil : MonoBehaviour
     private bool hasVolume = true;
 
     private float pressKeyTime;
+
+    private int currentCoinNum = -1;
+    private Text coinNumText;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -78,11 +85,30 @@ public class StartUtil : MonoBehaviour
             }
         }
         btnOriginalScale = btnList[0].transform.localScale;
+
+        coinNumText = GameObject.Find("CoinNum").GetComponent<Text>();
+
+    }
+
+    public void LogErrorFromAndroid(string errorMessage)
+    {
+        // Debug.LogError("Android Error: " + errorMessage);
     }
 
     // Update is called once per frame
     void Update()
     {
+        // 读取串口数据
+        Uart.GetInstance().Run();
+        // 获取币数
+        currentCoinNum = InputUtil.GetInstance().GetCoinNum();
+        if (currentCoinNum.ToString() != coinNumText.text.ToString())
+        {
+            Debug.Log("update coin num to: " + currentCoinNum);
+            coinNumText.text = currentCoinNum.ToString();
+        }
+
+        Debug.Log("update");
         if (Input.anyKey || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
             pressKeyTime = Time.time;
