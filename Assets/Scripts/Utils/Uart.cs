@@ -165,9 +165,9 @@ public class Uart
                                 msg1 += data[i + 2] + "\r ";
                             }
                             msg1 += "\n";
-                            Debug.Log("msg1 = " + msg1);
-                            InputUtil.GetInstance().SetKey(data);
-                            InputUtil.GetInstance().Run();
+                            // Debug.Log("msg1 = " + msg1);
+                            InputUtil.instance.SetKey(data);
+                            // InputUtil.instance.Run();
                             break;
                         // case CMD2_Ad:  //4个定位器  校准
                         //     msg2 = "";
@@ -199,7 +199,7 @@ public class Uart
 
                             Debug.Log("coin1 = " + coin1 + " coin2= " + coin2);
 
-                            InputUtil.GetInstance().SetCoinNum(coin1);
+                            InputUtil.instance.SetCoinNum(coin1);
                             // FjData.GetInstance().HwCoin[0] = coin1;
                             // FjData.GetInstance().HwCoin[1] = coin2;
                             break;
@@ -213,7 +213,7 @@ public class Uart
         }
 
         //更新按键数据
-        // InputUtil.GetInstance().Run();
+        InputUtil.instance.Run();
 
         //摇摇车复位控制
         // ResetSetting.GetInstance().Run();

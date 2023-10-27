@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+// using UnityEditor.PackageManager;
 using UnityEngine;
 
 
 public class Config
 {
-    public static bool isAndroid = true;
+    public static bool isAndroid = Application.platform == RuntimePlatform.Android;
 }
 
 public class InputUtil
@@ -24,6 +25,8 @@ public class InputUtil
     public int keySettingRight = 38; // 设置-中
 
 
+    private Dictionary<int, bool> keyStatus;// 当前帧的状态
+    private Dictionary<int, bool> keyLastStatus; // 上一帧的状态
 
     private bool StartKeyPressed;
     private bool UpKeyPressed;
@@ -33,16 +36,33 @@ public class InputUtil
     private bool SettingCenterKeyPessed;
 
 
-    private int coinNum;
+    private int CoinNum;
 
     UInt32 KEY_Old;
     UInt32 KEY_Down;
-    public static InputUtil instance = null;
+    private static InputUtil _instance = null;
+    public static InputUtil instance => _instance ?? (_instance = new InputUtil());
     // Start is called before the first frame update
 
     private InputUtil()
     {
         Debug.Log("excute new InputUtil");
+        keyStatus = new Dictionary<int, bool>();
+        keyLastStatus = new Dictionary<int, bool>();
+        keyStatus[KeyStart] = false;
+        keyStatus[KeyUp] = false;
+        keyStatus[KeyDown] = false;
+        keyStatus[KeyLeft] = false;
+        keyStatus[KeyRight] = false;
+        keyStatus[keySettingCenter] = false;
+
+        keyLastStatus[KeyStart] = false;
+        keyLastStatus[KeyUp] = false;
+        keyLastStatus[KeyDown] = false;
+        keyLastStatus[KeyLeft] = false;
+        keyLastStatus[KeyRight] = false;
+        keyLastStatus[keySettingCenter] = false;
+
         ClearKey();
     }
 
@@ -52,16 +72,16 @@ public class InputUtil
         KEY_Down = 0;
         Debug.Log("run ClearKey");
     }
-    public static InputUtil GetInstance()
-    {
-        Debug.Log($"instance is null ? {null == instance}");
-        if (null == instance)
-        {
-            Debug.Log("goto new InputUtil");
-            instance = new InputUtil();
-        }
-        return instance;
-    }
+    // public static InputUtil GetInstance()
+    // {
+    //     Debug.Log($"instance is null ? {null == instance}");
+    //     if (null == instance)
+    //     {
+    //         Debug.Log("goto new InputUtil");
+    //         instance = new InputUtil();
+    //     }
+    //     return instance;
+    // }
 
     public void SetKey(byte[] keyvalue)
     {
@@ -120,6 +140,27 @@ public class InputUtil
         LeftKeyPressed = KEY_Left_Pressed();
         RightKeyPressed = KEY_Right_Pressed();
         SettingCenterKeyPessed = KEY_SettingCenter_pressed();
+
+
+        // 记录上一帧的状态
+        keyLastStatus[KeyStart] = keyStatus[KeyStart];
+        keyLastStatus[KeyUp] = keyStatus[KeyUp];
+        keyLastStatus[KeyDown] = keyStatus[KeyDown];
+        keyLastStatus[KeyLeft] = keyStatus[KeyLeft];
+        keyLastStatus[KeyRight] = keyStatus[KeyRight];
+        keyLastStatus[keySettingCenter] = keyStatus[keySettingCenter];
+
+        // 记录当前帧的状态
+        keyStatus[KeyStart] = StartKeyPressed;
+        keyStatus[KeyUp] = UpKeyPressed;
+        keyStatus[KeyDown] = DownKeyPressed;
+        keyStatus[KeyLeft] = LeftKeyPressed;
+        keyStatus[KeyRight] = RightKeyPressed;
+        keyStatus[keySettingCenter] = SettingCenterKeyPessed;
+
+
+
+        // 按下 设置 中心键，清空币数
         if (SettingCenterKeyPessed)
         {
             Uart.GetInstance().SendClearAccount();
@@ -186,20 +227,90 @@ public class InputUtil
 
     public void SetCoinNum(int n)
     {
-        coinNum = n;
+        CoinNum = n;
     }
 
-    // 给外部使用的函数
+    // 供外部使用的函数
 
-    public bool AnyKeyPressed()
+    public bool AnyAxisPressed()
     {
-        return StartKeyPressed || UpKeyPressed || DownKeyPressed || LeftKeyPressed || RightKeyPressed || SettingCenterKeyPessed;
+        if (Config.isAndroid)
+        {
+            return (keyStatus[KeyUp] && !keyLastStatus[KeyUp]) || (keyStatus[KeyDown] && !keyLastStatus[KeyDown]) || (keyStatus[KeyLeft] && !keyLastStatus[KeyLeft]) || (keyStatus[KeyRight] && !keyLastStatus[KeyRight]);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.LeftArrow) || Input.GetKeyDown(KeyCode.RightArrow);
+        }
     }
-    public bool isStartPressed() { return StartKeyPressed; }
-    public bool isUpPressed() { return UpKeyPressed; }
-    public bool isDownPressed() { return DownKeyPressed; }
-    public bool isLeftPressed() { return LeftKeyPressed; }
-    public bool isRightPressed() { return RightKeyPressed; }
+    public bool isStartPressed()
+    {
+        if (Config.isAndroid)
+        {
+            return keyStatus[KeyStart];
+        }
+        else
+        {
+            return Input.GetKey(KeyCode.P);
+        }
 
-    public int GetCoinNum() { return coinNum; }
+    }
+    public bool isStartOnceClicked()
+    {
+        if (Config.isAndroid)
+        {
+            return (keyStatus[KeyStart] && !keyLastStatus[KeyStart]);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.P);
+        }
+
+    }
+    public bool isUpPressed()
+    {
+        if (Config.isAndroid)
+        {
+            return keyStatus[KeyUp];
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.Y);
+        }
+    }
+    public bool isDownPressed()
+    {
+        if (Config.isAndroid)
+        {
+            return keyStatus[KeyDown];
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.U);
+        }
+    }
+    public bool isLeftPressed()
+    {
+        if (Config.isAndroid)
+        {
+            return keyStatus[KeyLeft];
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.I);
+        }
+    }
+    public bool isRightPressed()
+    {
+        if (Config.isAndroid)
+        {
+            return keyStatus[KeyRight];
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.O);
+        }
+    }
+
+    public int GetCoinNum() { return CoinNum; }
 }

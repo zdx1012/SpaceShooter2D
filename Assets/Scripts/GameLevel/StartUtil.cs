@@ -30,9 +30,12 @@ public class StartUtil : MonoBehaviour
 
     private Button[] btnList;
 
-    private Vector3 btnOriginalScale;
+    // 可点击的对象
+    private List<GameObject> canClickGameObject = new List<GameObject>();
+    private int currentActivateIndex = 0;
 
-    private float lastModifyTime = 0;
+    // 默认图标的缩放倍数
+    private Vector3 btnOriginalScale;
 
     private Vector2 _movement;
     private int gamePartNum = 0;
@@ -72,17 +75,16 @@ public class StartUtil : MonoBehaviour
        .OrderBy(btn => btn.name)
        .ToArray();
 
+        Debug.Assert(volumeButton.gameObject != null, "can't find volumeButton.gameObject");
+        canClickGameObject.Add(volumeButton.gameObject);
+
         gamePartNum = SceneManager.sceneCountInBuildSettings - 1;
 
         for (int i = 0; i < btnList.Length; i++)
         {
             int index = i; // 创建一个局部变量来捕获循环变量的值
             btnList[index].onClick.AddListener(() => OnClick(btnList[index], index));
-            if (index + 1 > gamePartNum)
-            {
-                btnList[i].interactable = false;
-                if (HiddenOtherPart) btnList[index].gameObject.SetActive(false);
-            }
+            canClickGameObject.Add(btnList[i].gameObject);
         }
         btnOriginalScale = btnList[0].transform.localScale;
 
@@ -99,17 +101,25 @@ public class StartUtil : MonoBehaviour
     void Update()
     {
         // 读取串口数据
-        Uart.GetInstance().Run();
+        if (Config.isAndroid)
+        {
+            Uart.GetInstance().Run();
+        }
         // 获取币数
-        currentCoinNum = InputUtil.GetInstance().GetCoinNum();
+        currentCoinNum = InputUtil.instance.GetCoinNum();
         if (currentCoinNum.ToString() != coinNumText.text.ToString())
         {
             Debug.Log("update coin num to: " + currentCoinNum);
             coinNumText.text = currentCoinNum.ToString();
         }
 
+        if (InputUtil.instance.isStartOnceClicked())
+        {
+            EventSystem.current.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
+        }
+
         Debug.Log("update");
-        if (Input.anyKey || Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+        if (InputUtil.instance.AnyAxisPressed())
         {
             pressKeyTime = Time.time;
             showVideoPlayer(false);
@@ -123,14 +133,30 @@ public class StartUtil : MonoBehaviour
 
     void setBtnStatus()
     {
-        // 如果没有任何可交互组件选中，设置默认选中音量
-        if (EventSystem.current.currentSelectedGameObject == null) EventSystem.current.SetSelectedGameObject(volumeButton.gameObject);
-        EventSystem.current.currentSelectedGameObject.gameObject.transform.localScale = btnOriginalScale * scaleMultiplier;
-        for (int i = 0; i < gamePartNum; i++)
+        currentActivateIndex += 1;
+        currentActivateIndex = currentActivateIndex % canClickGameObject.Count;
+        for (int i = 0; i < canClickGameObject.Count; i++)
         {
-            btnList[i].transform.localScale = (EventSystem.current.currentSelectedGameObject == btnList[i].gameObject ? btnOriginalScale * scaleMultiplier : btnOriginalScale);
+            if (i == currentActivateIndex)
+            {
+                canClickGameObject[i].transform.localScale = btnOriginalScale * scaleMultiplier;
+            }
+            else
+            {
+                canClickGameObject[i].transform.localScale = btnOriginalScale;
+            }
         }
-        volumeButton.gameObject.transform.localScale = EventSystem.current.currentSelectedGameObject == volumeButton.gameObject ? btnOriginalScale * scaleMultiplier : btnOriginalScale;
+        Debug.Log("currentActivateIndex = " + currentActivateIndex);
+        EventSystem.current.SetSelectedGameObject(canClickGameObject[currentActivateIndex]);
+
+        // 如果没有任何可交互组件选中，设置默认选中音量
+        // if (EventSystem.current.currentSelectedGameObject == null) EventSystem.current.SetSelectedGameObject(volumeButton.gameObject);
+        // EventSystem.current.currentSelectedGameObject.gameObject.transform.localScale = btnOriginalScale * scaleMultiplier;
+        // for (int i = 0; i < gamePartNum; i++)
+        // {
+        //     btnList[i].transform.localScale = (EventSystem.current.currentSelectedGameObject == btnList[i].gameObject ? btnOriginalScale * scaleMultiplier : btnOriginalScale);
+        // }
+        // volumeButton.gameObject.transform.localScale = EventSystem.current.currentSelectedGameObject == volumeButton.gameObject ? btnOriginalScale * scaleMultiplier : btnOriginalScale;
     }
     void OnClick(Button clickedObject, int index)
     {
