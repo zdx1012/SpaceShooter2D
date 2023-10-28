@@ -39,7 +39,7 @@ public class StartUtil : MonoBehaviour
 
     private Vector2 _movement;
     private int gamePartNum = 0;
-    private int curSelectBtnIndex = 0;
+    // private int curSelectBtnIndex = 0;
     private GameObject gameLevel;
     private GameObject videoPlayer;
     private VideoPlayer vp;
@@ -100,17 +100,6 @@ public class StartUtil : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("start util update " + Config.isAndroid);
-        // // 读取串口数据
-        // if (Config.isAndroid)
-        // {
-        //     Uart.GetInstance().Run();
-        // }
-        // else
-        // {
-        //     // 不调用，则获取不到键盘的方向键
-        //     InputUtil.instance.Run(); 
-        // }
         // 获取币数
         currentCoinNum = InputUtil.instance.GetCoinNum();
         if (currentCoinNum.ToString() != coinNumText.text.ToString())

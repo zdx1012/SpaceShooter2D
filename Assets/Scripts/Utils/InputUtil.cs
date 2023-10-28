@@ -8,6 +8,7 @@ using UnityEngine;
 public class Config
 {
     public static bool isAndroid = Application.platform == RuntimePlatform.Android;
+    public static bool ReadHistroyData = false;
 }
 
 public class InputUtil

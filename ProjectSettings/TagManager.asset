@@ -25,6 +25,7 @@ TagManager:
   - PowerUp
   - ListButton
   - VideoPlay
+  - GameSetting
   layers:
   - Default
   - TransparentFX

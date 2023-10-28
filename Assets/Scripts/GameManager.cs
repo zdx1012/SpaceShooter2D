@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
+using System.IO;
 
 [Serializable]
 public class EnemyWave
@@ -54,7 +55,6 @@ public class GameManager : MonoBehaviour
     public Text LevelText;
 
     [Header("读取已存储的玩家生命值，子弹等级等信息")]
-    public bool ReadPlayerHistroyData = false;
 
     private EnemyFactory _enemyFactory;
     private PowerUpFactory _powerUpFactory;
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     private GameObject _gameSucessImage;
     private bool _waveIsOver = false;
     // 是否暂停，0-暂停，1-正常
-    private int _timeScale = 1;
+    // private int _timeScale = 1;
 
     void Awake()
     {
@@ -80,10 +80,9 @@ public class GameManager : MonoBehaviour
 
         Effetcs.Load();
         Game.Current.StartNew();
-        // 删除所有已存储的数据
-        // PlayerPrefs.DeleteAll();
+        
         // 读取历史数据
-        if (ReadPlayerHistroyData) Game.Current.ReadHistroyData();
+        if (Config.ReadHistroyData) Game.Current.ReadHistroyData();
     }
 
     void Start()
@@ -114,7 +113,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        
+
 
         // Select 键 暂停
         // if (Input.GetKeyDown(KeyCode.Pause))
