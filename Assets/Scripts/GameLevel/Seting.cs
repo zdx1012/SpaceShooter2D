@@ -6,6 +6,7 @@ using Assets.Scripts.GamePlay;
 using UnityEngine.EventSystems;
 using System;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class Seting : MonoBehaviour
 {
@@ -71,6 +72,13 @@ public class Seting : MonoBehaviour
                 allValues[i].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1);
                 // 更改文字的颜色为红色
                 allValues[i].GetComponent<Text>().color = Color.red;
+                Debug.Log(" curSelctedGameObject.parent.position = " + EventSystem.current.currentSelectedGameObject.transform.parent.transform.position);
+                Renderer parentRenderer = EventSystem.current.currentSelectedGameObject.transform.parent.GetComponent<Renderer>();
+                if (parentRenderer != null)
+                {
+                    Color newColor = new Color(0f, 0.5f, 1f, 0.5f); // 浅蓝色，透明度为50%
+                    parentRenderer.material.color = newColor;
+                }
             }
             else
             {
@@ -95,22 +103,25 @@ public class Seting : MonoBehaviour
 
         UpdateUI();
         // 下移
-        if (Input.GetKeyDown(KeyCode.C))
+        if (InputUtil.instance.isSettingDownOnceClicked())
         {
             currentSelectIndex = (currentSelectIndex + 1) % allValues.Count;
         }
 
         // 上移
-        if (Input.GetKeyDown(KeyCode.D))
+        if (InputUtil.instance.isSettingUpOnceClicked())
         {
             currentSelectIndex = (currentSelectIndex + allValues.Count - 1) % allValues.Count;
         }
 
+        int key = 0;
+        if (InputUtil.instance.isSettingLeftOnceClicked()) key = 1;
+        if (InputUtil.instance.isSettingRightOnceClicked()) key = 2;
         // 检测按键
-        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.B))
+        if (key > 0)
         {
             bool isAdd = false;
-            if (Input.GetKeyDown(KeyCode.A)) isAdd = true;
+            if (key == 2) isAdd = true;
             currentSelectedObject = EventSystem.current.currentSelectedGameObject;
 
             if (currentSelectedObject == healthyCount)
@@ -134,6 +145,12 @@ public class Seting : MonoBehaviour
                 UpdateEnemyCount(1, isAdd);
             }
         }
+
+        if (InputUtil.instance.isStartOnceClicked())
+        {
+            SceneManager.LoadScene("Start");
+        }
+
 
     }
 

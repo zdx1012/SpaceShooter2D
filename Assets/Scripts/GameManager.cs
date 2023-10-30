@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
             {
                 _gameSucessImage.SetActive(true);
                 SavePlayerData();
-                if (Input.anyKey)
+                if (InputUtil.instance.isStartOnceClicked())
                 {
                     StartCoroutine(GotoGameLevel());
                 }
@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
         if (Game.Current.Player.Health <= 0)
         {
             _gameOverImage.SetActive(true);
-            if (Input.anyKey)
+            if (InputUtil.instance.isStartOnceClicked())
             {
                 StartCoroutine(GotoGameLevel());
             }

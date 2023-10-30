@@ -51,7 +51,7 @@ namespace Assets.Scripts.Factories
             if (!_templates.TryGetValue(type, out var template))
                 return null;
 
-            Debug.Log($"creating obj {type}/{position}...");
+            // Debug.Log($"creating obj {type}/{position}...");
             return GameObject.Instantiate(template, position, Quaternion.identity);
         }
 

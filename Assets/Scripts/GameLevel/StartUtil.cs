@@ -108,12 +108,17 @@ public class StartUtil : MonoBehaviour
             coinNumText.text = currentCoinNum.ToString();
         }
 
+        if (InputUtil.instance.isSettingCenterOnceClicked())
+        {
+            SceneManager.LoadScene("Set");
+        }
+
         if (InputUtil.instance.isStartOnceClicked())
         {
             EventSystem.current.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
         }
 
-        Debug.Log("update");
+        Debug.Log("update anyAxisPressed = " + InputUtil.instance.AnyAxisPressed());
         if (InputUtil.instance.AnyAxisPressed())
         {
             pressKeyTime = Time.time;

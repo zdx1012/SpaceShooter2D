@@ -73,7 +73,8 @@ namespace Assets.Scripts.GamePlay
         public static LocalConfig instance => _instance ?? (_instance = new LocalConfig());
 
         public GameConfig gameConfig;
-        private string saveFilePath = "GameConfig.json";
+        private static string fileName = "GameConfig.json";
+        string saveFilePath = Path.Combine(Application.persistentDataPath, fileName);
 
 
         public LocalConfig()

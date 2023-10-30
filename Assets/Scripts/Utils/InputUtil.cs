@@ -35,6 +35,10 @@ public class InputUtil
     private bool LeftKeyPressed;
     private bool RightKeyPressed;
     private bool SettingCenterKeyPessed;
+    private bool SettingUpKeyPessed;
+    private bool SettingDownKeyPessed;
+    private bool SettingLeftKeyPessed;
+    private bool SettingRightKeyPessed;
 
     private float stepAxis = 0.1f;
     private float xAxis = 0.0f;
@@ -60,6 +64,10 @@ public class InputUtil
         keyStatus[KeyLeft] = false;
         keyStatus[KeyRight] = false;
         keyStatus[keySettingCenter] = false;
+        keyStatus[keySettingUp] = false;
+        keyStatus[keySettingDown] = false;
+        keyStatus[keySettingLeft] = false;
+        keyStatus[keySettingRight] = false;
 
         keyLastStatus[KeyStart] = false;
         keyLastStatus[KeyUp] = false;
@@ -67,6 +75,10 @@ public class InputUtil
         keyLastStatus[KeyLeft] = false;
         keyLastStatus[KeyRight] = false;
         keyLastStatus[keySettingCenter] = false;
+        keyLastStatus[keySettingUp] = false;
+        keyLastStatus[keySettingDown] = false;
+        keyLastStatus[keySettingLeft] = false;
+        keyLastStatus[keySettingRight] = false;
 
         ClearKey();
     }
@@ -139,14 +151,19 @@ public class InputUtil
 
     public void Run()
     {
+        Debug.Log("run key update");
         StartKeyPressed = KEY_Start_Pressed();
         UpKeyPressed = KEY_Up_Pressed();
         DownKeyPressed = KEY_Down_Pressed();
         LeftKeyPressed = KEY_Left_Pressed();
         RightKeyPressed = KEY_Right_Pressed();
         SettingCenterKeyPessed = KEY_SettingCenter_pressed();
+        SettingUpKeyPessed = KEY_SettingUp_pressed();
+        SettingDownKeyPessed = KEY_SettingDown_pressed();
+        SettingLeftKeyPessed = KEY_SettingLeft_pressed();
+        SettingRightKeyPessed = KEY_SettingRight_pressed();
 
-        Debug.Log("---------------------LeftKeyPressed = " + LeftKeyPressed);
+
         // 设置X轴的偏移
         if (LeftKeyPressed || RightKeyPressed)
         {
@@ -201,6 +218,11 @@ public class InputUtil
         keyLastStatus[KeyLeft] = keyStatus[KeyLeft];
         keyLastStatus[KeyRight] = keyStatus[KeyRight];
         keyLastStatus[keySettingCenter] = keyStatus[keySettingCenter];
+        keyLastStatus[keySettingUp] = keyStatus[keySettingUp];
+        keyLastStatus[keySettingDown] = keyStatus[keySettingDown];
+        keyLastStatus[keySettingLeft] = keyStatus[keySettingLeft];
+        keyLastStatus[keySettingRight] = keyStatus[keySettingRight];
+
 
         // 记录当前帧的状态
         keyStatus[KeyStart] = StartKeyPressed;
@@ -209,15 +231,21 @@ public class InputUtil
         keyStatus[KeyLeft] = LeftKeyPressed;
         keyStatus[KeyRight] = RightKeyPressed;
         keyStatus[keySettingCenter] = SettingCenterKeyPessed;
+        keyStatus[keySettingUp] = SettingUpKeyPessed;
+        keyStatus[keySettingDown] = SettingDownKeyPessed;
+        keyStatus[keySettingLeft] = SettingLeftKeyPessed;
+        keyStatus[keySettingRight] = SettingRightKeyPessed;
 
 
 
         // 按下 设置 中心键，清空币数
+        // TODO: DELETE THIS CODE
         if (SettingCenterKeyPessed)
         {
             Uart.GetInstance().SendClearAccount();
         }
-        Debug.Log($"111 {Config.isAndroid} StartKeyPressed = {StartKeyPressed}, UpKeyPressed = {UpKeyPressed}, DownKeyPressed = {DownKeyPressed}, LeftKeyPressed = {LeftKeyPressed}, RightKeyPressed = {RightKeyPressed}");
+        // Debug.Log($"111 {Config.isAndroid} StartKeyPressed = {StartKeyPressed}, UpKeyPressed = {UpKeyPressed}, DownKeyPressed = {DownKeyPressed}, LeftKeyPressed = {LeftKeyPressed}, RightKeyPressed = {RightKeyPressed}");
+        // Debug.Log($"222 {Config.isAndroid} SettingCenterKeyPessed = {SettingCenterKeyPessed} SettingUpKeyPessed = {SettingUpKeyPessed} SettingDownKeyPessed = {SettingDownKeyPessed} SettingLeftKeyPessed = {SettingLeftKeyPessed} SettingRightKeyPessed = {SettingRightKeyPessed}");
     }
 
     private int IO_Statue(int no)
@@ -274,8 +302,37 @@ public class InputUtil
         if (Config.isAndroid)
             return 0 == IO_Statue(keySettingCenter);
         else
+            return Input.GetKey(KeyCode.Q);
+    }
+    private bool KEY_SettingUp_pressed()
+    {
+        if (Config.isAndroid)
+            return 0 == IO_Statue(keySettingUp);
+        else
+            return Input.GetKey(KeyCode.W);
+    }
+    private bool KEY_SettingDown_pressed()
+    {
+        if (Config.isAndroid)
+            return 0 == IO_Statue(keySettingDown);
+        else
             return Input.GetKey(KeyCode.S);
     }
+    private bool KEY_SettingLeft_pressed()
+    {
+        if (Config.isAndroid)
+            return 0 == IO_Statue(keySettingLeft);
+        else
+            return Input.GetKey(KeyCode.A);
+    }
+    private bool KEY_SettingRight_pressed()
+    {
+        if (Config.isAndroid)
+            return 0 == IO_Statue(keySettingRight);
+        else
+            return Input.GetKey(KeyCode.D);
+    }
+
 
     public void SetCoinNum(int n)
     {
@@ -316,6 +373,64 @@ public class InputUtil
         }
 
     }
+
+    public bool isSettingCenterOnceClicked()
+    {
+        if (Config.isAndroid)
+        {
+            return (keyStatus[keySettingCenter] && !keyLastStatus[keySettingCenter]);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.Q);
+        }
+    }
+
+    public bool isSettingUpOnceClicked()
+    {
+        if (Config.isAndroid)
+        {
+            return (keyStatus[keySettingUp] && !keyLastStatus[keySettingUp]);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.W);
+        }
+    }
+    public bool isSettingDownOnceClicked()
+    {
+        if (Config.isAndroid)
+        {
+            return (keyStatus[keySettingDown] && !keyLastStatus[keySettingDown]);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.S);
+        }
+    }
+    public bool isSettingLeftOnceClicked()
+    {
+        if (Config.isAndroid)
+        {
+            return (keyStatus[keySettingLeft] && !keyLastStatus[keySettingLeft]);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.A);
+        }
+    }
+    public bool isSettingRightOnceClicked()
+    {
+        if (Config.isAndroid)
+        {
+            return (keyStatus[keySettingRight] && !keyLastStatus[keySettingRight]);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.D);
+        }
+    }
+
     // public bool isUpPressed()
     // {
     //     if (Config.isAndroid)
