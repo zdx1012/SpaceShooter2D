@@ -118,11 +118,9 @@ public class StartUtil : MonoBehaviour
             EventSystem.current.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
         }
 
-        Debug.Log("update anyAxisPressed = " + InputUtil.instance.AnyAxisPressed());
         if (InputUtil.instance.AnyAxisPressed())
         {
             pressKeyTime = Time.time;
-            Debug.Log("showVideoPlayer");
             showVideoPlayer(false);
             setBtnStatus();
         }
@@ -147,7 +145,6 @@ public class StartUtil : MonoBehaviour
                 canClickGameObject[i].transform.localScale = btnOriginalScale;
             }
         }
-        Debug.Log("currentActivateIndex = " + currentActivateIndex);
         EventSystem.current.SetSelectedGameObject(canClickGameObject[currentActivateIndex]);
 
         // 如果没有任何可交互组件选中，设置默认选中音量
@@ -165,7 +162,6 @@ public class StartUtil : MonoBehaviour
         if (index + 1 <= gamePartNum)
         {
             Debug.Log("Button clicked: " + clickedObject.name + " index = " + index + " gamePartNum = " + gamePartNum);
-            // 在这里可以执行特定的操作，例如打开一个窗口、加载一个场景、改变游戏状态等。
             SceneManager.LoadScene(index + 1);
         }
     }

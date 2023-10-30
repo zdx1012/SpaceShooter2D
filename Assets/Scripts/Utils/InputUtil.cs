@@ -115,13 +115,13 @@ public class InputUtil
         KEY_Down |= ((KEY_Old ^ key) & KEY_Old);
         KEY_Old = key;
         // Debug.Log("key = " + key + " KEY_Down = " + KEY_Down);
-        for (int i = 0; i < 40; i++)
-        {
-            if (IO_Statue(i) == 0)
-            {
-                Debug.Log(i + " pressed");
-            }
-        }
+        // for (int i = 0; i < 39; i++)
+        // {
+        //     if (IO_Statue(i) == 0)
+        //     {
+        //         Debug.Log(i + " pressed");
+        //     }
+        // }
     }
 
     // public string GetStr()
@@ -240,7 +240,7 @@ public class InputUtil
 
         // 按下 设置 中心键，清空币数
         // TODO: DELETE THIS CODE
-        if (SettingCenterKeyPessed)
+        if (SettingCenterKeyPessed && Config.isAndroid)
         {
             Uart.GetInstance().SendClearAccount();
         }

@@ -196,7 +196,7 @@ public class Uart
                             coin2 = (int)(data[4] << 7);
                             coin2 |= (int)(data[5] << 0);
 
-                            Debug.Log("coin1 = " + coin1 + " coin2= " + coin2);
+                            // Debug.Log("coin1 = " + coin1 + " coin2= " + coin2);
 
                             InputUtil.instance.SetCoinNum(coin1);
                             // FjData.GetInstance().HwCoin[0] = coin1;

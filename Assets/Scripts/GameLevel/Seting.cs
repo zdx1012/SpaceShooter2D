@@ -72,7 +72,7 @@ public class Seting : MonoBehaviour
                 allValues[i].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1);
                 // 更改文字的颜色为红色
                 allValues[i].GetComponent<Text>().color = Color.red;
-                Debug.Log(" curSelctedGameObject.parent.position = " + EventSystem.current.currentSelectedGameObject.transform.parent.transform.position);
+                // Debug.Log(" curSelctedGameObject.parent.position = " + EventSystem.current.currentSelectedGameObject.transform.parent.transform.position);
                 Renderer parentRenderer = EventSystem.current.currentSelectedGameObject.transform.parent.GetComponent<Renderer>();
                 if (parentRenderer != null)
                 {
