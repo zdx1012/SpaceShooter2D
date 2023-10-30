@@ -74,13 +74,18 @@ public class GameManager : MonoBehaviour
 
         _powerUpFactory = PowerUpFactory.Instance;
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
-
+        // 读取本地配置文件，设置游戏难度
+        Debug.Assert(LocalConfig.instance.gameConfig.data.Length > Game.Current.currentGameLevel, "游戏关卡配置有误(当前关卡未配置)");
+        Difficulty = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].difficultyLevel;
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
+        // 设置生命值
+        Game.Current.Player.Health = LocalConfig.instance.gameConfig.initHealth;
+
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
         Game.Current.StartNew();
-        
+
         // 读取历史数据
         if (Config.ReadHistroyData) Game.Current.ReadHistroyData();
     }
@@ -139,10 +144,10 @@ public class GameManager : MonoBehaviour
             if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
             {
                 _gameSucessImage.SetActive(true);
-                SavePlayerData();
+                // SavePlayerData();
                 if (InputUtil.instance.isStartOnceClicked())
                 {
-                    StartCoroutine(GotoGameLevel());
+                    StartCoroutine(gotoNextGameLevel());
                 }
                 return;
             }
@@ -151,7 +156,7 @@ public class GameManager : MonoBehaviour
         if (Game.Current.Player.Health <= 0)
         {
             _gameOverImage.SetActive(true);
-            if (InputUtil.instance.isStartOnceClicked())
+            if (InputUtil.instance.isStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
             {
                 StartCoroutine(GotoGameLevel());
             }
@@ -211,6 +216,18 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         SceneManager.LoadScene(0);
+        yield break;
+    }
+
+    IEnumerator gotoNextGameLevel()
+    {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene(0);
+        if (Game.Current.currentGameLevel < Game.Current.totalGameLevel)
+        {
+            Game.Current.currentGameLevel += 1;
+            SceneManager.LoadScene(Game.Current.currentGameLevel);
+        }
         yield break;
     }
 }

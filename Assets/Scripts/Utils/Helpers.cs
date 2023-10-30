@@ -92,6 +92,10 @@ namespace Assets.Scripts.GamePlay
                 SaveGameConfig();
             }
         }
+        public void ReLoadConfig()
+        {
+            LoadGameConfig();
+        }
         public void SaveGameConfig()
         {
             if (gameConfig == null)

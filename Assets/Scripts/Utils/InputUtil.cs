@@ -151,7 +151,6 @@ public class InputUtil
 
     public void Run()
     {
-        Debug.Log("run key update");
         StartKeyPressed = KEY_Start_Pressed();
         UpKeyPressed = KEY_Up_Pressed();
         DownKeyPressed = KEY_Down_Pressed();

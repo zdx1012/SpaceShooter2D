@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Networking;
 using System.IO;
 using System;
+using Assets.Scripts.GamePlay;
 
 public class StartUtil : MonoBehaviour
 {
@@ -78,7 +79,7 @@ public class StartUtil : MonoBehaviour
         Debug.Assert(volumeButton.gameObject != null, "can't find volumeButton.gameObject");
         canClickGameObject.Add(volumeButton.gameObject);
 
-        gamePartNum = SceneManager.sceneCountInBuildSettings - 1;
+        gamePartNum = SceneManager.sceneCountInBuildSettings - 2;
 
         for (int i = 0; i < btnList.Length; i++)
         {
@@ -90,6 +91,9 @@ public class StartUtil : MonoBehaviour
 
         coinNumText = GameObject.Find("CoinNum").GetComponent<Text>();
 
+        // 读取配置显示图标《静音状态》
+        if(!LocalConfig.instance.gameConfig.playVideoSound) setVolumeStatus();
+        
     }
 
     public void LogErrorFromAndroid(string errorMessage)
@@ -162,7 +166,9 @@ public class StartUtil : MonoBehaviour
         if (index + 1 <= gamePartNum)
         {
             Debug.Log("Button clicked: " + clickedObject.name + " index = " + index + " gamePartNum = " + gamePartNum);
-            SceneManager.LoadScene(index + 1);
+            Game.Current.currentGameLevel = index;
+            Game.Current.totalGameLevel = gamePartNum;
+            SceneManager.LoadScene(index);
         }
     }
 
@@ -173,6 +179,7 @@ public class StartUtil : MonoBehaviour
         {
             gameLevel.SetActive(false);
             videoPlayer.gameObject.SetActive(true);
+            
             if (!vp.isPlaying) vp.Play();
         }
         else

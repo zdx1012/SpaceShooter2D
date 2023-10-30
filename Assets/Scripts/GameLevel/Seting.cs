@@ -159,12 +159,13 @@ public class Seting : MonoBehaviour
         if (InputUtil.instance.isStartOnceClicked())
         {
             SceneManager.LoadScene("Start");
+            LocalConfig.instance.ReLoadConfig();
         }
 
         if (InputUtil.instance.isSettingCenterOnceClicked())
         {
             LocalConfig.instance.SaveGameConfig();
-            SceneManager.LoadScene("Set");
+            SceneManager.LoadScene("Start");
         }
 
 
