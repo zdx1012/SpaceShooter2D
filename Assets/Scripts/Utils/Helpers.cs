@@ -94,18 +94,19 @@ namespace Assets.Scripts.GamePlay
         }
         public void SaveGameConfig()
         {
-
-            GameLevelConfig[] tmp = new GameLevelConfig[]
+            if (gameConfig == null)
             {
+                GameLevelConfig[] tmp = new GameLevelConfig[]
+                {
                 new GameLevelConfig(1, DifficultyLevel.Easy),
                 new GameLevelConfig(2, DifficultyLevel.Normal)
-            };
-            gameConfig = new GameConfig(10, true, tmp);
-            Debug.Log(tmp.Length);
+                };
+                gameConfig = new GameConfig(10, true, tmp);
+            }
 
             // 序列化游戏配置为 JSON 字符串
             string json = JsonConvert.SerializeObject(gameConfig);
-            Debug.Log("json=" + json);
+            // Debug.Log("json=" + json);
 
             // 写入 JSON 字符串到文件
             File.WriteAllText(saveFilePath, json);

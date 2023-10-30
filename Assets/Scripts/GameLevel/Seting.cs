@@ -59,7 +59,14 @@ public class Seting : MonoBehaviour
     // 更新UI
     void UpdateUI()
     {
-
+        if (LocalConfig.instance.gameConfig.playVideoSound)
+        {
+            sound.GetComponent<Text>().text = "是";
+        }
+        else
+        {
+            sound.GetComponent<Text>().text = "否";
+        }
         healthyCount.GetComponent<Text>().text = LocalConfig.instance.gameConfig.initHealth.ToString();
 
         // 设置当前选中 和 选中缩放
@@ -123,8 +130,11 @@ public class Seting : MonoBehaviour
             bool isAdd = false;
             if (key == 2) isAdd = true;
             currentSelectedObject = EventSystem.current.currentSelectedGameObject;
-
-            if (currentSelectedObject == healthyCount)
+            if (currentSelectedObject == sound)
+            {
+                UpdateAudio();
+            }
+            else if (currentSelectedObject == healthyCount)
             {
                 UpdatePlayerHealthy(isAdd);
             }
@@ -151,10 +161,20 @@ public class Seting : MonoBehaviour
             SceneManager.LoadScene("Start");
         }
 
+        if (InputUtil.instance.isSettingCenterOnceClicked())
+        {
+            LocalConfig.instance.SaveGameConfig();
+            SceneManager.LoadScene("Set");
+        }
+
 
     }
 
+    private void UpdateAudio()
+    {
 
+        LocalConfig.instance.gameConfig.UpdateDemoSound();
+    }
 
     // 更新玩家生命值
     private void UpdatePlayerHealthy(bool isAdd)

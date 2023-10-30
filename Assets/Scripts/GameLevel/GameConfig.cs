@@ -11,7 +11,7 @@ public class GameConfig
 
     public int initHealth = 99;
 
-    public bool playAudio = true;
+    public bool playVideoSound = true;
 
     public GameLevelConfig[] data;
 
@@ -23,7 +23,7 @@ public class GameConfig
     public GameConfig(int _health, bool audio, GameLevelConfig[] tmp)
     {
         initHealth = _health;
-        playAudio = audio;
+        playVideoSound = audio;
         data = tmp;
     }
 
@@ -38,6 +38,10 @@ public class GameConfig
         if (initHealth < 1) initHealth = 1;
     }
 
+    public void UpdateDemoSound()
+    {
+        playVideoSound = !playVideoSound;
+    }
 }
 
 
