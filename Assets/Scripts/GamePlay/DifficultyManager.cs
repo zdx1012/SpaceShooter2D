@@ -30,7 +30,6 @@ namespace Assets.Scripts.GamePlay
             Difficulty = difficulty;
         }
 
-        //public bool CanCreateEnemy() => Time.time - _lastCreationTime >= GetCreationTimeRate(mode);
         public bool CanCreateEnemy(EnemyMode mode){
             return Time.time - _lastCreationTime >= GetCreationTimeRate(mode);
         } 

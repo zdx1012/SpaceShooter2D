@@ -8,6 +8,8 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections;
 using System.IO;
+using System.Collections.Generic;
+using Random = UnityEngine.Random;
 
 [Serializable]
 public class EnemyWave
@@ -75,12 +77,27 @@ public class GameManager : MonoBehaviour
         _powerUpFactory = PowerUpFactory.Instance;
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
         // 读取本地配置文件，设置游戏难度
-        Debug.Assert(LocalConfig.instance.gameConfig.data.Length > Game.Current.currentGameLevel, "游戏关卡配置有误(当前关卡未配置)");
+        Debug.Assert(LocalConfig.instance.gameConfig.data.Length >= Game.Current.currentGameLevel, "游戏关卡配置有误(当前关卡未配置)");
         Difficulty = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].difficultyLevel;
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
         // 设置生命值
         Game.Current.Player.Health = LocalConfig.instance.gameConfig.initHealth;
 
+        // 设置敌人波数
+        List<EnemyWave> newEnemyWaves = new List<EnemyWave>();
+        if (EnemyWaves.Length > 0)
+        {
+            int maxEnemyCount = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].EnemyCount;
+            newEnemyWaves.Clear(); // 清空列表
+
+            for (int i = 0; i < maxEnemyCount; i++)
+            {
+                int randomIndex = Random.Range(0, EnemyWaves.Length);
+                newEnemyWaves.Add(EnemyWaves[randomIndex]);
+            }
+        }
+
+        EnemyWaves = newEnemyWaves.ToArray();
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
@@ -164,8 +181,8 @@ public class GameManager : MonoBehaviour
 
         _waveManager.ExecuteCurrentWave();
 
-        // 生成 升级技能点《可拾取》
-        if (_waveManager.CurrentWave.Ended)
+        // 每一波结束并且非最后一波敌人生成完成后， 随机升级技能点《可拾取》
+        if (_waveManager.CurrentWave.Ended && !_waveIsOver)
         {
             // handle wave powerUp if present
             if (_waveManager.CurrentWave.Definition.HasPowerUp)
@@ -223,7 +240,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         SceneManager.LoadScene(0);
-        if (Game.Current.currentGameLevel < Game.Current.totalGameLevel)
+        if (Game.Current.currentGameLevel + 1 < Game.Current.totalGameLevel)
         {
             Game.Current.currentGameLevel += 1;
             SceneManager.LoadScene(Game.Current.currentGameLevel);

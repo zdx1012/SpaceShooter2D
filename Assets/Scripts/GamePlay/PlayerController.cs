@@ -66,6 +66,13 @@ public class PlayerController : GamePlayObject
     {
         base.Update();
 
+        if (Health < 0)
+        {
+            Debug.Log("Destroy Player all Saved Data");
+            PlayerPrefs.DeleteAll();
+        }
+
+
         // inputs
         //_movement.x = Input.GetAxisRaw("Horizontal");
         //_movement.y = Input.GetAxisRaw("Vertical");

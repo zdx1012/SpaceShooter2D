@@ -34,7 +34,7 @@ namespace Assets.Scripts.GamePlay
             if (Ended) return;
             if (_currentWave.IsFullyCreated) return;
             if (_currentWave.Delaying) return;
-
+            Debug.Log($"当前敌人进度： {_currentWave.Index} / {_waves.Length}  {_difficultyManager.Difficulty}");
             // 循环生成每一波的敌人
             foreach (var obj in _currentWave.Definition.Sets)
             {
@@ -60,8 +60,6 @@ namespace Assets.Scripts.GamePlay
             Ended = nextWaveIndex >= _waves.Length;
             // 生成6波 升级技能后，将下标置0，才能重新生成 Enemy
             if (Ended){
-                // _currentWave = new CurrentWave(0, _waves[0]);
-                // Debug.Log($" _currentWave.IsFullyCreated = {_currentWave.IsFullyCreated} , _currentWave.Delaying = {_currentWave.Delaying}");
                 Ended = false;
                 return false;
             }
