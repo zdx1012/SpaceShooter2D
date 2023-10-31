@@ -17,19 +17,14 @@ public class Seting : MonoBehaviour
     [Header("玩家生命数")]
     public GameObject healthyCount;
 
-    [Header("第一关敌人数量")]
-    public GameObject game1EnemyCount;
+    [Header("关卡的预制体")]
+    public GameObject prefab; // 预制体
 
-    [Header("第一关难度")]
-    public GameObject game1Difficulty;
+    [Header("ScrollView的Content对象")]
+    public Transform content; // ScrollView的Content对象
 
-    [Header("第二关敌人数量")]
-    public GameObject game2EnemyCount;
-
-    [Header("第二关难度")]
-    public GameObject game2Difficulty;
-
-
+    private List<GameObject> allDifficultyValuesObject;
+    private List<GameObject> allEnemyCountValuesObject;
 
     private List<GameObject> allValues;
 
@@ -41,18 +36,36 @@ public class Seting : MonoBehaviour
     {
         // 初始化可交互的对象
         allValues = new List<GameObject>();
-
-        allValues.Add(sound);
-        allValues.Add(healthyCount);
-        allValues.Add(game1Difficulty);
-        allValues.Add(game1EnemyCount);
-        allValues.Add(game2Difficulty);
-        allValues.Add(game2EnemyCount);
+        // 初始化存储各关卡设置的对象
+        allDifficultyValuesObject = new List<GameObject>();
+        allEnemyCountValuesObject = new List<GameObject>();
 
     }
+
     void Start()
     {
+        // 创建预制体实例
+        for (int i = 0; i < LocalConfig.instance.gameConfig.data.Length; i++)
+        {
+            GameObject newItem = Instantiate(prefab, content);
+            Text tip = newItem.transform.Find("tip").GetComponent<Text>();
+            tip.text = "关卡" + (i + 1).ToString();
 
+            // EnemyValue
+            GameObject enemyCountObject = newItem.transform.Find("EnemyCount/EnemyValue").gameObject;
+            allEnemyCountValuesObject.Add(enemyCountObject);
+            // diffcultyValue
+            GameObject diffcultyObject = newItem.transform.Find("Diffculty/DiffcultyValue").gameObject;
+            allDifficultyValuesObject.Add(diffcultyObject);
+        }
+        // 添加到所有可交互的对象
+        allValues.Add(sound);
+        allValues.Add(healthyCount);
+        for (int i = 0; i < allEnemyCountValuesObject.Count; i++)
+        {
+            allValues.Add(allEnemyCountValuesObject[i]);
+            allValues.Add(allDifficultyValuesObject[i]);
+        }
     }
 
 
@@ -79,13 +92,6 @@ public class Seting : MonoBehaviour
                 allValues[i].GetComponent<RectTransform>().localScale = new Vector3(1.4f, 1.4f, 1);
                 // 更改文字的颜色为红色
                 allValues[i].GetComponent<Text>().color = Color.red;
-                // Debug.Log(" curSelctedGameObject.parent.position = " + EventSystem.current.currentSelectedGameObject.transform.parent.transform.position);
-                Renderer parentRenderer = EventSystem.current.currentSelectedGameObject.transform.parent.GetComponent<Renderer>();
-                if (parentRenderer != null)
-                {
-                    Color newColor = new Color(0f, 0.5f, 1f, 0.5f); // 浅蓝色，透明度为50%
-                    parentRenderer.material.color = newColor;
-                }
             }
             else
             {
@@ -95,13 +101,13 @@ public class Seting : MonoBehaviour
             }
         }
 
+
         // 设置值
-        game1Difficulty.GetComponent<Text>().text = GetDifficultyDesc(LocalConfig.instance.gameConfig.data[0].difficultyIndex);
-        game1EnemyCount.GetComponent<Text>().text = LocalConfig.instance.gameConfig.data[0].EnemyCount.ToString();
-
-        game2Difficulty.GetComponent<Text>().text = GetDifficultyDesc(LocalConfig.instance.gameConfig.data[1].difficultyIndex);
-        game2EnemyCount.GetComponent<Text>().text = LocalConfig.instance.gameConfig.data[1].EnemyCount.ToString();
-
+        for (int i = 0; i < allDifficultyValuesObject.Count; i++)
+        {
+            allDifficultyValuesObject[i].GetComponent<Text>().text = GetDifficultyDesc(LocalConfig.instance.gameConfig.data[i].difficultyIndex);
+            allEnemyCountValuesObject[i].GetComponent<Text>().text = LocalConfig.instance.gameConfig.data[i].EnemyCount.ToString();
+        }
     }
 
     // Update is called once per frame
@@ -138,21 +144,22 @@ public class Seting : MonoBehaviour
             {
                 UpdatePlayerHealthy(isAdd);
             }
-            else if (currentSelectedObject == game1Difficulty)
+            else
             {
-                UpdateDifficulty(0, isAdd);
-            }
-            else if (currentSelectedObject == game1EnemyCount)
-            {
-                UpdateEnemyCount(0, isAdd);
-            }
-            else if (currentSelectedObject == game2Difficulty)
-            {
-                UpdateDifficulty(1, isAdd);
-            }
-            else if (currentSelectedObject == game2EnemyCount)
-            {
-                UpdateEnemyCount(1, isAdd);
+                for (int i = 0; i < allDifficultyValuesObject.Count; i++)
+                {
+                    if (currentSelectedObject == allDifficultyValuesObject[i])
+                    {
+                        UpdateDifficulty(i, isAdd);
+                    }
+                }
+                for (int i = 0; i < allEnemyCountValuesObject.Count; i++)
+                {
+                    if (currentSelectedObject == allEnemyCountValuesObject[i])
+                    {
+                        UpdateEnemyCount(i, isAdd);
+                    }
+                }
             }
         }
 

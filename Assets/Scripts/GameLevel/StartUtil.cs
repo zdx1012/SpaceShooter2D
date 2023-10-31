@@ -68,8 +68,6 @@ public class StartUtil : MonoBehaviour
         Debug.Assert(volumeButton != null, "can't find volumeButton");
         volumeButton.onClick.AddListener(setVolumeStatus);
 
-        btnList = GameObject.FindGameObjectsWithTag("ListButton").Select(go => go.GetComponent<Button>()).ToArray();
-
 
         btnList = GameObject.FindGameObjectsWithTag("ListButton")
        .Select(go => go.GetComponent<Button>())
@@ -79,7 +77,7 @@ public class StartUtil : MonoBehaviour
         Debug.Assert(volumeButton.gameObject != null, "can't find volumeButton.gameObject");
         canClickGameObject.Add(volumeButton.gameObject);
 
-        gamePartNum = SceneManager.sceneCountInBuildSettings - 2;
+        gamePartNum = LocalConfig.instance.gameConfig.data.Length;
 
         for (int i = 0; i < btnList.Length; i++)
         {
@@ -151,14 +149,6 @@ public class StartUtil : MonoBehaviour
         }
         EventSystem.current.SetSelectedGameObject(canClickGameObject[currentActivateIndex]);
 
-        // 如果没有任何可交互组件选中，设置默认选中音量
-        // if (EventSystem.current.currentSelectedGameObject == null) EventSystem.current.SetSelectedGameObject(volumeButton.gameObject);
-        // EventSystem.current.currentSelectedGameObject.gameObject.transform.localScale = btnOriginalScale * scaleMultiplier;
-        // for (int i = 0; i < gamePartNum; i++)
-        // {
-        //     btnList[i].transform.localScale = (EventSystem.current.currentSelectedGameObject == btnList[i].gameObject ? btnOriginalScale * scaleMultiplier : btnOriginalScale);
-        // }
-        // volumeButton.gameObject.transform.localScale = EventSystem.current.currentSelectedGameObject == volumeButton.gameObject ? btnOriginalScale * scaleMultiplier : btnOriginalScale;
     }
     void OnClick(Button clickedObject, int index)
     {
