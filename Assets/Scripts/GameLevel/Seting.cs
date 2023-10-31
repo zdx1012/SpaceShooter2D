@@ -82,6 +82,18 @@ public class Seting : MonoBehaviour
         }
         healthyCount.GetComponent<Text>().text = LocalConfig.instance.gameConfig.initHealth.ToString();
 
+        // 设置scrollview的位置
+        Vector3 newPosition = new Vector3(content.transform.position.x, content.transform.position.y, content.transform.position.z); ; // 分配新位置给Transform.position
+        if (EventSystem.current.currentSelectedGameObject.transform.position.x > 800)
+        {
+            newPosition.x = content.transform.position.x - 10;
+        }
+        else if (EventSystem.current.currentSelectedGameObject.transform.position.x < 300)
+        {
+            newPosition.x = content.transform.position.x + 10;
+        }
+        content.transform.position = newPosition;
+
         // 设置当前选中 和 选中缩放
         EventSystem.current.SetSelectedGameObject(allValues[currentSelectIndex]);
         for (int i = 0; i < allValues.Count; i++)
