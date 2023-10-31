@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
     [Header("提供生成 升级技能 的类型 《给Factory使用》")]
     public GameObject[] PowerUpsTemplates;
 
-    [Header("提供生成每一波敌人的相关设置")]
+    [Header("提供生成每一波敌人的相关设置<具体数量，以设置中配置的数量为准，从这里随机抽取进行组成>")]
     public EnemyWave[] EnemyWaves;
     [Header("UI提示文本")]
     public Text ScoreText;
@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         // 设置生命值
         Game.Current.Player.Health = LocalConfig.instance.gameConfig.initHealth;
 
-        // 设置敌人波数
+        // 设置敌人波数<读取配置文件敌人数据>
         List<EnemyWave> newEnemyWaves = new List<EnemyWave>();
         if (EnemyWaves.Length > 0)
         {
@@ -96,15 +96,14 @@ public class GameManager : MonoBehaviour
                 newEnemyWaves.Add(EnemyWaves[randomIndex]);
             }
         }
-
         EnemyWaves = newEnemyWaves.ToArray();
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
         Game.Current.StartNew();
 
-        // 读取历史数据
-        if (Config.ReadHistroyData) Game.Current.ReadHistroyData();
+        // 读取上次通关保存的玩家数据
+        if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
     }
 
     void Start()
@@ -116,22 +115,6 @@ public class GameManager : MonoBehaviour
         _gameOverImage.SetActive(false);
     }
 
-    // 保存所有数据
-    void SavePlayerData()
-    {
-        PlayerPrefs.SetInt(SavePlayerDataType.Score.ToString(), Game.Current.Score);
-        PlayerPrefs.SetInt(SavePlayerDataType.Healthy.ToString(), Game.Current.Player.Health);
-        PlayerPrefs.SetInt(SavePlayerDataType.ShootingPower.ToString(), Game.Current.Player.ShootingPower);
-        PlayerPrefs.SetFloat(SavePlayerDataType.ShieldPower.ToString(), Game.Current.Player.ShieldPower);
-        Debug.Log($"zzz Player save historyScore = {Game.Current.Score}, historyHealthy = {Game.Current.Player.Health}, historyShootingPower = {Game.Current.Player.ShootingPower}, historyShieldPower = {Game.Current.Player.ShieldPower}");
-
-        int historyScore = PlayerPrefs.GetInt(SavePlayerDataType.Score.ToString(), 0);
-        int historyHealthy = PlayerPrefs.GetInt(SavePlayerDataType.Healthy.ToString(), 0);
-        int historyShootingPower = PlayerPrefs.GetInt(SavePlayerDataType.ShootingPower.ToString(), 0);
-        float historyShieldPower = PlayerPrefs.GetFloat(SavePlayerDataType.ShieldPower.ToString(), 0f);
-        Debug.Log($"Read historyScore = {historyScore}, historyHealthy = {historyHealthy}, historyShootingPower = {historyShootingPower}, historyShieldPower = {historyShieldPower}");
-
-    }
 
     void Update()
     {
@@ -161,10 +144,9 @@ public class GameManager : MonoBehaviour
             if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
             {
                 _gameSucessImage.SetActive(true);
-                // SavePlayerData();
                 if (InputUtil.instance.isStartOnceClicked())
                 {
-                    StartCoroutine(gotoNextGameLevel());
+                    StartCoroutine(GotoNextGameLevel());
                 }
                 return;
             }
@@ -232,18 +214,25 @@ public class GameManager : MonoBehaviour
     IEnumerator GotoGameLevel()
     {
         yield return new WaitForSeconds(3f);
+        // 清空通关数据
+        PlayerInfo.instance.Reset();
         SceneManager.LoadScene(0);
         yield break;
     }
 
-    IEnumerator gotoNextGameLevel()
+    IEnumerator GotoNextGameLevel()
     {
         yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene(0);
         if (Game.Current.currentGameLevel + 1 < Game.Current.totalGameLevel)
         {
             Game.Current.currentGameLevel += 1;
+            // 保存通关数据
+            PlayerInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
             SceneManager.LoadScene(Game.Current.currentGameLevel);
+        }
+        else if (Game.Current.currentGameLevel + 1 == Game.Current.totalGameLevel)
+        {
+            SceneManager.LoadScene("Start");
         }
         yield break;
     }

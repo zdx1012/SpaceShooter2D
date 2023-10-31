@@ -140,4 +140,47 @@ namespace Assets.Scripts.GamePlay
             gameConfig.data[index].difficultyLevel = difficulty;
         }
     }
+
+    public class PlayerInfo
+    {
+
+        private static PlayerInfo _instance = null;
+        public static PlayerInfo instance => _instance ?? (_instance = new PlayerInfo());
+
+        private int Health = 1;
+        private int Score = 0;
+        private int ShootingPower = 1;
+
+        public bool hasUpdate = false;
+
+        public void SaveData(int healthy, int score, int shootingPower)
+        {
+            Health = healthy;
+            Score = score;
+            ShootingPower = shootingPower;
+            hasUpdate = true;
+        }
+
+        public int GetHealthy()
+        {
+            hasUpdate = false;
+            return Health;
+        }
+        public int GetScore()
+        {
+            return Score;
+        }
+        public int GetShootingPower()
+        {
+            return ShootingPower;
+        }
+
+        public void Reset()
+        {
+            Health = 1;
+            Score = 0;
+            ShootingPower = 1;
+            hasUpdate = false;
+        }
+    }
 }

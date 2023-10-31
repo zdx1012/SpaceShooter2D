@@ -48,10 +48,4 @@
         Shield,
         Health
     }
-    public enum SavePlayerDataType {
-        Healthy,
-        ShieldPower,
-        ShootingPower,
-        Score
-    }
 }
