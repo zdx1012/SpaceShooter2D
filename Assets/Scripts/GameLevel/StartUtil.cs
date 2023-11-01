@@ -110,7 +110,7 @@ public class StartUtil : MonoBehaviour
             coinNumText.text = currentCoinNum.ToString();
         }
 
-        if (InputUtil.instance.IsSettingKeyHold(10))
+        if (InputUtil.instance.IsSettingKeyHold())
         {
             SceneManager.LoadScene("Set");
         }

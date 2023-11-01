@@ -15,6 +15,7 @@ namespace Assets.Scripts.GamePlay
 
         private CurrentWave _currentWave;
         internal CurrentWave CurrentWave => _currentWave;
+        internal int WaveLength;
         public bool Ended { get; private set; } = false;
 
         public WaveManager(EnemyWave[] waves, DifficultyManager difficultyManager, GameObject defaultSpawnPoint)
@@ -26,6 +27,8 @@ namespace Assets.Scripts.GamePlay
             _defaultSpawnPoint = defaultSpawnPoint;
 
             _currentWave = new CurrentWave(0, _waves.First());
+
+            WaveLength = _waves.Length;
         }
 
         // public

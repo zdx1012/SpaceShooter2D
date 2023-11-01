@@ -563,9 +563,9 @@ public class InputUtil
 
     public int GetCoinNum() { return CoinNum; }
 
-    public bool IsSettingKeyHold(int second)
+    public bool IsSettingKeyHold()
     {
-        if (keyPressedFrame[AllKey.keySettingCenter] >= second * 60)
+        if (keyPressedFrame[AllKey.keySettingCenter] >= 5 * 60)
         {
             keyPressedFrame[AllKey.keySettingCenter] = 0;
             return true;

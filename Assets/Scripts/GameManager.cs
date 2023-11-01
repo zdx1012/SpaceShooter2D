@@ -101,7 +101,6 @@ public class GameManager : MonoBehaviour
 
         Effetcs.Load();
         Game.Current.StartNew();
-        Debug.Log($"aaa {PlayerInfo.instance.hasUpdate}");
         // 读取上次通关保存的玩家数据
         if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
     }
@@ -199,6 +198,7 @@ public class GameManager : MonoBehaviour
         if (ShieldText)
         {
             ShieldText.text = Game.Current.Player.ShieldPower.ToString();
+            // ShieldText.text = $"{_waveManager.CurrentWave.Index} / {_waveManager.WaveLength}";
         }
         if (HealthText)
         {

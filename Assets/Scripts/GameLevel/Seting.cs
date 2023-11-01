@@ -181,7 +181,7 @@ public class Seting : MonoBehaviour
             LocalConfig.instance.ReLoadConfig();
         }
 
-        if (InputUtil.instance.IsSettingKeyHold(10))
+        if (InputUtil.instance.IsSettingKeyHold())
         {
             LocalConfig.instance.SaveGameConfig();
             SceneManager.LoadScene("Start");
