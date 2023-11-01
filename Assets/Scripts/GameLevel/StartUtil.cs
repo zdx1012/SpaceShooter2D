@@ -158,7 +158,7 @@ public class StartUtil : MonoBehaviour
             Debug.Log("Button clicked: " + clickedObject.name + " index = " + index + " gamePartNum = " + gamePartNum);
             Game.Current.currentGameLevel = index;
             Game.Current.totalGameLevel = gamePartNum;
-            SceneManager.LoadScene(index);
+            SceneManager.LoadScene(index + 1);
         }
     }
 

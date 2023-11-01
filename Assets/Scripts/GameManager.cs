@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
         _powerUpFactory = PowerUpFactory.Instance;
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
         // 读取本地配置文件，设置游戏难度
-        Debug.Assert(LocalConfig.instance.gameConfig.data.Length >= Game.Current.currentGameLevel, "游戏关卡配置有误(当前关卡未配置)");
+        Debug.Assert(LocalConfig.instance.gameConfig.data.Length > Game.Current.currentGameLevel, "游戏关卡配置有误(当前关卡未配置)");
         Difficulty = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].difficultyLevel;
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
         // 设置生命值
@@ -101,7 +101,7 @@ public class GameManager : MonoBehaviour
 
         Effetcs.Load();
         Game.Current.StartNew();
-
+        Debug.Log($"aaa {PlayerInfo.instance.hasUpdate}");
         // 读取上次通关保存的玩家数据
         if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
     }
@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
             if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
             {
                 _gameSucessImage.SetActive(true);
-                if (InputUtil.instance.isStartOnceClicked())
+                if (InputUtil.instance.isStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
                 {
                     StartCoroutine(GotoNextGameLevel());
                 }
@@ -216,22 +216,25 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         // 清空通关数据
         PlayerInfo.instance.Reset();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("0");
         yield break;
     }
 
     IEnumerator GotoNextGameLevel()
     {
+        Debug.Log("currentGameLevel : " + Game.Current.currentGameLevel + "/" + Game.Current.totalGameLevel);
         yield return new WaitForSeconds(3f);
         if (Game.Current.currentGameLevel + 1 < Game.Current.totalGameLevel)
         {
             Game.Current.currentGameLevel += 1;
             // 保存通关数据
             PlayerInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
-            SceneManager.LoadScene(Game.Current.currentGameLevel);
+            Debug.Log("load scene " + (Game.Current.currentGameLevel + 1));
+            SceneManager.LoadScene(Game.Current.currentGameLevel + 1);
         }
         else if (Game.Current.currentGameLevel + 1 == Game.Current.totalGameLevel)
         {
+            Debug.Log("load start ");
             SceneManager.LoadScene("Start");
         }
         yield break;
