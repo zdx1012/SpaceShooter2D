@@ -144,7 +144,7 @@ public class GameManager : MonoBehaviour
             if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
             {
                 _gameSucessImage.SetActive(true);
-                if (InputUtil.instance.isStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
+                if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
                 {
                     StartCoroutine(GotoNextGameLevel());
                 }
@@ -155,7 +155,7 @@ public class GameManager : MonoBehaviour
         if (Game.Current.Player.Health <= 0)
         {
             _gameOverImage.SetActive(true);
-            if (InputUtil.instance.isStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
+            if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
             {
                 StartCoroutine(GotoGameLevel());
             }

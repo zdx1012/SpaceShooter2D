@@ -110,12 +110,12 @@ public class StartUtil : MonoBehaviour
             coinNumText.text = currentCoinNum.ToString();
         }
 
-        if (InputUtil.instance.isSettingCenterOnceClicked())
+        if (InputUtil.instance.IsSettingCenterOnceClicked())
         {
             SceneManager.LoadScene("Set");
         }
 
-        if (InputUtil.instance.isStartOnceClicked())
+        if (InputUtil.instance.IsStartOnceClicked())
         {
             EventSystem.current.currentSelectedGameObject.GetComponent<Button>().onClick.Invoke();
         }

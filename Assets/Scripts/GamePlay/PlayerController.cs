@@ -81,7 +81,7 @@ public class PlayerController : GamePlayObject
         // attack
         _canShoot = Time.time >= _nextShootTime;
         // _shootPressed = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0);
-        _shootPressed = InputUtil.instance.isStartPressed();
+        _shootPressed = InputUtil.instance.IsStartPressed();
         if (_canShoot && _shootPressed)
         {
             Shoot();

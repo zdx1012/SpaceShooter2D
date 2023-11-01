@@ -128,20 +128,20 @@ public class Seting : MonoBehaviour
 
         UpdateUI();
         // 下移
-        if (InputUtil.instance.isSettingDownOnceClicked())
+        if (InputUtil.instance.IsSettingDownOnceClicked())
         {
             currentSelectIndex = (currentSelectIndex + 1) % allValues.Count;
         }
 
         // 上移
-        if (InputUtil.instance.isSettingUpOnceClicked())
+        if (InputUtil.instance.IsSettingUpOnceClicked())
         {
             currentSelectIndex = (currentSelectIndex + allValues.Count - 1) % allValues.Count;
         }
 
         int key = 0;
-        if (InputUtil.instance.isSettingLeftOnceClicked()) key = 1;
-        if (InputUtil.instance.isSettingRightOnceClicked()) key = 2;
+        if (InputUtil.instance.IsSettingLeftOnceClicked()) key = 1;
+        if (InputUtil.instance.IsSettingRightOnceClicked()) key = 2;
         // 检测按键
         if (key > 0)
         {
@@ -175,13 +175,13 @@ public class Seting : MonoBehaviour
             }
         }
 
-        if (InputUtil.instance.isStartOnceClicked())
+        if (InputUtil.instance.IsStartOnceClicked())
         {
             SceneManager.LoadScene("Start");
             LocalConfig.instance.ReLoadConfig();
         }
 
-        if (InputUtil.instance.isSettingCenterOnceClicked())
+        if (InputUtil.instance.IsSettingCenterOnceClicked())
         {
             LocalConfig.instance.SaveGameConfig();
             SceneManager.LoadScene("Start");
