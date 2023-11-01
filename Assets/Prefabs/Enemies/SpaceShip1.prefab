@@ -146,10 +146,11 @@ PolygonCollider2D:
       - {x: -0.5, y: -0.024999999}
       - {x: -0.34, y: -0.035}
       - {x: -0.22, y: -0.114999995}
-      - {x: -0.099999994, y: -0.405}
-      - {x: -0.049999997, y: -0.525}
-      - {x: 0.049999997, y: -0.525}
-      - {x: 0.13, y: -0.33499998}
+      - {x: -0.14802644, y: -0.12053603}
+      - {x: -0.11280376, y: -0.096456714}
+      - {x: 0.010078119, y: -0.022570029}
+      - {x: 0.13127548, y: -0.10753986}
+      - {x: 0.22974718, y: -0.09486798}
       - {x: 0.22999999, y: -0.13499999}
       - {x: 0.29999998, y: -0.044999998}
 --- !u!114 &2456989394794635161
@@ -164,11 +165,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6731468fc9defe42bf205701dbd37db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 2
+  Health: 1
   Speed: 1
   ExplosionTemplate: {fileID: 100012, guid: 7edb547341019e24a94684da87860bf8, type: 3}
-  HitTemplate: {fileID: 0}
-  ScoreValue: 20
+  HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
+    type: 3}
+  ScoreValue: 10
   CanShoot: 1
   ShootRate: 0.5
   BulletTemplate: {fileID: 6382252670245963048, guid: 468bf9b1c999b2e45ac297b203ef3621,

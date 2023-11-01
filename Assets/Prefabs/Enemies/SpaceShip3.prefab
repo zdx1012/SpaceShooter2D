@@ -185,8 +185,9 @@ MonoBehaviour:
   Health: 2
   Speed: 1.5
   ExplosionTemplate: {fileID: 100012, guid: 7edb547341019e24a94684da87860bf8, type: 3}
-  HitTemplate: {fileID: 0}
-  ScoreValue: 30
+  HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
+    type: 3}
+  ScoreValue: 20
   CanShoot: 1
   ShootRate: 1
   BulletTemplate: {fileID: 6382252670245963048, guid: 75ef1b4e52f026648806683e062ae499,

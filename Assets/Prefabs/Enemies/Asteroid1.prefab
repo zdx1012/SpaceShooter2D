@@ -251,7 +251,8 @@ MonoBehaviour:
   Health: 1
   Speed: 1
   ExplosionTemplate: {fileID: 100004, guid: a2d6c691e057be74195d1c95bc96c939, type: 3}
-  HitTemplate: {fileID: 0}
+  HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
+    type: 3}
   ScoreValue: 10
   CanRotate: 1
   RandomColor: 1
