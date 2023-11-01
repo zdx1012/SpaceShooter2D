@@ -102,8 +102,10 @@ namespace Assets.Scripts.GamePlay
             {
                 GameLevelConfig[] tmp = new GameLevelConfig[]
                 {
-                new GameLevelConfig(1, DifficultyLevel.Easy),
-                new GameLevelConfig(2, DifficultyLevel.Normal)
+                new GameLevelConfig(3, DifficultyLevel.Easy),
+                new GameLevelConfig(4, DifficultyLevel.Normal),
+                new GameLevelConfig(5, DifficultyLevel.Normal),
+                new GameLevelConfig(6, DifficultyLevel.Hard),
                 };
                 gameConfig = new GameConfig(10, true, tmp);
             }

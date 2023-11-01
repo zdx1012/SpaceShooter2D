@@ -55,9 +55,9 @@ public class GameLevelConfig
     public DifficultyLevel difficultyLevel;
 
 
-    public GameLevelConfig(int n, DifficultyLevel diffculty)
+    public GameLevelConfig(int enemyCount, DifficultyLevel diffculty)
     {
-        EnemyCount = n;
+        EnemyCount = enemyCount;
         difficultyLevel = diffculty;
         switch (diffculty)
         {
