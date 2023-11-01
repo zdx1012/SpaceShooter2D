@@ -463,14 +463,14 @@ public class InputUtil
     // 长按视作点击一次
     public bool AnyAxisPressed()
     {
-        if (Config.isAndroid)
-        {
+        // if (Config.isAndroid)
+        // {
             return (keyStatus[AllKey.KeyUp] && !keyLastStatus[AllKey.KeyUp]) || (keyStatus[AllKey.KeyDown] && !keyLastStatus[AllKey.KeyDown]) || (keyStatus[AllKey.KeyLeft] && !keyLastStatus[AllKey.KeyLeft]) || (keyStatus[AllKey.KeyRight] && !keyLastStatus[AllKey.KeyRight]);
-        }
-        else
-        {
-            return Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.U) || Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.O);
-        }
+        // }
+        // else
+        // {
+        //     return Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.U) || Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.O);
+        // }
     }
 
     // // 长按 每次都有响应
@@ -482,72 +482,72 @@ public class InputUtil
     // 长按视作点击一次
     public bool IsStartOnceClicked()
     {
-        if (Config.isAndroid)
-        {
-            return (keyStatus[AllKey.KeyStart] && !keyLastStatus[AllKey.KeyStart]);
-        }
-        else
-        {
-            return Input.GetKeyDown(KeyCode.P);
-        }
+        // if (Config.isAndroid)
+        // {
+            return keyStatus[AllKey.KeyStart] && !keyLastStatus[AllKey.KeyStart];
+        // }
+        // else
+        // {
+        //     return Input.GetKeyDown(KeyCode.P);
+        // }
 
     }
 
     public bool IsSettingCenterOnceClicked()
     {
-        if (Config.isAndroid)
-        {
-            return (keyStatus[AllKey.keySettingCenter] && !keyLastStatus[AllKey.keySettingCenter]);
-        }
-        else
-        {
-            return Input.GetKeyDown(KeyCode.Q);
-        }
+        // if (Config.isAndroid)
+        // {
+            return keyStatus[AllKey.keySettingCenter] && !keyLastStatus[AllKey.keySettingCenter];
+        // }
+        // else
+        // {
+        //     return Input.GetKeyDown(KeyCode.Q);
+        // }
     }
 
     public bool IsSettingUpOnceClicked()
     {
-        if (Config.isAndroid)
-        {
-            return (keyStatus[AllKey.keySettingUp] && !keyLastStatus[AllKey.keySettingUp]);
-        }
-        else
-        {
-            return Input.GetKeyDown(KeyCode.W);
-        }
+        // if (Config.isAndroid)
+        // {
+            return keyStatus[AllKey.keySettingUp] && !keyLastStatus[AllKey.keySettingUp];
+        // }
+        // else
+        // {
+        //     return Input.GetKeyDown(KeyCode.W);
+        // }
     }
     public bool IsSettingDownOnceClicked()
     {
-        if (Config.isAndroid)
-        {
-            return (keyStatus[AllKey.keySettingDown] && !keyLastStatus[AllKey.keySettingDown]);
-        }
-        else
-        {
-            return Input.GetKeyDown(KeyCode.S);
-        }
+        // if (Config.isAndroid)
+        // {
+            return keyStatus[AllKey.keySettingDown] && !keyLastStatus[AllKey.keySettingDown];
+        // }
+        // else
+        // {
+        //     return Input.GetKeyDown(KeyCode.S);
+        // }
     }
     public bool IsSettingLeftOnceClicked()
     {
-        if (Config.isAndroid)
-        {
-            return (keyStatus[AllKey.keySettingLeft] && !keyLastStatus[AllKey.keySettingLeft]);
-        }
-        else
-        {
-            return Input.GetKeyDown(KeyCode.A);
-        }
+        // if (Config.isAndroid)
+        // {
+            return keyStatus[AllKey.keySettingLeft] && !keyLastStatus[AllKey.keySettingLeft];
+        // }
+        // else
+        // {
+        //     return Input.GetKeyDown(KeyCode.A);
+        // }
     }
     public bool IsSettingRightOnceClicked()
     {
-        if (Config.isAndroid)
-        {
-            return (keyStatus[AllKey.keySettingRight] && !keyLastStatus[AllKey.keySettingRight]);
-        }
-        else
-        {
-            return Input.GetKeyDown(KeyCode.D);
-        }
+        // if (Config.isAndroid)
+        // {
+            return keyStatus[AllKey.keySettingRight] && !keyLastStatus[AllKey.keySettingRight];
+        // }
+        // else
+        // {
+        //     return Input.GetKeyDown(KeyCode.D);
+        // }
     }
 
 
@@ -562,4 +562,14 @@ public class InputUtil
     }
 
     public int GetCoinNum() { return CoinNum; }
+
+    public bool IsSettingKeyHold(int second)
+    {
+        if (keyPressedFrame[AllKey.keySettingCenter] >= second * 60)
+        {
+            keyPressedFrame[AllKey.keySettingCenter] = 0;
+            return true;
+        }
+        return false;
+    }
 }
