@@ -74,7 +74,15 @@ public class InputUtil
     private float yAxis = 0.0f;
 
 
-    private int CoinNum;
+    /// <summary>
+    /// 投入总币数
+    /// </summary>
+    private int CoinTotalNum;
+
+    /// <summary>
+    /// 当前可用币数
+    /// </summary>
+    private int CoinCurrentNum;
 
     UInt32 KEY_Old;
     UInt32 KEY_Down;
@@ -346,15 +354,19 @@ public class InputUtil
 
 
 
-
-
+        // PC上 按F2键，增加币数
+        if (Input.GetKeyDown(KeyCode.F2) && !Config.isAndroid)
+        {
+            CoinTotalNum += 1;
+            CoinCurrentNum += 1;
+        }
 
         // 按下 设置 中心键，清空币数
         // TODO: DELETE THIS CODE
-        if (SettingCenterKeyPessed && Config.isAndroid)
-        {
-            Uart.GetInstance().SendClearAccount();
-        }
+        // if (SettingCenterKeyPessed && Config.isAndroid)
+        // {
+        //     Uart.GetInstance().SendClearAccount();
+        // }
         // Debug.Log($"111 {Config.isAndroid} StartKeyPressed = {keyStatus[AllKey.KeyStart]}, UpKeyPressed = {keyStatus[AllKey.KeyUp]}, DownKeyPressed = {keyStatus[AllKey.KeyDown]}, LeftKeyPressed = {keyStatus[AllKey.KeyLeft]}, RightKeyPressed = {keyStatus[AllKey.KeyRight]}");
         // Debug.Log($"222 {Config.isAndroid} SettingCenterKeyPessed = {SettingCenterKeyPessed} SettingUpKeyPessed = {SettingUpKeyPessed} SettingDownKeyPessed = {SettingDownKeyPessed} SettingLeftKeyPessed = {SettingLeftKeyPessed} SettingRightKeyPessed = {SettingRightKeyPessed}");
     }
@@ -453,9 +465,15 @@ public class InputUtil
     // }
 
 
-    public void SetCoinNum(int n)
+    public bool SetCoinNum(int n)
     {
-        CoinNum = n;
+        if (CoinTotalNum != n)
+        {
+            CoinTotalNum = n;
+            CoinCurrentNum += 1;
+            return true;
+        }
+        return false;
     }
 
     // 供外部使用的函数
@@ -465,7 +483,7 @@ public class InputUtil
     {
         // if (Config.isAndroid)
         // {
-            return (keyStatus[AllKey.KeyUp] && !keyLastStatus[AllKey.KeyUp]) || (keyStatus[AllKey.KeyDown] && !keyLastStatus[AllKey.KeyDown]) || (keyStatus[AllKey.KeyLeft] && !keyLastStatus[AllKey.KeyLeft]) || (keyStatus[AllKey.KeyRight] && !keyLastStatus[AllKey.KeyRight]);
+        return (keyStatus[AllKey.KeyUp] && !keyLastStatus[AllKey.KeyUp]) || (keyStatus[AllKey.KeyDown] && !keyLastStatus[AllKey.KeyDown]) || (keyStatus[AllKey.KeyLeft] && !keyLastStatus[AllKey.KeyLeft]) || (keyStatus[AllKey.KeyRight] && !keyLastStatus[AllKey.KeyRight]);
         // }
         // else
         // {
@@ -484,7 +502,7 @@ public class InputUtil
     {
         // if (Config.isAndroid)
         // {
-            return keyStatus[AllKey.KeyStart] && !keyLastStatus[AllKey.KeyStart];
+        return keyStatus[AllKey.KeyStart] && !keyLastStatus[AllKey.KeyStart];
         // }
         // else
         // {
@@ -497,7 +515,7 @@ public class InputUtil
     {
         // if (Config.isAndroid)
         // {
-            return keyStatus[AllKey.keySettingCenter] && !keyLastStatus[AllKey.keySettingCenter];
+        return keyStatus[AllKey.keySettingCenter] && !keyLastStatus[AllKey.keySettingCenter];
         // }
         // else
         // {
@@ -509,7 +527,7 @@ public class InputUtil
     {
         // if (Config.isAndroid)
         // {
-            return keyStatus[AllKey.keySettingUp] && !keyLastStatus[AllKey.keySettingUp];
+        return keyStatus[AllKey.keySettingUp] && !keyLastStatus[AllKey.keySettingUp];
         // }
         // else
         // {
@@ -520,7 +538,7 @@ public class InputUtil
     {
         // if (Config.isAndroid)
         // {
-            return keyStatus[AllKey.keySettingDown] && !keyLastStatus[AllKey.keySettingDown];
+        return keyStatus[AllKey.keySettingDown] && !keyLastStatus[AllKey.keySettingDown];
         // }
         // else
         // {
@@ -531,7 +549,7 @@ public class InputUtil
     {
         // if (Config.isAndroid)
         // {
-            return keyStatus[AllKey.keySettingLeft] && !keyLastStatus[AllKey.keySettingLeft];
+        return keyStatus[AllKey.keySettingLeft] && !keyLastStatus[AllKey.keySettingLeft];
         // }
         // else
         // {
@@ -542,7 +560,7 @@ public class InputUtil
     {
         // if (Config.isAndroid)
         // {
-            return keyStatus[AllKey.keySettingRight] && !keyLastStatus[AllKey.keySettingRight];
+        return keyStatus[AllKey.keySettingRight] && !keyLastStatus[AllKey.keySettingRight];
         // }
         // else
         // {
@@ -561,7 +579,23 @@ public class InputUtil
         return yAxis;
     }
 
-    public int GetCoinNum() { return CoinNum; }
+    public int GetCoinNum() { return CoinCurrentNum; }
+
+    /// <summary>
+    /// 扣除玩家币数
+    /// </summary>
+    /// <param name="n">扣除数量</param>
+    public void CutCoin(int n)
+    {
+        Debug.Log("cut coin " + n);
+        CoinCurrentNum -= n;
+
+    }
+
+    public void SetSound(bool isOpen)
+    {
+        Uart.GetInstance().SendSound(isOpen);
+    }
 
     public bool IsSettingKeyHold()
     {

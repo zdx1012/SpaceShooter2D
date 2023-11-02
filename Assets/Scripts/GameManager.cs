@@ -216,7 +216,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         // 清空通关数据
         PlayerInfo.instance.Reset();
-        SceneManager.LoadScene("0");
+        SceneManager.LoadScene(0);
         yield break;
     }
 
@@ -234,8 +234,8 @@ public class GameManager : MonoBehaviour
         }
         else if (Game.Current.currentGameLevel + 1 == Game.Current.totalGameLevel)
         {
-            Debug.Log("load start ");
-            SceneManager.LoadScene("Start");
+            Debug.Log("load scene 0");
+            SceneManager.LoadScene(0);
         }
         yield break;
     }

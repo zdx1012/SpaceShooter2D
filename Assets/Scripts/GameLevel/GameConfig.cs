@@ -11,6 +11,8 @@ public class GameConfig
 
     public int initHealth = 99;
 
+    public int coinsStartGame = 1;
+
     public bool playVideoSound = true;
 
     public GameLevelConfig[] data;
