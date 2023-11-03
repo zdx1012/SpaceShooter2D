@@ -14,6 +14,9 @@ public class Seting : MonoBehaviour
     [Header("音效控制")]
     public GameObject sound;
 
+    [Header("币数配置")]
+    public GameObject coinStartGame;
+
     [Header("玩家生命数")]
     public GameObject healthyCount;
 
@@ -59,6 +62,7 @@ public class Seting : MonoBehaviour
             allDifficultyValuesObject.Add(diffcultyObject);
         }
         // 添加到所有可交互的对象
+        allValues.Add(coinStartGame);
         allValues.Add(sound);
         allValues.Add(healthyCount);
         for (int i = 0; i < allEnemyCountValuesObject.Count; i++)
@@ -81,18 +85,31 @@ public class Seting : MonoBehaviour
             sound.GetComponent<Text>().text = "否";
         }
         healthyCount.GetComponent<Text>().text = LocalConfig.instance.gameConfig.initHealth.ToString();
+        coinStartGame.GetComponent<Text>().text = GetCoinDesc(LocalConfig.instance.gameConfig.coinsStartGame);
 
-        // 设置scrollview的位置
-        Vector3 newPosition = new Vector3(content.transform.position.x, content.transform.position.y, content.transform.position.z); ; // 分配新位置给Transform.position
-        if (EventSystem.current.currentSelectedGameObject.transform.position.x > 800)
+
+        // 
+        if (EventSystem.current.currentSelectedGameObject == null)
         {
-            newPosition.x = content.transform.position.x - 10;
+            EventSystem.current.SetSelectedGameObject(coinStartGame);
         }
-        else if (EventSystem.current.currentSelectedGameObject.transform.position.x < 300)
+
+        // 当前选中的是关卡
+        if (currentSelectIndex >= allValues.Count - allEnemyCountValuesObject.Count)
         {
-            newPosition.x = content.transform.position.x + 10;
+            // 设置scrollview的位置
+            Vector3 newPosition = new Vector3(content.transform.position.x, content.transform.position.y, content.transform.position.z); ; // 分配新位置给Transform.position
+            if (EventSystem.current.currentSelectedGameObject.transform.position.x > 800)
+            {
+                newPosition.x = content.transform.position.x - 10;
+            }
+            else if (EventSystem.current.currentSelectedGameObject.transform.position.x < 300)
+            {
+                newPosition.x = content.transform.position.x + 10;
+            }
+            content.transform.position = newPosition;
         }
-        content.transform.position = newPosition;
+
 
         // 设置当前选中 和 选中缩放
         EventSystem.current.SetSelectedGameObject(allValues[currentSelectIndex]);
@@ -156,6 +173,10 @@ public class Seting : MonoBehaviour
             {
                 UpdatePlayerHealthy(isAdd);
             }
+            else if (currentSelectedObject == coinStartGame)
+            {
+                UpdateCoinGame(isAdd);
+            }
             else
             {
                 for (int i = 0; i < allDifficultyValuesObject.Count; i++)
@@ -210,6 +231,20 @@ public class Seting : MonoBehaviour
 
     }
 
+    // 更新玩家生命值
+    private void UpdateCoinGame(bool isAdd)
+    {
+        if (isAdd)
+        {
+            LocalConfig.instance.gameConfig.AddCoinStartGame();
+        }
+        else
+        {
+            LocalConfig.instance.gameConfig.ReduceCoinStartGame();
+        }
+
+    }
+
     // 更新敌人数量
     private void UpdateEnemyCount(int index, bool isAdd)
     {
@@ -258,4 +293,32 @@ public class Seting : MonoBehaviour
         return desc;
     }
 
+    private String GetCoinDesc(int index)
+    {
+        String text = "";
+        switch (index)
+        {
+            case 1:
+                text = "一币一玩";
+                break;
+            case 2:
+                text = "两币一玩";
+                break;
+            case 3:
+                text = "三币一玩";
+                break;
+            case 4:
+                text = "四币一玩";
+                break;
+            case 5:
+                text = "五币一玩";
+                break;
+            case 6:
+                text = "六币一玩";
+                break;
+            default:
+                break;
+        }
+        return text;
+    }
 }

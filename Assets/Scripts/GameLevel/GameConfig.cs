@@ -29,6 +29,17 @@ public class GameConfig
         data = tmp;
     }
 
+    public void AddCoinStartGame()
+    {
+        coinsStartGame += 1;
+        if (coinsStartGame > 6) coinsStartGame = 6;
+    }
+    public void ReduceCoinStartGame()
+    {
+        coinsStartGame -= 1;
+        if (coinsStartGame < 1) coinsStartGame = 1;
+    }
+
     public void Addhealthy()
     {
         initHealth += 1;
