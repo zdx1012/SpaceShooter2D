@@ -96,23 +96,25 @@ namespace Assets.Scripts.GamePlay
         {
             LoadGameConfig();
         }
+        
+
+        public void DefaultGameConfig(){
+            gameConfig = new GameConfig(0, 0, 0, 0, false, 0, 0, 0, false, false);
+            SaveGameConfig();
+            LoadGameConfig();
+        }
+
         public void SaveGameConfig()
         {
             if (gameConfig == null)
             {
-                GameLevelConfig[] tmp = new GameLevelConfig[]
-                {
-                new GameLevelConfig(3, DifficultyLevel.Easy),
-                new GameLevelConfig(4, DifficultyLevel.Normal),
-                new GameLevelConfig(5, DifficultyLevel.Normal),
-                new GameLevelConfig(6, DifficultyLevel.Hard),
-                };
-                gameConfig = new GameConfig(10, true, tmp);
+
+                gameConfig = new GameConfig(0, 0, 0, 0, false, 0, 0, 0, false, false);
             }
 
             // 序列化游戏配置为 JSON 字符串
             string json = JsonConvert.SerializeObject(gameConfig);
-            // Debug.Log("json=" + json);
+            Debug.Log("json=" + json);
 
             // 写入 JSON 字符串到文件
             File.WriteAllText(saveFilePath, json);
@@ -132,15 +134,7 @@ namespace Assets.Scripts.GamePlay
             Debug.Log("Game config loaded from file: " + saveFilePath);
         }
 
-        public void UpdateConfigHealthy(int healthy)
-        {
-            gameConfig.initHealth = healthy;
-        }
-        public void UpdateConfigGameLevel(int index, int n, DifficultyLevel difficulty)
-        {
-            gameConfig.data[index].EnemyCount = n;
-            gameConfig.data[index].difficultyLevel = difficulty;
-        }
+
     }
 
     public class PlayerInfo

@@ -76,27 +76,10 @@ public class GameManager : MonoBehaviour
 
         _powerUpFactory = PowerUpFactory.Instance;
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
-        // 读取本地配置文件，设置游戏难度
-        Debug.Assert(LocalConfig.instance.gameConfig.data.Length > Game.Current.currentGameLevel, "游戏关卡配置有误(当前关卡未配置)");
-        Difficulty = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].difficultyLevel;
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
         // 设置生命值
         Game.Current.Player.Health = LocalConfig.instance.gameConfig.initHealth;
 
-        // 设置敌人波数<读取配置文件敌人数据>
-        List<EnemyWave> newEnemyWaves = new List<EnemyWave>();
-        if (EnemyWaves.Length > 0)
-        {
-            int maxEnemyCount = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].EnemyCount;
-            newEnemyWaves.Clear(); // 清空列表
-
-            for (int i = 0; i < maxEnemyCount; i++)
-            {
-                int randomIndex = Random.Range(0, EnemyWaves.Length);
-                newEnemyWaves.Add(EnemyWaves[randomIndex]);
-            }
-        }
-        EnemyWaves = newEnemyWaves.ToArray();
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
