@@ -14,6 +14,7 @@ public class Init : MonoBehaviour
 {
     [Header("长时间未操作，自动播放视频（S）")]
     public int waitVideoTime = 10;
+    public int autoSelectPlaneTime = 10;
 
     private Text insertCoinTip;
     private Text startGameTip;
@@ -26,6 +27,13 @@ public class Init : MonoBehaviour
 
     private int startGameCoin = 1;
     private Text coinNumText;
+
+    private bool showSelectPlane = false;
+    public GameObject selectPlaneObject;
+
+    public GameObject[] allPlanes;
+
+    private int currentSelectPlan = 0;
 
     private RectTransform insertCoinTipTransform;
 
@@ -49,6 +57,15 @@ public class Init : MonoBehaviour
             StartCoroutine(ShowInsertCoin());
         }
 
+        Transform transform = GameObject.Find("Canvas").transform.Find("SelectPlan").transform.Find("Planes").transform;
+        allPlanes = new GameObject[transform.childCount];
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            allPlanes[i] = transform.GetChild(i).gameObject;
+        }
+
+
         // 设置声音等信息
         SetParams();
     }
@@ -71,12 +88,12 @@ public class Init : MonoBehaviour
             pressKeyTime = Time.time;
         }
 
-
+        // 跳转设置页面
         if (InputUtil.instance.IsSettingCenterOnceClicked())
         {
             SceneManager.LoadScene("SettingMain");
         }
-
+        // 隐藏 请投币
         if (GameData.Instance.CanPlayGame())
         {
             insertCoinTipTransform.gameObject.SetActive(false);
@@ -85,24 +102,28 @@ public class Init : MonoBehaviour
                 GameData.Instance.ReduceGameCoin();
                 SceneManager.LoadScene(1);
             }
+            selectPlaneObject.SetActive(true);
         }
-
-        if (InputUtil.instance.AnyAxisPressed())
+        // 显示飞机选择界面
+        else
         {
-            pressKeyTime = Time.time;
-            showVideoPlayer(false);
+            selectPlaneObject.SetActive(false);
         }
-        else if (Time.time - pressKeyTime > waitVideoTime && !vp.isPlaying)
+        // 自动播放视频
+        if (Time.time - pressKeyTime > waitVideoTime && !vp.isPlaying)
         {
             showVideoPlayer(true);
         }
+
+        // 处理飞机选择逻辑
+        showPlane();
     }
 
 
 
     private void showVideoPlayer(bool show)
     {
-        if (LocalConfig.instance.gameConfig.GetBoolDemoVideo())
+        if (LocalConfig.instance.gameConfig.GetBoolDemoVideo() && !showSelectPlane)
         {
             if (show)
             {
@@ -123,6 +144,8 @@ public class Init : MonoBehaviour
         vp.audioOutputMode = VideoAudioOutputMode.None;
     }
 
+
+    // 闪烁 - 请投币
     IEnumerator ShowInsertCoin()
     {
         DOTween.Sequence()
@@ -140,5 +163,53 @@ public class Init : MonoBehaviour
         // AudioListener audioListener = Camera.main.GetComponent<AudioListener>();
         globalVolume = Mathf.Clamp01(globalVolume); // 限制在0到1之间
         AudioListener.volume = globalVolume;
+    }
+
+    void showPlane()
+    {
+        // 避免一直切换
+        if (Time.time - pressKeyTime < 0.2f || !selectPlaneObject.activeSelf)
+        {
+            return;
+        }
+        currentSelectPlan = GameData.Instance.GetCurrentPlane();
+        // 显示飞机
+        for (int i = 0; i < allPlanes.Length; i++)
+        {
+            if (i == currentSelectPlan)
+            {
+                allPlanes[i].SetActive(true);
+            }
+            else
+            {
+                allPlanes[i].SetActive(false);
+            }
+        }
+
+        if (InputUtil.instance.GetHorizontalAxis() > 0)
+        {
+            pressKeyTime = Time.time;
+            currentSelectPlan += 1;
+            if (currentSelectPlan >= allPlanes.Length) { currentSelectPlan = 0; }
+        }
+        else if (InputUtil.instance.GetHorizontalAxis() < 0)
+        {
+            pressKeyTime = Time.time;
+            currentSelectPlan -= 1;
+            if (currentSelectPlan < 0) { currentSelectPlan = allPlanes.Length - 1; }
+        }
+        GameData.Instance.SetCurrentPlane(currentSelectPlan);
+
+        if (Time.time - pressKeyTime > autoSelectPlaneTime)
+        {
+            StartCoroutine(startGame());
+        }
+    }
+
+    IEnumerator startGame()
+    {
+        selectPlaneObject.SetActive(value: false);
+        yield return new WaitForSeconds(2f);
+        SceneManager.LoadScene(1);
     }
 }

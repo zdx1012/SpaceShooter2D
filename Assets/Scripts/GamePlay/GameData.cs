@@ -16,6 +16,8 @@ public class GameData
 
     private string gameCoinString;
 
+    private int currentPlayer;
+
     public GameData()
     {
         currentGameCoin = 0;
@@ -85,11 +87,23 @@ public class GameData
     /// 获取玩家初始生命值
     /// </summary>
     /// <returns></returns>
-    public int GetPlayerInitHealthy(){
+    public int GetPlayerInitHealthy()
+    {
         return LocalConfig.instance.gameConfig.GetHealthy();
     }
 
-    public bool GetPlayerAutoFire(){
+    public bool GetPlayerAutoFire()
+    {
         return LocalConfig.instance.gameConfig.autoFire;
+    }
+
+    public void SetCurrentPlane(int player)
+    {
+        if (player < 0 || player > 2) player = 0;
+        currentPlayer = player;
+    }
+    public int GetCurrentPlane()
+    {
+        return currentPlayer;
     }
 }
