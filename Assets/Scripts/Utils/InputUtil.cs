@@ -359,6 +359,7 @@ public class InputUtil
         {
             CoinTotalNum += 1;
             CoinCurrentNum += 1;
+            GameData.Instance.AddGameCoin();
         }
 
         // 按下 设置 中心键，清空币数
@@ -471,6 +472,7 @@ public class InputUtil
         {
             CoinTotalNum = n;
             CoinCurrentNum += 1;
+            GameData.Instance.AddGameCoin();
             return true;
         }
         return false;
@@ -605,5 +607,28 @@ public class InputUtil
             return true;
         }
         return false;
+    }
+
+    public bool IO_Pressed(int no)
+    {
+        no = 1 << no;
+        if ((KEY_Down & no) > 0)
+        {
+            KEY_Down &= (uint)(~no);
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsGiftPressed()
+    {
+        if (Config.isAndroid)
+        {
+            return IO_Pressed(3);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.F3);
+        }
     }
 }

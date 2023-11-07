@@ -162,7 +162,7 @@ public class GameConfig
     public float GetVolume()
     {
         Debug.Log("value=" + volumeChoice[valueGame]);
-        return volumeChoice[volume];
+        return volumeChoice[volume] * 10;
     }
 
     /// <summary>
@@ -217,6 +217,10 @@ public class GameConfig
         }
     }
 
+    public bool GetBoolDemoVideo()
+    {
+        return demoVideo;
+    }
 
     public void SetAutoFire()
     {
@@ -234,6 +238,10 @@ public class GameConfig
         }
     }
 
+    public bool GetBoolAutoFire()
+    {
+        return autoFire;
+    }
 }
 
 

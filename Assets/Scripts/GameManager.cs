@@ -37,6 +37,7 @@ public class EnemyWaveSet
 
 public class GameManager : MonoBehaviour
 {
+    [Header("难度（读取设置生成）")]
     public DifficultyLevel Difficulty = DifficultyLevel.Normal;
     //public bool IncreaseDifficultyOverTime = true;
     [Header("提供生成敌人的Y坐标")]
@@ -71,6 +72,17 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        switch(LocalConfig.instance.gameConfig.GetDifficulty()){
+            case 0:
+                Difficulty = DifficultyLevel.Easy;
+                break;
+            case 1:
+                Difficulty = DifficultyLevel.Normal;
+                break;
+            case 2:
+                Difficulty = DifficultyLevel.Hard;
+                break;
+        }
         _enemyFactory = EnemyFactory.Instance;
         _enemyFactory.LoadTemplates(EnemiesTemplates);
 

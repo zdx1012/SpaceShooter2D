@@ -60,6 +60,9 @@ public class PlayerController : GamePlayObject
         _bulletPoints = gameObject.FindComponentsInChildWithTag(ObjectTags.BulletPoints);
         _bulletAudio = GetComponent<AudioSource>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // 重新设置生命值
+        Health = GameData.Instance.GetPlayerInitHealthy();
     }
 
     protected override void Update()
@@ -81,7 +84,7 @@ public class PlayerController : GamePlayObject
         // attack
         _canShoot = Time.time >= _nextShootTime;
         // _shootPressed = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0);
-        _shootPressed = InputUtil.instance.IsStartPressed();
+        _shootPressed = InputUtil.instance.IsStartPressed() || GameData.Instance.GetPlayerAutoFire();
         if (_canShoot && _shootPressed)
         {
             Shoot();
