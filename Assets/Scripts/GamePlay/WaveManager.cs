@@ -62,11 +62,11 @@ namespace Assets.Scripts.GamePlay
             var nextWaveIndex = _currentWave.Index + 1;
             Ended = nextWaveIndex >= _waves.Length;
             // 生成6波 升级技能后，将下标置0，才能重新生成 Enemy
-            if (Ended){
+            if (Ended)
+            {
                 Ended = false;
                 return false;
             }
-                
             _currentWave = new CurrentWave(nextWaveIndex, _waves[nextWaveIndex]);
             return true;
         }
@@ -99,8 +99,10 @@ namespace Assets.Scripts.GamePlay
         public int Index { get; }
         public int EnemiesCreated { get; private set; }
         public bool IsFullyCreated => EnemiesCreated >= _totalEnemies;
+        public bool IsHalfCreated => EnemiesCreated >= _totalEnemies / 2;
         public bool Ended => IsFullyCreated && _enemies.All(kv => kv.Value.All(e => e?.Destroyed ?? true));
         public bool Delaying => _creationTime + Definition.Delay > Time.time;
+        public bool HasCreatePowerUp = false;
         public EnemyWave Definition { get; }
 
         public CurrentWave(int index, EnemyWave definition)

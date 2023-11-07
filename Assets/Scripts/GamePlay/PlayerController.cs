@@ -10,7 +10,7 @@ public class PlayerController : GamePlayObject
 {
     private const float SHIELD_USAGE_POWER = 0.20f;
     private const float SHIELD_MAX_POWER = 3f;
-    private const int SHOOT_MAX_POWER = 6;
+    private const int SHOOT_MAX_POWER = 4;
     private const int HEALTH_MAX_POINTS = 99;
 
     private Rigidbody2D _rb;
@@ -40,7 +40,7 @@ public class PlayerController : GamePlayObject
     public float ShootRate = 4f;
     public float ShieldPower = 1f;
     public GameObject ShieldEffect;
-    public Color ShieldColor = new Color(130, 255, 250);
+    public Color ShieldColor = new Color(216, 255, 250);
     public GameObject BulletTemplate;
     public Ease ShieldEasyFX = Ease.Linear;
 
@@ -95,7 +95,7 @@ public class PlayerController : GamePlayObject
         // }
 
         // 使用保护罩
-        var shieldPressed = false;
+        var shieldPressed = true;
         // var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton3);
         _shielded = shieldPressed && ShieldPower > 0 && !IsInvulnerable();
         ProcessShieldDefense();

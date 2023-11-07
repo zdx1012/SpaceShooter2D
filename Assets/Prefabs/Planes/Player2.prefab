@@ -236,8 +236,9 @@ GameObject:
   - component: {fileID: 3515990905901153111}
   - component: {fileID: 998409616262641844}
   - component: {fileID: 4720415378665836522}
+  - component: {fileID: -484659533256876243}
   m_Layer: 8
-  m_Name: Player 1
+  m_Name: Player 2
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -300,13 +301,13 @@ SpriteRenderer:
   m_SortingLayerID: -1892585311
   m_SortingLayer: 5
   m_SortingOrder: 1
-  m_Sprite: {fileID: 6407754020364804758, guid: 6639199608bcaca45ad8efd4c0f46163,
+  m_Sprite: {fileID: -1886636485551513190, guid: 6639199608bcaca45ad8efd4c0f46163,
     type: 3}
   m_Color: {r: 0.6431373, g: 0.8235294, b: 0.9137255, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 1
-  m_Size: {x: 1.1, y: 1.95}
+  m_Size: {x: 1.7, y: 1.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -329,8 +330,8 @@ PolygonCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.11, y: 1.95}
-    newSize: {x: 1.1, y: 1.95}
+    oldSize: {x: 1.73, y: 1.57}
+    newSize: {x: 1.7, y: 1.5}
     adaptiveTilingThreshold: 0.5
     drawMode: 1
     adaptiveTiling: 0
@@ -398,16 +399,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 3
-  Speed: 7
+  Speed: 6
   ExplosionTemplate: {fileID: 100008, guid: e9fd47bd83d954547a096ac63024c3a9, type: 3}
   HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
     type: 3}
   ShootingPower: 1
-  CanTakeDamage: 0
-  ShootRate: 2
+  CanTakeDamage: 1
+  ShootRate: 4
   ShieldPower: 1
   ShieldEffect: {fileID: 3936511404714628773}
-  ShieldColor: {r: 0.40583837, g: 0.9056604, b: 0.8895371, a: 1}
+  ShieldColor: {r: 0.84313726, g: 0.9056604, b: 0.8895371, a: 1}
   BulletTemplate: {fileID: 6382252670245963048, guid: 52181cba447de6142aa77fc8e2932cb0,
     type: 3}
   ShieldEasyFX: 1
@@ -507,6 +508,25 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &-484659533256876243
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3515990905901153106}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: aadcf349faf52f4489ddccf8ba61a1ee, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3744478403733711875
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +551,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3744478403733711875}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.06, y: 0.78, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3515990905095888598}

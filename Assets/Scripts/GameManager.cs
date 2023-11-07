@@ -37,6 +37,9 @@ public class EnemyWaveSet
 
 public class GameManager : MonoBehaviour
 {
+    [Header("飞机预制体")]
+    public GameObject[] AllPlanes;
+
     [Header("难度（读取设置生成）")]
     public DifficultyLevel Difficulty = DifficultyLevel.Normal;
     //public bool IncreaseDifficultyOverTime = true;
@@ -64,15 +67,18 @@ public class GameManager : MonoBehaviour
     private DifficultyManager _difficultyManager;
     private WaveManager _waveManager;
 
-    private GameObject _gameOverImage;
-    private GameObject _gameSucessImage;
+    [Header("游戏失败界面")]
+    public GameObject _gameOverObject;
+    [Header("游戏成功界面")]
+    public GameObject _gameSucessObject;
     private bool _waveIsOver = false;
     // 是否暂停，0-暂停，1-正常
     // private int _timeScale = 1;
 
     void Awake()
     {
-        switch(LocalConfig.instance.gameConfig.GetDifficulty()){
+        switch (LocalConfig.instance.gameConfig.GetDifficulty())
+        {
             case 0:
                 Difficulty = DifficultyLevel.Easy;
                 break;
@@ -89,6 +95,12 @@ public class GameManager : MonoBehaviour
         _powerUpFactory = PowerUpFactory.Instance;
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
+
+
+        // 读取配置，选择飞机模型
+        GameObject prefabInstance = Instantiate(AllPlanes[GameData.Instance.GetCurrentPlane()]);
+        prefabInstance.transform.position = new Vector3(0f, -3f, 0f);
+
         // 设置生命值
         Game.Current.Player.Health = LocalConfig.instance.gameConfig.initHealth;
 
@@ -96,17 +108,13 @@ public class GameManager : MonoBehaviour
 
         Effetcs.Load();
         Game.Current.StartNew();
+
         // 读取上次通关保存的玩家数据
         if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
     }
 
     void Start()
     {
-        _gameSucessImage = GameObject.Find("GameSuccessImage").gameObject;
-        _gameSucessImage.SetActive(false);
-
-        _gameOverImage = GameObject.Find("GameOverImage").gameObject;
-        _gameOverImage.SetActive(false);
     }
 
 
@@ -137,7 +145,7 @@ public class GameManager : MonoBehaviour
         {
             if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
             {
-                _gameSucessImage.SetActive(true);
+                _gameSucessObject.SetActive(true);
                 if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
                 {
                     StartCoroutine(GotoNextGameLevel());
@@ -148,7 +156,7 @@ public class GameManager : MonoBehaviour
 
         if (Game.Current.Player.Health <= 0)
         {
-            _gameOverImage.SetActive(true);
+            _gameOverObject.SetActive(true);
             if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
             {
                 StartCoroutine(GotoGameLevel());
@@ -156,23 +164,27 @@ public class GameManager : MonoBehaviour
         }
 
         _waveManager.ExecuteCurrentWave();
-
-        // 每一波结束并且非最后一波敌人生成完成后， 随机升级技能点《可拾取》
-        if (_waveManager.CurrentWave.Ended && !_waveIsOver)
+        // 
+        if (_waveManager.CurrentWave.IsHalfCreated && _waveManager.CurrentWave.Definition.HasPowerUp && !_waveManager.CurrentWave.HasCreatePowerUp && Random.Range(-10000, 10) > 7)
         {
-            // handle wave powerUp if present
-            if (_waveManager.CurrentWave.Definition.HasPowerUp)
+            for (int i = 0; i < _waveManager.CurrentWave.Definition.PowupCount; i++)
             {
-                for (int i = 0; i < _waveManager.CurrentWave.Definition.PowupCount; i++)
-                {
-                    var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
-                    var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
-                    _powerUpFactory.Create(powerUpType, pos);
-                }
-
+                var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
+                var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
+                _powerUpFactory.Create(powerUpType, pos);
             }
+            _waveManager.CurrentWave.HasCreatePowerUp = true;
+        }
 
-            _waveIsOver = !_waveManager.MoveNext();
+        // 当前一波敌人生成完成，自动生成下一波
+        if (_waveManager.CurrentWave.Ended)
+        {
+            _waveManager.MoveNext();
+            // 判断敌人是否全部生成完成
+            if (_waveManager.CurrentWave.Index == _waveManager.WaveLength - 1)
+            {
+                _waveIsOver = true;
+            }
         }
         // 生成小行星
         if (_difficultyManager.CanCreateAsteroid())
