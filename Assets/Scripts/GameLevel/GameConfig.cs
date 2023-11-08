@@ -39,7 +39,7 @@ public class GameConfig
 
 
     private String[] languageChoice = { "中文", "English" };
-    public int[] healthyChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 35, 40, 45, 50 };
+    public int[] healthyChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
     public int[] coinValueChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     public int[] valueGameChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     public String[] boolValueChoice = { "是", "否" };

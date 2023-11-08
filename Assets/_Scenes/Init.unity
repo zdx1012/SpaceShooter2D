@@ -1231,6 +1231,7 @@ GameObject:
   - component: {fileID: 542979916}
   - component: {fileID: 542979918}
   - component: {fileID: 542979917}
+  - component: {fileID: 542979919}
   m_Layer: 5
   m_Name: Logo
   m_TagString: Untagged
@@ -1293,6 +1294,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542979915}
   m_CullTransparentMesh: 0
+--- !u!114 &542979919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542979915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f17dbf3a60bba9418550f9ebe5c4ba6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetPositionOffset: {x: -1200, y: 0, z: 0}
+  movementDuration: 2
+  movementEase: 2
+  Loop: 1
+  IsRevert: 1
 --- !u!1 &554571667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1708,6 +1726,8 @@ MonoBehaviour:
   targetPositionOffset: {x: -30, y: 0, z: 0}
   movementDuration: 0.8
   movementEase: 10
+  Loop: -1
+  IsRevert: 0
 --- !u!1 &687147937
 GameObject:
   m_ObjectHideFlags: 0
@@ -2242,6 +2262,8 @@ MonoBehaviour:
   targetPositionOffset: {x: 30, y: 0, z: 0}
   movementDuration: 0.8
   movementEase: 1
+  Loop: -1
+  IsRevert: 0
 --- !u!1 &917496226
 GameObject:
   m_ObjectHideFlags: 0
@@ -4611,7 +4633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waitVideoTime: 3
-  autoSelectPlaneTime: 3
+  autoSelectPlaneTime: 10
   selectPlaneObject: {fileID: 1544097841}
   allPlanes: []
 --- !u!4 &1619517057

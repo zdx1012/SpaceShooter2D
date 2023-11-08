@@ -16,6 +16,7 @@ namespace Assets.Scripts.GamePlay
         private CurrentWave _currentWave;
         internal CurrentWave CurrentWave => _currentWave;
         internal int WaveLength;
+        public bool BossCreated { get; private set; }
         public bool Ended { get; private set; } = false;
 
         public WaveManager(EnemyWave[] waves, DifficultyManager difficultyManager, GameObject defaultSpawnPoint)
@@ -84,9 +85,19 @@ namespace Assets.Scripts.GamePlay
             {
                 _difficultyManager.NotifyEnemyTypeSelected(set.EnemyType, set.Mode);
                 var position = ScreenHelper.GetRandomScreenPoint(y: _defaultSpawnPoint.transform.position.y);
+                if (set.EnemyType >= EnemyType.Boss0) { BossCreated = true; position.x = 0; }
                 return _enemyFactory.Create(set.EnemyType, position);
             }
             return null;
+        }
+        public bool IsLastWave()
+        {
+            return _currentWave.Index + 1 == _waves.Length;
+        }
+
+        public string GetWaveInfo()
+        {
+            return $"{_currentWave.Index + 1}/{_waves.Length}";
         }
     }
 

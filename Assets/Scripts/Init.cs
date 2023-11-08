@@ -16,6 +16,8 @@ public class Init : MonoBehaviour
     public int waitVideoTime = 10;
     public int autoSelectPlaneTime = 10;
 
+    public GameObject logo;
+
     private Text insertCoinTip;
     private Text startGameTip;
 
@@ -23,9 +25,9 @@ public class Init : MonoBehaviour
     private VideoPlayer vp;
     private float pressKeyTime;
 
+    private bool loadGame = false;
     private int currentCoinNum = -1;
 
-    private int startGameCoin = 1;
     private Text coinNumText;
 
     private bool showSelectPlane = false;
@@ -46,8 +48,6 @@ public class Init : MonoBehaviour
         vp = videoPlayer.GetComponent<VideoPlayer>();
 
         coinNumText = GameObject.Find("CoinNum").GetComponent<Text>();
-
-        startGameCoin = LocalConfig.instance.gameConfig.GetValueGame();
 
         insertCoinTipTransform = GameObject.Find("InsertCoin").GetComponent<RectTransform>();
 
@@ -99,10 +99,10 @@ public class Init : MonoBehaviour
             insertCoinTipTransform.gameObject.SetActive(false);
             if (InputUtil.instance.IsStartOnceClicked())
             {
-                GameData.Instance.ReduceGameCoin();
-                SceneManager.LoadScene(1);
+                PlayGame();
             }
-            selectPlaneObject.SetActive(true);
+
+            if (!loadGame) selectPlaneObject.SetActive(true);
         }
         // 显示飞机选择界面
         else
@@ -202,8 +202,16 @@ public class Init : MonoBehaviour
 
         if (Time.time - pressKeyTime > autoSelectPlaneTime)
         {
-            StartCoroutine(startGame());
+            PlayGame();
         }
+    }
+
+    void PlayGame()
+    {
+        loadGame = true;
+        GameData.Instance.ReduceGameCoin();
+        logo.GetComponent<ObjectMovement>().StartMovement();
+        StartCoroutine(startGame());
     }
 
     IEnumerator startGame()

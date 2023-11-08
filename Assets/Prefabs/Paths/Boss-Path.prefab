@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8969118109651067616
+--- !u!1 &1261772647996763437
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,36 +8,36 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 414277711029259477}
-  - component: {fileID: 2677559023757213337}
+  - component: {fileID: 3592183574344009628}
+  - component: {fileID: 4070780666659462293}
   m_Layer: 0
-  m_Name: Circle-Path
+  m_Name: Boss-Path
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &414277711029259477
+--- !u!4 &3592183574344009628
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8969118109651067616}
+  m_GameObject: {fileID: 1261772647996763437}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.81, y: 2.71, z: 0}
-  m_LocalScale: {x: 1.3541, y: 1.3541, z: 1.3541}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2677559023757213337
+--- !u!114 &4070780666659462293
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8969118109651067616}
+  m_GameObject: {fileID: 1261772647996763437}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8e5ac92bc18f545cc84cd886ece82b4d, type: 3}
@@ -46,18 +46,30 @@ MonoBehaviour:
   editorData:
     _bezierPath:
       points:
-      - {x: 2.216132, y: 0.85707027, z: 0}
-      - {x: 1.6974958, y: 0.34969288, z: 0}
-      - {x: 1.6190181, y: -1.0341861, z: 0}
-      - {x: 2.1194985, y: -1.5594809, z: 0}
-      - {x: 2.9127545, y: -2.3920677, z: 0}
-      - {x: 5.162386, y: -2.427146, z: 0}
-      - {x: 5.952632, y: -1.5917016, z: 0}
-      - {x: 6.471805, y: -1.0428343, z: 0}
-      - {x: 6.347255, y: 0.40963566, z: 0}
-      - {x: 5.791576, y: 0.9215114, z: 0}
-      - {x: 5.0025244, y: 1.6483631, z: 0}
-      - {x: 2.9829993, y: 1.6072903, z: 0}
+      - {x: -6.9540663, y: -0.57950544, z: 0}
+      - {x: -5.491931, y: -0.8092536, z: 0}
+      - {x: -3.5007339, y: -0.5432134, z: 0}
+      - {x: -2.0208392, y: -0.52006894, z: 0}
+      - {x: -0.16630542, y: -0.49106535, z: 0}
+      - {x: 2.327511, y: -0.6842072, z: 0}
+      - {x: 4.1605525, y: -0.40119594, z: 0}
+      - {x: 5.529448, y: -0.18984622, z: 0}
+      - {x: 8.651528, y: -0.47727722, z: 0}
+      - {x: 8.588569, y: 0.9064062, z: 0}
+      - {x: 8.522047, y: 2.368362, z: 0}
+      - {x: 5.26322, y: 1.746834, z: 0}
+      - {x: 3.8039334, y: 1.8573896, z: 0}
+      - {x: 2.024135, y: 1.9922271, z: 0}
+      - {x: -0.35515642, y: 1.6248674, z: 0}
+      - {x: -2.1397128, y: 1.5899252, z: 0}
+      - {x: -3.6729054, y: 1.5599047, z: 0}
+      - {x: -5.7229877, y: 1.7461367, z: 0}
+      - {x: -7.2512484, y: 1.6196436, z: 0}
+      - {x: -8.504549, y: 1.5159087, z: 0}
+      - {x: -11.286104, y: 2.1603253, z: 0}
+      - {x: -11.382082, y: 0.9064062, z: 0}
+      - {x: -11.48902, y: -0.49071127, z: 0}
+      - {x: -8.338286, y: -0.3620003, z: 0}
       isClosed: 1
       space: 1
       controlMode: 3
@@ -67,6 +79,10 @@ MonoBehaviour:
         m_Center: {x: -0.11005926, y: 3.866757, z: 0}
         m_Extent: {x: 2, y: 0.14433765, z: 0}
       perAnchorNormalsAngle:
+      - 0
+      - 0
+      - 0
+      - 0
       - 0
       - 0
       - 0

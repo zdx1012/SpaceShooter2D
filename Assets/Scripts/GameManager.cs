@@ -52,13 +52,18 @@ public class GameManager : MonoBehaviour
     [Header("提供生成 升级技能 的类型 《给Factory使用》")]
     public GameObject[] PowerUpsTemplates;
 
-    [Header("提供生成每一波敌人的相关设置<具体数量，以设置中配置的数量为准，从这里随机抽取进行组成>")]
+    [Header("提供生成每一波敌人的相关设置")]
     public EnemyWave[] EnemyWaves;
     [Header("UI提示文本")]
     public Text ScoreText;
-    public Text ShieldText;
     public Text HealthText;
-    public Text LevelText;
+    [Header("boss生命")]
+    public GameObject BossHP;
+    [Header("boss当前生命")]
+    public GameObject BossCurrentHP;
+    // 当前BOSSS对象，获取生命信息
+    private SpaceShipEnemy BossObject;
+    public GameObject BossCome;
 
     [Header("读取已存储的玩家生命值，子弹等级等信息")]
 
@@ -71,7 +76,6 @@ public class GameManager : MonoBehaviour
     public GameObject _gameOverObject;
     [Header("游戏成功界面")]
     public GameObject _gameSucessObject;
-    private bool _waveIsOver = false;
     // 是否暂停，0-暂停，1-正常
     // private int _timeScale = 1;
 
@@ -120,38 +124,16 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-
-
-        // Select 键 暂停
-        // if (Input.GetKeyDown(KeyCode.Pause))
-        // {
-        //     _timeScale = _timeScale == 1 ? 0 : 1;
-        //     Time.timeScale = _timeScale;
-        // }
-        // // Select + Start 键 关卡选择界面
-        // if (Input.GetKey(KeyCode.Pause) && Input.GetKey(KeyCode.Return)){
-        //     SceneManager.LoadScene(0);
-        // }
-
+        // 更新U元素
         UpdateUI();
 
-        // if ((Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton2)) && !_waveIsOver)
-        // {
-        //     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // }
 
         // 所有敌人生成完毕后,检测是否还有敌人，没有则提示游戏结束
-        if (_waveIsOver)
+        if (BossObject != null && BossObject.Health == 0)
         {
-            if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
-            {
-                _gameSucessObject.SetActive(true);
-                if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
-                {
-                    StartCoroutine(GotoNextGameLevel());
-                }
-                return;
-            }
+            _gameSucessObject.SetActive(true);
+            StartCoroutine(GotoNextGameLevel());
+            return;
         }
 
         if (Game.Current.Player.Health <= 0)
@@ -159,7 +141,7 @@ public class GameManager : MonoBehaviour
             _gameOverObject.SetActive(true);
             if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
             {
-                StartCoroutine(GotoGameLevel());
+                StartCoroutine(GotoGameInit());
             }
         }
 
@@ -180,11 +162,6 @@ public class GameManager : MonoBehaviour
         if (_waveManager.CurrentWave.Ended)
         {
             _waveManager.MoveNext();
-            // 判断敌人是否全部生成完成
-            if (_waveManager.CurrentWave.Index == _waveManager.WaveLength - 1)
-            {
-                _waveIsOver = true;
-            }
         }
         // 生成小行星
         if (_difficultyManager.CanCreateAsteroid())
@@ -202,23 +179,40 @@ public class GameManager : MonoBehaviour
         {
             ScoreText.text = Game.Current.Score.ToString();
         }
-        if (ShieldText)
-        {
-            ShieldText.text = Game.Current.Player.ShieldPower.ToString();
-            // ShieldText.text = $"{_waveManager.CurrentWave.Index} / {_waveManager.WaveLength}";
-        }
         if (HealthText)
         {
             HealthText.text = Game.Current.Player.Health.ToString();
         }
-        if (LevelText)
+        if (_waveManager.IsLastWave() && BossCome.activeInHierarchy == false)
         {
-            LevelText.text = Game.Current.Player.ShootingPower.ToString();
+            BossCome.SetActive(true);
         }
+        if (_waveManager.BossCreated)
+        {
 
+            if (BossObject is null)
+            {
+                GameObject[] tmp = GameObject.FindGameObjectsWithTag(ObjectTags.Enemy);
+                for (int i = 0; i < tmp.Length; i++)
+                {
+                    if (tmp[i].name.StartsWith("Boss"))
+                    {
+                        BossObject = tmp[i].GetComponent<SpaceShipEnemy>();
+                        BossHP.SetActive(true);
+                    }
+                }
+            }
+            else
+            {
+                Debug.Log(BossObject.Health);
+                float width = BossHP.GetComponent<RectTransform>().rect.width * BossObject.Health / BossObject.MaxHealth;
+                float Height = BossCurrentHP.GetComponent<RectTransform>().rect.height;
+                BossCurrentHP.GetComponent<RectTransform>().sizeDelta = new Vector2(width, Height);
+            }
+        }
     }
 
-    IEnumerator GotoGameLevel()
+    IEnumerator GotoGameInit()
     {
         yield return new WaitForSeconds(3f);
         // 清空通关数据
