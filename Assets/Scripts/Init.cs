@@ -52,6 +52,7 @@ public class Init : MonoBehaviour
         insertCoinTipTransform = GameObject.Find("InsertCoin").GetComponent<RectTransform>();
 
         currentCoinNum = GameData.Instance.GetCurrentGameCoin();
+        Debug.Log("start currentCoinNum = " + currentCoinNum);
         if (currentCoinNum <= 0)
         {
             StartCoroutine(ShowInsertCoin());
@@ -65,7 +66,8 @@ public class Init : MonoBehaviour
             allPlanes[i] = transform.GetChild(i).gameObject;
         }
 
-
+        // 播放背景声音
+        AudioManage.Instance.PlayBgm(AudioManage.Instance.initBgmClip);
         // 设置声音等信息
         SetParams();
     }
@@ -168,7 +170,7 @@ public class Init : MonoBehaviour
     void showPlane()
     {
         // 避免一直切换
-        if (Time.time - pressKeyTime < 0.2f || !selectPlaneObject.activeSelf)
+        if (Time.time - pressKeyTime < 0.2f || !selectPlaneObject.activeInHierarchy)
         {
             return;
         }

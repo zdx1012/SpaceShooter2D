@@ -11,6 +11,7 @@ public class GameData
 
 
     public int currentGameCoin;
+    public Action insertCoinAction;
     private int coinValue;
     private int valueGame;
 
@@ -49,7 +50,8 @@ public class GameData
     public void AddGameCoin()
     {
         currentGameCoin += coinValue;
-        Debug.Log("当前可用游戏币：" + currentGameCoin);
+        insertCoinAction?.Invoke();
+        Debug.Log("++ 当前可用游戏币：" + currentGameCoin);
     }
 
     /// <summary>
@@ -58,10 +60,11 @@ public class GameData
     /// <returns></returns>
     public bool ReduceGameCoin()
     {
-        if (currentGameCoin > valueGame)
+        if (currentGameCoin >= valueGame)
         {
             currentGameCoin -= valueGame;
-            Debug.Log("当前可用游戏币：" + currentGameCoin);
+            Debug.Log("-- 当前可用游戏币：" + currentGameCoin);
+            Debug.Log("valueGame = " + valueGame);
             return true;
         }
         return false;
@@ -73,6 +76,7 @@ public class GameData
     /// <returns></returns>
     public bool CanPlayGame()
     {
+        Debug.Log("currentGameCoin = " + currentGameCoin + " valueGame = " + valueGame);
         return currentGameCoin >= valueGame;
     }
 

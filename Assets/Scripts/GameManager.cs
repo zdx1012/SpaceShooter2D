@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
     [Header("游戏失败界面")]
     public GameObject _gameOverObject;
     [Header("游戏成功界面")]
-    public GameObject _gameSucessObject;
+    public GameObject _gameSuccessObject;
     // 是否暂停，0-暂停，1-正常
     // private int _timeScale = 1;
 
@@ -119,6 +119,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        AudioManage.Instance.PlayBgm(AudioManage.Instance.gameNormalClip);
+        AudioManage.Instance.PlayClip(AudioManage.Instance.gameStartClip);
     }
 
 
@@ -131,14 +133,24 @@ public class GameManager : MonoBehaviour
         // 所有敌人生成完毕后,检测是否还有敌人，没有则提示游戏结束
         if (BossObject != null && BossObject.Health == 0)
         {
-            _gameSucessObject.SetActive(true);
-            StartCoroutine(GotoNextGameLevel());
+            if (!_gameSuccessObject.activeInHierarchy)
+            {
+                _gameSuccessObject.SetActive(true);
+                AudioManage.Instance.PlayClip(AudioManage.Instance.gameSuccessClip);
+                StartCoroutine(GotoNextGameLevel());
+            }
+
             return;
         }
 
         if (Game.Current.Player.Health <= 0)
         {
-            _gameOverObject.SetActive(true);
+            if (!_gameOverObject.activeInHierarchy)
+            {
+                _gameOverObject.SetActive(true);
+                AudioManage.Instance.PlayClip(AudioManage.Instance.gameOverClip);
+            }
+
             if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
             {
                 StartCoroutine(GotoGameInit());
@@ -186,6 +198,8 @@ public class GameManager : MonoBehaviour
         if (_waveManager.IsLastWave() && BossCome.activeInHierarchy == false)
         {
             BossCome.SetActive(true);
+            AudioManage.Instance.PlayClip(AudioManage.Instance.bossAppearClip);
+            AudioManage.Instance.PlayBgm(AudioManage.Instance.gameBossClip);
         }
         if (_waveManager.BossCreated)
         {
@@ -204,7 +218,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.Log(BossObject.Health);
                 float width = BossHP.GetComponent<RectTransform>().rect.width * BossObject.Health / BossObject.MaxHealth;
                 float Height = BossCurrentHP.GetComponent<RectTransform>().rect.height;
                 BossCurrentHP.GetComponent<RectTransform>().sizeDelta = new Vector2(width, Height);
