@@ -200,6 +200,7 @@ MonoBehaviour:
   HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
     type: 3}
   ScoreValue: 30
+  MaxHealth: 100
   CanShoot: 1
   ShootRate: 1
   BulletTemplate: {fileID: 6382252670245963048, guid: 75ef1b4e52f026648806683e062ae499,
@@ -216,7 +217,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 4f4c2e1ae851bd54097fee9eb2de825e, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
