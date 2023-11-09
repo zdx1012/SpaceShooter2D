@@ -45,10 +45,10 @@ public class SpaceShipEnemy : Enemy
         {
             // 初始化 敌人的子弹，根据敌人的位置和方向 确定子弹的位置和方向
             var bullet = Instantiate(BulletTemplate, _bulletPoint[i].transform.position, _bulletPoint[i].transform.rotation); // rotation.z为1，即-180度，
-                                                                                                                        // var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, Quaternion.identity);
+                                                                                                                              // var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, Quaternion.identity);
             bullet.GetComponent<BulletController>().SetAsEnemyBullet();
         }
-        _bulletAudio.Play();
+        if (_bulletAudio != null) _bulletAudio.Play();
 
         _nextShootTime = Time.time + (1f / ShootRate) + Random.Range(0f, 0.5f); // add some randomness time while shooting
     }

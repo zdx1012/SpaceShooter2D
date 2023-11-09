@@ -76,7 +76,6 @@ public class GameData
     /// <returns></returns>
     public bool CanPlayGame()
     {
-        Debug.Log("currentGameCoin = " + currentGameCoin + " valueGame = " + valueGame);
         return currentGameCoin >= valueGame;
     }
 

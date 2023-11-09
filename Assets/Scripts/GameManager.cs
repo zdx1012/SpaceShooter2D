@@ -111,6 +111,7 @@ public class GameManager : MonoBehaviour
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
+        Game.Current.totalGameLevel = SceneManager.sceneCountInBuildSettings - 2;
         Game.Current.StartNew();
 
         // 读取上次通关保存的玩家数据
@@ -130,10 +131,10 @@ public class GameManager : MonoBehaviour
         UpdateUI();
 
 
-        // 所有敌人生成完毕后,检测是否还有敌人，没有则提示游戏结束
-        if (BossObject != null && BossObject.Health == 0)
+        // s生成boss后，检测是否还有BOSS，没有则提示游戏结束
+        if (_waveManager.BossCreated && ((BossObject != null && BossObject.Health == 0) || BossObject == null))
         {
-            if (!_gameSuccessObject.activeInHierarchy)
+            if (!_gameSuccessObject.activeSelf)
             {
                 _gameSuccessObject.SetActive(true);
                 AudioManage.Instance.PlayClip(AudioManage.Instance.gameSuccessClip);
@@ -145,7 +146,7 @@ public class GameManager : MonoBehaviour
 
         if (Game.Current.Player.Health <= 0)
         {
-            if (!_gameOverObject.activeInHierarchy)
+            if (!_gameOverObject.activeSelf)
             {
                 _gameOverObject.SetActive(true);
                 AudioManage.Instance.PlayClip(AudioManage.Instance.gameOverClip);
@@ -195,7 +196,7 @@ public class GameManager : MonoBehaviour
         {
             HealthText.text = Game.Current.Player.Health.ToString();
         }
-        if (_waveManager.IsLastWave() && BossCome.activeInHierarchy == false)
+        if (_waveManager.IsLastWave() && BossCome.activeSelf == false && !_waveManager.BossCreated)
         {
             BossCome.SetActive(true);
             AudioManage.Instance.PlayClip(AudioManage.Instance.bossAppearClip);

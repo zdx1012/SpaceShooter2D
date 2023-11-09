@@ -160,7 +160,7 @@ MonoBehaviour:
   ScoreValue: 100
   MaxHealth: 100
   CanShoot: 1
-  ShootRate: 1
+  ShootRate: 0.5
   BulletTemplate: {fileID: 6382252670245963048, guid: 822a2cb52e57e3546981157e162181af,
     type: 3}
 --- !u!82 &7103041749856754992
@@ -173,7 +173,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 4f4c2e1ae851bd54097fee9eb2de825e, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 1171bb59eb67dc24aa8188ef5cbcfab8, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1

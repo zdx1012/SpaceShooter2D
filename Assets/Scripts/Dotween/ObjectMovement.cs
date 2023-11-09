@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 using DG.Tweening;
 
 public class ObjectMovement : MonoBehaviour
@@ -9,7 +10,11 @@ public class ObjectMovement : MonoBehaviour
 
     public int Loop = -1;
     public bool IsRevert = false;
+    [Header("每次激活是否都显示动画")]
     public bool ShowOnEveryActivate = true;
+
+    [Header("平移动画完成后是否隐藏")]
+    public bool HideAfterShow = false;
 
     private Vector3 targetPosition;  // 目标位置
     private Vector3 startPosition;  // 起始位置
@@ -32,7 +37,11 @@ public class ObjectMovement : MonoBehaviour
     {
         SetPosition();
         // 将游戏对象移动到目标位置
-        transform.DOMove(targetPosition, movementDuration).SetEase(movementEase).SetLoops(Loop).Play();
+        transform.DOMove(targetPosition, movementDuration)
+                .SetEase(movementEase)
+                .SetLoops(Loop)
+                .OnComplete(OnMovementComplete)
+                .Play();
     }
 
     void SetPosition()
@@ -42,9 +51,18 @@ public class ObjectMovement : MonoBehaviour
         if (IsRevert) { transform.position = targetPosition; targetPosition = startPosition; }
     }
 
-    // private void ReverseMovement()
-    // {
-    //     // 将游戏对象移动回起始位置
-    //     transform.DOMove(transform.position, movementDuration).SetEase(movementEase).OnComplete(StartMovement);
-    // }
+
+    void OnMovementComplete()
+    {
+        if (HideAfterShow) StartCoroutine(Hidden());
+
+
+    }
+
+    private IEnumerator Hidden()
+    {
+        yield return new WaitForSeconds(2);
+        transform.gameObject.SetActive(false);
+        yield return null;
+    }
 }

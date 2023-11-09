@@ -7,18 +7,25 @@ public class AudioManage : MonoBehaviour
 {
     [Header("投币")]
     public AudioClip coinAudioClip;
+
     [Header("初始化界面背景音乐")]
     public AudioClip initBgmClip;
+
     [Header("正常游戏背景音乐")]
     public AudioClip gameNormalClip;
+
     [Header("打BOSS背景音乐")]
     public AudioClip gameBossClip;
+
     [Header("boss出现警示音")]
     public AudioClip bossAppearClip;
+
     [Header("游戏开始提示音")]
     public AudioClip gameStartClip;
+
     [Header("游戏成功提示音")]
     public AudioClip gameSuccessClip;
+    
     [Header("游戏失败提示音")]
     public AudioClip gameOverClip;
 

@@ -160,7 +160,7 @@ MonoBehaviour:
   ScoreValue: 150
   MaxHealth: 150
   CanShoot: 1
-  ShootRate: 2
+  ShootRate: 0.5
   BulletTemplate: {fileID: 6382252670245963048, guid: 822a2cb52e57e3546981157e162181af,
     type: 3}
 --- !u!82 &7103041749856754992

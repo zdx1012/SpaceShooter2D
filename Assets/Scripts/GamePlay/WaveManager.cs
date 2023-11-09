@@ -38,7 +38,7 @@ namespace Assets.Scripts.GamePlay
             if (Ended) return;
             if (_currentWave.IsFullyCreated) return;
             if (_currentWave.Delaying) return;
-            Debug.Log($"当前敌人进度： {_currentWave.Index} / {_waves.Length}  {_difficultyManager.Difficulty}");
+            // Debug.Log($"当前敌人进度： {_currentWave.Index + 1} / {_waves.Length}  {_difficultyManager.Difficulty}");
             // 循环生成每一波的敌人
             foreach (var obj in _currentWave.Definition.Sets)
             {
