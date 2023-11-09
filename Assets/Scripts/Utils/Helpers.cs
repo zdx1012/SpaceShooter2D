@@ -96,10 +96,11 @@ namespace Assets.Scripts.GamePlay
         {
             LoadGameConfig();
         }
-        
 
-        public void DefaultGameConfig(){
-            gameConfig = new GameConfig(0, 0, 0, 0, false, 0, 0, 0, false, false);
+
+        public void DefaultGameConfig()
+        {
+            gameConfig = new GameConfig(0, 0, 0, 0, false, 0, 0, 0, false, false, 0, 0);
             SaveGameConfig();
             LoadGameConfig();
         }
@@ -108,8 +109,7 @@ namespace Assets.Scripts.GamePlay
         {
             if (gameConfig == null)
             {
-
-                gameConfig = new GameConfig(0, 0, 0, 0, false, 0, 0, 0, false, false);
+                gameConfig = new GameConfig(0, 0, 0, 0, false, 0, 0, 0, false, false, 0, 0);
             }
 
             // 序列化游戏配置为 JSON 字符串

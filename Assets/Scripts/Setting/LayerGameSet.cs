@@ -68,7 +68,7 @@ public class LayerGameSet : SettingLayers
                         LocalConfig.instance.gameConfig.SetValueGame(isNext);
                         break;
                     case 2:
-                        LocalConfig.instance.gameConfig.SetScoreAdd();
+                        LocalConfig.instance.gameConfig.SetGiftAdd();
                         break;
                     case 3:
                         LocalConfig.instance.gameConfig.SetVolumeGame(isNext);
@@ -87,6 +87,12 @@ public class LayerGameSet : SettingLayers
                         break;
                     case 8:
                         LocalConfig.instance.gameConfig.SetHealthy(isNext);
+                        break;
+                    case 9:
+                        LocalConfig.instance.gameConfig.SetGiftScore(isNext);
+                        break;
+                    case 10:
+                        LocalConfig.instance.gameConfig.SetGiftCount(isNext);
                         break;
                 }
             }
@@ -174,6 +180,8 @@ public class LayerGameSet : SettingLayers
         textItems[6].text = LocalConfig.instance.gameConfig.GetDemoVideo();
         textItems[7].text = LocalConfig.instance.gameConfig.GetAutoFire();
         textItems[8].text = LocalConfig.instance.gameConfig.GetHealthy().ToString();
+        textItems[9].text = LocalConfig.instance.gameConfig.GetGiftScore().ToString();
+        textItems[10].text = LocalConfig.instance.gameConfig.GetGiftCount().ToString();
     }
 
 }

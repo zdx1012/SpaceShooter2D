@@ -170,7 +170,7 @@ public class Init : MonoBehaviour
     void showPlane()
     {
         // 避免一直切换
-        if (Time.time - pressKeyTime < 0.2f || !selectPlaneObject.activeInHierarchy)
+        if (Time.time - pressKeyTime < 0.5f || !selectPlaneObject.activeInHierarchy)
         {
             return;
         }

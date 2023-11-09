@@ -11,6 +11,17 @@ using System.IO;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
+public enum GameState
+{
+    None,
+    Start,
+    Success,
+    GameOver,
+    Contiunue,
+    Gift,
+
+}
+
 [Serializable]
 public class EnemyWave
 {
@@ -72,12 +83,24 @@ public class GameManager : MonoBehaviour
     private DifficultyManager _difficultyManager;
     private WaveManager _waveManager;
 
+    private GameState gameState;
+
     [Header("游戏失败界面")]
     public GameObject _gameOverObject;
+
     [Header("游戏成功界面")]
     public GameObject _gameSuccessObject;
-    // 是否暂停，0-暂停，1-正常
-    // private int _timeScale = 1;
+
+    [Header("游戏开始界面")]
+    public GameObject _gameStartbject;
+
+
+    [Header("继续界面")]
+    public GameObject _gameContinueObject;
+
+    [Header("退礼界面")]
+    public GameObject _gameGiftbject;
+
 
     void Awake()
     {
@@ -113,6 +136,7 @@ public class GameManager : MonoBehaviour
         Effetcs.Load();
         Game.Current.totalGameLevel = SceneManager.sceneCountInBuildSettings - 2;
         Game.Current.StartNew();
+        gameState = GameState.Start;
 
         // 读取上次通关保存的玩家数据
         if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
@@ -122,11 +146,13 @@ public class GameManager : MonoBehaviour
     {
         AudioManage.Instance.PlayBgm(AudioManage.Instance.gameNormalClip);
         AudioManage.Instance.PlayClip(AudioManage.Instance.gameStartClip);
+        // _gameStartbject.SetActive(true);
     }
 
 
     void Update()
     {
+        if (Time.timeScale == 0f) return;
         // 更新U元素
         UpdateUI();
 
@@ -134,28 +160,13 @@ public class GameManager : MonoBehaviour
         // s生成boss后，检测是否还有BOSS，没有则提示游戏结束
         if (_waveManager.BossCreated && ((BossObject != null && BossObject.Health == 0) || BossObject == null))
         {
-            if (!_gameSuccessObject.activeSelf)
-            {
-                _gameSuccessObject.SetActive(true);
-                AudioManage.Instance.PlayClip(AudioManage.Instance.gameSuccessClip);
-                StartCoroutine(GotoNextGameLevel());
-            }
-
+            SetGameState(GameState.Success);
             return;
         }
 
         if (Game.Current.Player.Health <= 0)
         {
-            if (!_gameOverObject.activeSelf)
-            {
-                _gameOverObject.SetActive(true);
-                AudioManage.Instance.PlayClip(AudioManage.Instance.gameOverClip);
-            }
-
-            if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
-            {
-                StartCoroutine(GotoGameInit());
-            }
+            SetGameState(GameState.Contiunue);
         }
 
         _waveManager.ExecuteCurrentWave();
@@ -195,6 +206,41 @@ public class GameManager : MonoBehaviour
         if (HealthText)
         {
             HealthText.text = Game.Current.Player.Health.ToString();
+        }
+        switch (gameState)
+        {
+            case GameState.Start:
+                _gameStartbject.SetActive(true);
+                gameState = GameState.None;
+                break;
+            case GameState.Success:
+                _gameSuccessObject.SetActive(true);
+                AudioManage.Instance.PlayClip(AudioManage.Instance.gameSuccessClip);
+                StartCoroutine(GotoNextGameLevel());
+                gameState = GameState.None;
+                break;
+            case GameState.GameOver:
+                _gameOverObject.SetActive(true);
+                AudioManage.Instance.PlayClip(AudioManage.Instance.gameOverClip);
+                gameState = GameState.None;
+                break;
+            case GameState.Contiunue:
+                _gameContinueObject.SetActive(true);
+                Debug.Log("goto coninue");
+                CountDownCallBack countDownCallBack = delegate ()
+                {
+                    _gameContinueObject.SetActive(false);
+                    SetGameState(GameState.GameOver, true);
+                    Time.timeScale = 1f;
+                    Game.Current.Player.RunHealthyCheck();
+                };
+                _gameContinueObject.GetComponent<CountDown>().StartCountDown(GameData.Instance.GetContinueTime(), countDownCallBack);
+                Time.timeScale = 0f;
+                break;
+            case GameState.Gift:
+                break;
+            case GameState.None:
+                break;
         }
         if (_waveManager.IsLastWave() && BossCome.activeSelf == false && !_waveManager.BossCreated)
         {
@@ -253,5 +299,10 @@ public class GameManager : MonoBehaviour
             SceneManager.LoadScene(0);
         }
         yield break;
+    }
+    void SetGameState(GameState state, bool isForce = false)
+    {
+        Debug.Log("set to " + state);
+        if (gameState == GameState.None || isForce) gameState = state;
     }
 }

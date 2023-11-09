@@ -64,16 +64,23 @@ public class PlayerController : GamePlayObject
         // 重新设置生命值
         Health = GameData.Instance.GetPlayerInitHealthy();
     }
+    public bool RunHealthyCheck()
+    {
+        if (Health <= 0) { base.Update(); PlayerPrefs.DeleteAll(); return true; }
+        return false;
+    }
 
     protected override void Update()
     {
-        base.Update();
-
-        if (Health < 0)
+        if (Health > 0)
         {
-            Debug.Log("Destroy Player all Saved Data");
-            PlayerPrefs.DeleteAll();
+            base.Update();
         }
+        // if (Health < 0)
+        // {
+        //     Debug.Log("Destroy Player all Saved Data");
+        //     PlayerPrefs.DeleteAll();
+        // }
 
 
         // inputs

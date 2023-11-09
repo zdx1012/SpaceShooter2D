@@ -20,7 +20,11 @@ public class GameConfig
     public int valueGame = 1;
 
     // 奖励累加
-    public bool scoreAdd = false;
+    public bool giftAdd = false;
+    // 奖励分数（退礼品所需分数）
+    public int giftScore = 0;
+    // 奖励个数（一次退礼品个数）
+    public int giftCount = 0;
 
     // 游戏音量
     public int volume = 0;
@@ -42,6 +46,9 @@ public class GameConfig
     public int[] healthyChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 };
     public int[] coinValueChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     public int[] valueGameChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+
+    public int[] giftScoreChoice = { 500, 600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900, 2000 };
+    public int[] giftCountChoice = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
     public String[] boolValueChoice = { "是", "否" };
     public String[] boolValueChoiceEn = { "Yes", "No" };
     public float[] volumeChoice = { 0.1f, 0.2f, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f, 0.9f, 1f };
@@ -50,18 +57,20 @@ public class GameConfig
 
 
 
-    public GameConfig(int _language, int _health, int _coinValue, int _valueGame, bool _scoreAdd, int _volume, int _difficultyLevel, int _waitCoinTime, bool _demoVideo, bool _autoFire)
+    public GameConfig(int _language, int _health, int _coinValue, int _valueGame, bool _giftAdd, int _volume, int _difficultyLevel, int _waitCoinTime, bool _demoVideo, bool _autoFire,int _giftScore,int _giftCount)
     {
         language = _language;
         initHealth = _health;
         coinValue = _coinValue;
         valueGame = _valueGame;
-        scoreAdd = _scoreAdd;
+        giftAdd = _giftAdd;
         volume = _volume;
         difficultyLevel = _difficultyLevel;
         waitCoinTime = _waitCoinTime;
         demoVideo = _demoVideo;
         autoFire = _autoFire;
+        giftScore = _giftScore;
+        giftCount = _giftCount;
     }
 
     /// <summary>
@@ -131,21 +140,56 @@ public class GameConfig
     }
 
     /// <summary>
+    /// 设置兑换礼物所需分数
+    /// </summary>
+    /// <param name="isNext"></param>
+    public void SetGiftScore(bool isNext)
+    {
+        giftScore = isNext ? giftScore + 1 : giftScore - 1;
+        if (giftScore >= giftScoreChoice.Length) giftScore = 0;
+        if (giftScore < 0) giftScore = giftScoreChoice.Length - 1;
+    }
+    public int GetGiftScore()
+    {
+        Debug.Log("giftScore=" + giftScoreChoice[giftScore]);
+        return giftScoreChoice[giftScore];
+    }
+
+
+    /// <summary>
+    /// 设置到达出礼物的个数
+    /// </summary>
+    /// <param name="isNext"></param>
+    public void SetGiftCount(bool isNext)
+    {
+        giftCount = isNext ? giftCount + 1 : giftCount - 1;
+        if (giftCount >= giftCountChoice.Length) giftCount = 0;
+        if (giftCount < 0) giftCount = giftCountChoice.Length - 1;
+    }
+    public int GetGiftCount()
+    {
+        Debug.Log("giftCount=" + giftCountChoice[giftCount]);
+        return giftCountChoice[giftCount];
+    }
+
+
+
+    /// <summary>
     /// 设置是否奖励累加
     /// </summary>
-    public void SetScoreAdd()
+    public void SetGiftAdd()
     {
-        scoreAdd = !scoreAdd;
+        giftAdd = !giftAdd;
     }
     public String GetScoreAdd()
     {
         if (language == 0)
         {
-            return boolValueChoice[scoreAdd ? 0 : 1];
+            return boolValueChoice[giftAdd ? 0 : 1];
         }
         else
         {
-            return boolValueChoiceEn[scoreAdd ? 0 : 1];
+            return boolValueChoiceEn[giftAdd ? 0 : 1];
         }
     }
 
@@ -222,6 +266,9 @@ public class GameConfig
         return demoVideo;
     }
 
+    /// <summary>
+    /// 设置是否自动攻击
+    /// </summary>
     public void SetAutoFire()
     {
         autoFire = !autoFire;

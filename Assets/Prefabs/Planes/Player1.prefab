@@ -345,7 +345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08160dee5fdedd49a15c6d5ff2c6f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 30
+  Health: 1
   Speed: 7
   ExplosionTemplate: {fileID: 100008, guid: e9fd47bd83d954547a096ac63024c3a9, type: 3}
   HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
@@ -353,7 +353,7 @@ MonoBehaviour:
   ShootingPower: 4
   CanTakeDamage: 1
   ShootRate: 2
-  ShieldPower: 100
+  ShieldPower: 1
   ShieldEffect: {fileID: 3936511404714628773}
   ShieldColor: {r: 0.84313726, g: 0.9622642, b: 0.9587181, a: 1}
   BulletTemplate: {fileID: 6382252670245963048, guid: 52181cba447de6142aa77fc8e2932cb0,

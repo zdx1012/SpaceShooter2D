@@ -109,4 +109,8 @@ public class GameData
     {
         return currentPlayer;
     }
+    public int GetContinueTime()
+    {
+        return LocalConfig.instance.gameConfig.GetWaitCoinTime();
+    }
 }
