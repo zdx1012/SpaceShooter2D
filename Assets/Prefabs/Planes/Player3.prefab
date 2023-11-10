@@ -356,7 +356,7 @@ MonoBehaviour:
   ShieldPower: 1
   ShieldEffect: {fileID: 3936511404714628773}
   ShieldColor: {r: 0.84313726, g: 0.9056604, b: 0.8895371, a: 1}
-  BulletTemplate: {fileID: 6382252670245963048, guid: 52181cba447de6142aa77fc8e2932cb0,
+  BulletTemplate: {fileID: 6382252670245963048, guid: abe0f6198de88fd47b3d8684422151c1,
     type: 3}
   ShieldEasyFX: 1
 --- !u!82 &4720415378665836522
