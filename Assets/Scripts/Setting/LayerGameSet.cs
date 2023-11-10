@@ -141,6 +141,7 @@ public class LayerGameSet : SettingLayers
                 {
                     Debug.Log(" save and exit");
                     LocalConfig.instance.SaveGameConfig();
+                    GameData.Instance.ReloadGameConfig();
                     GameSetting.Instance.showLayer(GameSetting.Instance.List);
                 };
                 GameSetting.Instance.SetConfirmCallBack(callBack);

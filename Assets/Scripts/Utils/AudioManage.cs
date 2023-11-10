@@ -30,12 +30,9 @@ public class AudioManage : MonoBehaviour
     public AudioClip gameOverClip;
 
 
-    [HideInInspector]
     public AudioSource audioBGMSource;
 
-    private AudioSource audioSource;
-
-    private AudioSource audioTip;
+    public AudioSource audioTip;
 
     public static AudioManage Instance;
 
@@ -44,6 +41,7 @@ public class AudioManage : MonoBehaviour
 
     void Awake()
     {
+        Debug.Log("audio manage awake");
         if (!isCreated)
         {
             DontDestroyOnLoad(gameObject);
@@ -61,14 +59,16 @@ public class AudioManage : MonoBehaviour
         audioTip.transform.SetParent(base.transform);
         audioTip.loop = false;
 
+        Instance = this;
+
     }
     void Start()
     {
+        Debug.Log("start");
         GameData.Instance.insertCoinAction = delegate
         {
             PlayClip(coinAudioClip);
         };
-        Instance = this;
     }
 
     // Update is called once per frame

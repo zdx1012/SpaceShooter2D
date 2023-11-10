@@ -105,7 +105,6 @@ namespace Assets.Scripts.GamePlay
         {
             gameConfig = new GameConfig(0, 0, 0, 0, false, 0, 0, 0, false, false, 0, 0);
             SaveGameConfig();
-            LoadGameConfig();
         }
 
         public void SaveGameConfig()
@@ -123,6 +122,7 @@ namespace Assets.Scripts.GamePlay
             File.WriteAllText(saveFilePath, json);
 
             Debug.Log("Game config saved to file: " + saveFilePath);
+            LoadGameConfig();
         }
 
         // 从 JSON 文件中加载游戏配置
@@ -139,6 +139,8 @@ namespace Assets.Scripts.GamePlay
             Debug.Log(" 一次出礼品个数： " + gameConfig.GetGiftCount());
             Debug.Log(" 礼品可否累加： " + gameConfig.GetBoolGiftAdd());
             Debug.Log(" 初始生命值： " + gameConfig.GetHealthy());
+            Debug.Log(" 1币几分: " + gameConfig.GetCoinValue());
+            Debug.Log(" 几分一玩： " + gameConfig.GetValueGame());
         }
 
 

@@ -114,10 +114,4 @@ public class GameSetting : MonoSingleton<GameSetting>
             confirmObject.SetActive(false);
         }
     }
-
-    public void Save()
-    {
-        Debug.Log("save data");
-        LocalConfig.instance.SaveGameConfig();
-    }
 }

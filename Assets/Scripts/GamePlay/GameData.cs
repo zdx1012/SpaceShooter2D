@@ -26,6 +26,12 @@ public class GameData
         valueGame = LocalConfig.instance.gameConfig.GetValueGame();
     }
 
+    public void ReloadGameConfig()
+    {
+        coinValue = LocalConfig.instance.gameConfig.GetCoinValue();
+        valueGame = LocalConfig.instance.gameConfig.GetValueGame();
+    }
+
     /// <summary>
     ///  获取当前多少币（分数）可以开始游戏
     /// </summary>
@@ -82,7 +88,7 @@ public class GameData
     public String GetShowCoinString()
     {
         gameCoinString = currentGameCoin.ToString();
-        if (valueGame > 0) gameCoinString = gameCoinString + "/" + valueGame.ToString();
+        if (valueGame > 1) gameCoinString = gameCoinString + "/" + valueGame.ToString();
         return gameCoinString;
     }
 

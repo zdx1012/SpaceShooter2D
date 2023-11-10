@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
     [Header("UI提示文本")]
     public Text ScoreText;
     public Text HealthText;
+    public Text CoinText;
     [Header("boss生命")]
     public GameObject BossHP;
     [Header("boss当前生命")]
@@ -224,6 +225,10 @@ public class GameManager : MonoBehaviour
         {
             HealthText.text = Game.Current.Player.Health.ToString();
         }
+        if (CoinText)
+        {
+            CoinText.text = GameData.Instance.GetShowCoinString();
+        }
         switch (gameState)
         {
             case GameState.Start:
@@ -233,7 +238,15 @@ public class GameManager : MonoBehaviour
             case GameState.Success:
                 _gameSuccessObject.SetActive(true);
                 AudioManage.Instance.PlayClip(AudioManage.Instance.gameSuccessClip);
-                StartCoroutine(GotoNextGameLevel());
+                // 非第三关则跳转下一关，否则弹出礼品
+                if (SceneManager.GetActiveScene().name != CurrentGameScene.Part3.GetDescription())
+                {
+                    StartCoroutine(GotoNextGameLevel());
+                }
+                else
+                {
+                    StartCoroutine(ReadyChangeGameState(GameState.Gift, 3));
+                }
                 gameState = GameState.None;
                 break;
             case GameState.GameOver:
@@ -318,6 +331,7 @@ public class GameManager : MonoBehaviour
         else if (SceneManager.GetActiveScene().name == CurrentGameScene.Part3.GetDescription())
         {
             targetSceneName = CurrentGameScene.Init.GetDescription();
+            yield break;
         }
         PlayerInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
         Debug.Log("goto scene " + targetSceneName);

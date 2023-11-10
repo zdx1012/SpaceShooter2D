@@ -70,7 +70,7 @@ public class LayerFactory : SettingLayers
             {
                 ConfirmCallBack callback = delegate
                 {
-                    GameSetting.Instance.Save();
+                    LocalConfig.instance.SaveGameConfig();
                     GameSetting.Instance.showLayer(GameSetting.Instance.List);
                 };
                 GameSetting.Instance.SetConfirmCallBack(callback);
