@@ -25,7 +25,7 @@ public class AudioManage : MonoBehaviour
 
     [Header("游戏成功提示音")]
     public AudioClip gameSuccessClip;
-    
+
     [Header("游戏失败提示音")]
     public AudioClip gameOverClip;
 
@@ -46,20 +46,16 @@ public class AudioManage : MonoBehaviour
         {
             DontDestroyOnLoad(gameObject);
             isCreated = true;
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-        audioBGMSource = new GameObject("AudioBgm", typeof(AudioSource)).GetComponent<AudioSource>();
-        audioBGMSource.transform.SetParent(base.transform);
-        audioBGMSource.loop = true;
+            audioBGMSource = new GameObject("AudioBgm", typeof(AudioSource)).GetComponent<AudioSource>();
+            audioBGMSource.transform.SetParent(base.transform);
+            audioBGMSource.loop = true;
 
-        audioTip = new GameObject("AudioTip", typeof(AudioSource)).GetComponent<AudioSource>();
-        audioTip.transform.SetParent(base.transform);
-        audioTip.loop = false;
+            audioTip = new GameObject("AudioTip", typeof(AudioSource)).GetComponent<AudioSource>();
+            audioTip.transform.SetParent(base.transform);
+            audioTip.loop = false;
 
-        Instance = this;
+            Instance = this;
+        }
 
     }
     void Start()
