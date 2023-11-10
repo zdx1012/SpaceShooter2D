@@ -48,7 +48,7 @@ public class SpaceShipEnemy : Enemy
                                                                                                                               // var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, Quaternion.identity);
             bullet.GetComponent<BulletController>().SetAsEnemyBullet();
         }
-        if (_bulletAudio != null) _bulletAudio.Play();
+        if (_bulletAudio != null &&  _bulletAudio.enabled) _bulletAudio.Play();
 
         _nextShootTime = Time.time + (1f / ShootRate) + Random.Range(0f, 0.5f); // add some randomness time while shooting
     }

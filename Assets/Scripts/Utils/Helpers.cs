@@ -2,6 +2,9 @@
 using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
+// using System.ComponentModel;
+using System;
+using Random = UnityEngine.Random;
 
 namespace Assets.Scripts.GamePlay
 {
@@ -46,7 +49,7 @@ namespace Assets.Scripts.GamePlay
 
     public static class GameObjectExtensions
     {
-        public static T FindComponentInChildWithTag<T>(this GameObject parent, string tag) where T : Component
+        public static T FindComponentInChildWithTag<T>(this GameObject parent, string tag) where T : UnityEngine.Component
         {
             var t = parent.transform;
             foreach (Transform tr in t)
@@ -59,7 +62,7 @@ namespace Assets.Scripts.GamePlay
 
         public static GameObject[] FindComponentsInChildWithTag(this GameObject parent, string tag)
         {
-            return parent.GetComponentsInChildren<Component>()
+            return parent.GetComponentsInChildren<UnityEngine.Component>()
                          .Where(c => c.tag == ObjectTags.BulletPoints)
                          .Select(c => c.gameObject)
                          .ToArray();
@@ -132,6 +135,10 @@ namespace Assets.Scripts.GamePlay
             gameConfig = JsonConvert.DeserializeObject<GameConfig>(json);
 
             Debug.Log("Game config loaded from file: " + saveFilePath);
+            Debug.Log(" 兑换礼品所需分数： " + gameConfig.GetGiftScore());
+            Debug.Log(" 一次出礼品个数： " + gameConfig.GetGiftCount());
+            Debug.Log(" 礼品可否累加： " + gameConfig.GetBoolGiftAdd());
+            Debug.Log(" 初始生命值： " + gameConfig.GetHealthy());
         }
 
 
@@ -177,6 +184,43 @@ namespace Assets.Scripts.GamePlay
             Score = 0;
             ShootingPower = 1;
             hasUpdate = false;
+        }
+    }
+
+
+    public enum GameState
+    {
+        None,
+        Start,
+        Success,
+        GameOver,
+        Contiunue,
+        Gift,
+        NoGift,
+
+    }
+
+    public enum CurrentGameScene
+    {
+        [System.ComponentModel.Description("Init")]
+        Init,
+        [System.ComponentModel.Description("Part1")]
+        Part1,
+        [System.ComponentModel.Description("Part2")]
+        Part2,
+        [System.ComponentModel.Description("Part3")]
+        Part3,
+        [System.ComponentModel.Description("SettingMain")]
+        SettingMain
+    }
+
+    static class EnumExtensions
+    {
+        public static string GetDescription(this Enum value)
+        {
+            var field = value.GetType().GetField(value.ToString());
+            var attribute = Attribute.GetCustomAttribute(field, typeof(System.ComponentModel.DescriptionAttribute)) as System.ComponentModel.DescriptionAttribute;
+            return attribute != null ? attribute.Description : value.ToString();
         }
     }
 }

@@ -30,7 +30,7 @@ public class CountDown : MonoBehaviour
 
     public void StartCountDown(float countDownTime, CountDownCallBack callback)
     {
-        startTime = Time.time;
+        startTime = Time.unscaledTime;
         endTime = startTime + countDownTime;
         countdownFinishedCallback = callback;
         activate = true;

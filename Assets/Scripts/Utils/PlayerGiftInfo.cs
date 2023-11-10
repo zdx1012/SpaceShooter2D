@@ -1,4 +1,5 @@
-﻿public class PlayerGiftInfo
+﻿using System;
+public class PlayerGiftInfo
 {
     public int GetCount; // 获取可退礼数量
     public int ReturnCount; // 已申请退礼数量
@@ -12,4 +13,6 @@
         OkCount = 0;
         ErrorCount = 0;
     }
+
+
 }

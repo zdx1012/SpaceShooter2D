@@ -57,7 +57,7 @@ public class GameConfig
 
 
 
-    public GameConfig(int _language, int _health, int _coinValue, int _valueGame, bool _giftAdd, int _volume, int _difficultyLevel, int _waitCoinTime, bool _demoVideo, bool _autoFire,int _giftScore,int _giftCount)
+    public GameConfig(int _language, int _health, int _coinValue, int _valueGame, bool _giftAdd, int _volume, int _difficultyLevel, int _waitCoinTime, bool _demoVideo, bool _autoFire, int _giftScore, int _giftCount)
     {
         language = _language;
         initHealth = _health;
@@ -181,7 +181,11 @@ public class GameConfig
     {
         giftAdd = !giftAdd;
     }
-    public String GetScoreAdd()
+    public bool GetBoolGiftAdd()
+    {
+        return giftAdd;
+    }
+    public String GetGiftAdd()
     {
         if (language == 0)
         {

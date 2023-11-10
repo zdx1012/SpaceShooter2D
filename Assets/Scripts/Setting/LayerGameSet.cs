@@ -173,7 +173,7 @@ public class LayerGameSet : SettingLayers
     {
         textItems[0].text = LocalConfig.instance.gameConfig.GetCoinValue().ToString();
         textItems[1].text = LocalConfig.instance.gameConfig.GetValueGame().ToString();
-        textItems[2].text = LocalConfig.instance.gameConfig.GetScoreAdd();
+        textItems[2].text = LocalConfig.instance.gameConfig.GetGiftAdd();
         textItems[3].text = LocalConfig.instance.gameConfig.GetVolume().ToString();
         textItems[4].text = LocalConfig.instance.gameConfig.GetDifficulty().ToString();
         textItems[5].text = LocalConfig.instance.gameConfig.GetWaitCoinTime().ToString();

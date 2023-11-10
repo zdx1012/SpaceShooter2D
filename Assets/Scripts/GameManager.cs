@@ -11,16 +11,6 @@ using System.IO;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
-public enum GameState
-{
-    None,
-    Start,
-    Success,
-    GameOver,
-    Contiunue,
-    Gift,
-
-}
 
 [Serializable]
 public class EnemyWave
@@ -84,6 +74,7 @@ public class GameManager : MonoBehaviour
     private WaveManager _waveManager;
 
     private GameState gameState;
+    private bool allowsDuplicates;
 
     [Header("游戏失败界面")]
     public GameObject _gameOverObject;
@@ -100,6 +91,8 @@ public class GameManager : MonoBehaviour
 
     [Header("退礼界面")]
     public GameObject _gameGiftbject;
+    public Text _gameGiftReturnCountText;
+    public Text _gameGiftReturnOkText;
 
 
     void Awake()
@@ -134,39 +127,47 @@ public class GameManager : MonoBehaviour
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
-        Game.Current.totalGameLevel = SceneManager.sceneCountInBuildSettings - 2;
         Game.Current.StartNew();
         gameState = GameState.Start;
 
         // 读取上次通关保存的玩家数据
         if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
+
     }
 
     void Start()
     {
         AudioManage.Instance.PlayBgm(AudioManage.Instance.gameNormalClip);
         AudioManage.Instance.PlayClip(AudioManage.Instance.gameStartClip);
-        // _gameStartbject.SetActive(true);
     }
 
 
     void Update()
     {
-        if (Time.timeScale == 0f) return;
+        if (Time.timeScale == 0f)
+        {
+            ContinueGame();
+            return;
+        }
+        else if (InputUtil.instance.IsSettingCenterOnceClicked())
+        {
+            SceneManager.LoadScene(CurrentGameScene.SettingMain.GetDescription());
+        }
         // 更新U元素
         UpdateUI();
 
 
         // s生成boss后，检测是否还有BOSS，没有则提示游戏结束
-        if (_waveManager.BossCreated && ((BossObject != null && BossObject.Health == 0) || BossObject == null))
+        if (_waveManager.BossCreated && ((BossObject != null && BossObject.Health == 0) || BossObject == null) && !allowsDuplicates)
         {
             SetGameState(GameState.Success);
+            allowsDuplicates = true; // 游戏成功后，已跳转场景，这个值可不用再设置为false
             return;
         }
-
-        if (Game.Current.Player.Health <= 0)
+        if (Game.Current.Player.Health <= 0 && !allowsDuplicates)
         {
             SetGameState(GameState.Contiunue);
+            allowsDuplicates = true;
         }
 
         _waveManager.ExecuteCurrentWave();
@@ -196,6 +197,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 继续游戏
+    /// </summary>
+    private void ContinueGame()
+    {
+        if (InputUtil.instance.IsStartOnceClicked() && GameData.Instance.CanPlayGame())
+        {
+            GameData.Instance.ReduceGameCoin();
+            Game.Current.Player.ResetHealth(LocalConfig.instance.gameConfig.GetHealthy());
+            Debug.Log("重置生命值 " + Game.Current.Player.Health);
+            _gameContinueObject.SetActive(false);
+            SetGameState(GameState.None, true);
+            Time.timeScale = 1f;
+            allowsDuplicates = false;
+        }
+    }
 
     private void UpdateUI()
     {
@@ -223,6 +240,7 @@ public class GameManager : MonoBehaviour
                 _gameOverObject.SetActive(true);
                 AudioManage.Instance.PlayClip(AudioManage.Instance.gameOverClip);
                 gameState = GameState.None;
+                StartCoroutine(ReadyChangeGameState(GameState.Gift, 3));
                 break;
             case GameState.Contiunue:
                 _gameContinueObject.SetActive(true);
@@ -230,14 +248,18 @@ public class GameManager : MonoBehaviour
                 CountDownCallBack countDownCallBack = delegate ()
                 {
                     _gameContinueObject.SetActive(false);
+                    Game.Current.Player.RunHealthyCheck();
                     SetGameState(GameState.GameOver, true);
                     Time.timeScale = 1f;
-                    Game.Current.Player.RunHealthyCheck();
                 };
                 _gameContinueObject.GetComponent<CountDown>().StartCountDown(GameData.Instance.GetContinueTime(), countDownCallBack);
                 Time.timeScale = 0f;
                 break;
             case GameState.Gift:
+                StartCoroutine(ShowGiftObject());
+                gameState = GameState.None;
+                break;
+            case GameState.NoGift:
                 break;
             case GameState.None:
                 break;
@@ -277,32 +299,87 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         // 清空通关数据
         PlayerInfo.instance.Reset();
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene(CurrentGameScene.Init.GetDescription());
         yield break;
     }
 
     IEnumerator GotoNextGameLevel()
     {
-        Debug.Log("currentGameLevel : " + Game.Current.currentGameLevel + "/" + Game.Current.totalGameLevel);
         yield return new WaitForSeconds(3f);
-        if (Game.Current.currentGameLevel + 1 < Game.Current.totalGameLevel)
+        string targetSceneName = "";
+        if (SceneManager.GetActiveScene().name == CurrentGameScene.Part1.GetDescription())
         {
-            Game.Current.currentGameLevel += 1;
-            // 保存通关数据
-            PlayerInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
-            Debug.Log("load scene " + (Game.Current.currentGameLevel + 1));
-            SceneManager.LoadScene(Game.Current.currentGameLevel + 1);
+            targetSceneName = CurrentGameScene.Part2.GetDescription();
         }
-        else if (Game.Current.currentGameLevel + 1 == Game.Current.totalGameLevel)
+        else if (SceneManager.GetActiveScene().name == CurrentGameScene.Part2.GetDescription())
         {
-            Debug.Log("load scene 0");
-            SceneManager.LoadScene(0);
+            targetSceneName = CurrentGameScene.Part3.GetDescription();
         }
+        else if (SceneManager.GetActiveScene().name == CurrentGameScene.Part3.GetDescription())
+        {
+            targetSceneName = CurrentGameScene.Init.GetDescription();
+        }
+        PlayerInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
+        Debug.Log("goto scene " + targetSceneName);
+        SceneManager.LoadScene(targetSceneName);
         yield break;
     }
+
+    /// <summary>
+    /// 即时设置游戏状态
+    /// </summary>
+    /// <param name="state">状态</param>
+    /// <param name="isForce">强制更改(当前状态不为None,且没有设置强制更新，则不会更新)</param>
     void SetGameState(GameState state, bool isForce = false)
     {
-        Debug.Log("set to " + state);
-        if (gameState == GameState.None || isForce) gameState = state;
+        if (gameState == GameState.None || isForce)
+        {
+            Debug.Log("set to " + state);
+            gameState = state;
+        }
+    }
+
+    /// <summary>
+    /// 延时更改状态
+    /// </summary>
+    /// <param name="state">状态</param>
+    /// <param name="Seconds">时间</param>
+    /// <returns></returns>
+    IEnumerator ReadyChangeGameState(GameState state, int Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+        SetGameState(state);
+    }
+
+
+    /// <summary>
+    ///  显示退礼物弹窗
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ShowGiftObject()
+    {
+        _gameGiftbject.SetActive(true);
+
+        while (true)
+        {
+            _gameGiftReturnCountText.text = GiftManager.Instance.GetPlayerGetCount(
+                Game.Current.Score,
+                 LocalConfig.instance.gameConfig.GetGiftScore(),
+                 LocalConfig.instance.gameConfig.GetGiftCount(),
+                 LocalConfig.instance.gameConfig.GetBoolGiftAdd()
+                 ).ToString();
+            _gameGiftReturnOkText.text = GiftManager.Instance.GetPlayerOkCount().ToString();
+            Debug.Log("_gameGiftReturnCountText.text = " + _gameGiftReturnCountText.text);
+            Debug.Log("_gameGiftReturnOkText.text = " + _gameGiftReturnOkText.text);
+            GiftManager.Instance.StartReturnGift();
+            if (_gameGiftReturnCountText.text == _gameGiftReturnOkText.text)
+            {
+                yield return new WaitForSeconds(2);
+                StartCoroutine(GotoGameInit());
+                yield break;
+            }
+
+            yield return null; // 等待下一帧
+        }
     }
 }

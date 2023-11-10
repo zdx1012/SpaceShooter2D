@@ -6,10 +6,6 @@ namespace Assets.Scripts.GamePlay
     {
         private PlayerController _player;
         private static Game _game = null;
-
-        public int currentGameLevel = 0;
-        public int totalGameLevel = 0;
-
         public int Score { get; private set; }
         public int EnemiesKilled { get; private set; }
         public PlayerController Player => _player ?? (_player = GameObject.FindGameObjectWithTag(ObjectTags.Player).GetComponent<PlayerController>());
