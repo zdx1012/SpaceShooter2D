@@ -101,7 +101,6 @@ public class GameConfig
     }
     public int GetHealthy()
     {
-        Debug.Log("initHealth=" + healthyChoice[initHealth]);
         return healthyChoice[initHealth];
     }
 
@@ -118,7 +117,6 @@ public class GameConfig
     }
     public int GetCoinValue()
     {
-        Debug.Log("coinValue=" + coinValueChoice[coinValue]);
         return coinValueChoice[coinValue];
     }
 
@@ -135,7 +133,6 @@ public class GameConfig
 
     public int GetValueGame()
     {
-        Debug.Log("valueGame=" + valueGameChoice[valueGame]);
         return valueGameChoice[valueGame];
     }
 
@@ -151,7 +148,6 @@ public class GameConfig
     }
     public int GetGiftScore()
     {
-        Debug.Log("giftScore=" + giftScoreChoice[giftScore]);
         return giftScoreChoice[giftScore];
     }
 
@@ -168,7 +164,6 @@ public class GameConfig
     }
     public int GetGiftCount()
     {
-        Debug.Log("giftCount=" + giftCountChoice[giftCount]);
         return giftCountChoice[giftCount];
     }
 
@@ -209,7 +204,6 @@ public class GameConfig
     }
     public float GetVolume()
     {
-        Debug.Log("value=" + volumeChoice[valueGame]);
         return volumeChoice[volume] * 10;
     }
 
