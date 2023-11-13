@@ -41,7 +41,6 @@ public class AudioManage : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("audio manage awake");
         if (!isCreated)
         {
             DontDestroyOnLoad(gameObject);

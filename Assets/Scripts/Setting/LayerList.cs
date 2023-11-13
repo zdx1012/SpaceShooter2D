@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Assets.Scripts.GamePlay;
 
 public class LayerList : SettingLayers
 {
@@ -49,11 +50,11 @@ public class LayerList : SettingLayers
         // 显示指定的layer
         else if (InputUtil.instance.IsSettingCenterOnceClicked())
         {
-            Debug.Log(curIndex);
             if (curIndex == 0) GameSetting.Instance.showLayer(GameSetting.Instance.GameSet);
-            if (curIndex == 2) GameSetting.Instance.showLayer(2); // GameSetting.Instance.HWTest
-            if (curIndex == 4) GameSetting.Instance.showLayer(3); // GameSetting.Instance.HWTest
-            if (curIndex == 5) SceneManager.LoadScene(0);
+            if (curIndex == 1) GameSetting.Instance.showLayer(GameSetting.Instance.Account);
+            if (curIndex == 2) GameSetting.Instance.showLayer(GameSetting.Instance.HWTest);
+            if (curIndex == 4) GameSetting.Instance.showLayer(4);
+            if (curIndex == 5) SceneManager.LoadScene(CurrentGameScene.Init.GetDescription());
         };
         SelectItem();
     }

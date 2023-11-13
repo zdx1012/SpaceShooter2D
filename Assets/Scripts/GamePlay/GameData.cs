@@ -57,6 +57,7 @@ public class GameData
     {
         currentGameCoin += coinValue;
         insertCoinAction?.Invoke();
+        GamePlayerPrefs.Instance.AddCoinRecord();
         Debug.Log("++ 当前可用游戏币：" + currentGameCoin);
     }
 

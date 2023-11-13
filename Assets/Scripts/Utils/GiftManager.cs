@@ -81,6 +81,7 @@ public class GiftManager
             {
                 playerGiftInfo.OkCount += 1;
                 successSendGiftTime = Time.time;
+                GamePlayerPrefs.Instance.AddGiftRecord();
             }
         }
     }

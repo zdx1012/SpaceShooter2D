@@ -4,13 +4,13 @@ using UnityEngine.UI;
 
 public class LauangeShow : MonoBehaviour
 {
-    private Text m_tv;
+    private Text text;
 
     public string[] strs;
 
-    private int zh_size;
+    private int cnSize;
 
-    private int en_size;
+    private int enSize;
 
     private bool isInit = true;
 
@@ -18,14 +18,14 @@ public class LauangeShow : MonoBehaviour
 
     private void Awake()
     {
-        
+
         if (isInit)
         {
             isInit = false;
-            m_tv = GetComponent<Text>();
-            zh_size = m_tv.fontSize;
-            en_size = zh_size - 12;
-            if (en_size < 20) en_size = 20;
+            text = GetComponent<Text>();
+            cnSize = text.fontSize;
+            enSize = cnSize - 12;
+            if (enSize < 20) enSize = 20;
         }
     }
 
@@ -43,30 +43,14 @@ public class LauangeShow : MonoBehaviour
         }
         if (Language == 0)
         {
-            m_tv.text = strs[0];
-            m_tv.fontSize = zh_size;
+            text.text = strs[0];
+            text.fontSize = cnSize;
+        }
+        else if (Language == 1)
+        {
+            text.text = strs[1];
+            text.fontSize = enSize;
             return;
         }
-        if (Language == 1 || strs.Length <= 2)
-        {
-            m_tv.text = strs[1];
-            m_tv.fontSize = en_size;
-            return;
-        }
-        if (Language == 2)
-        {
-            m_tv.text = strs[2];
-            m_tv.fontSize = en_size;
-            return;
-        }
-        if (strs.Length < 4)
-        {
-            m_tv.text = strs[1];
-        }
-        else
-        {
-            m_tv.text = strs[3];
-        }
-        m_tv.fontSize = en_size;
     }
 }

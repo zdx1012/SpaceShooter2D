@@ -77,16 +77,10 @@ public class LayerFactory : SettingLayers
             }
 
         }
-        UpdateUI();
+        SelectItem();
     }
 
     public override void SelectItem()
-    {
-
-    }
-
-
-    void UpdateUI()
     {
         if (curIndex < textItems.Length) textItems[curIndex].text = LocalConfig.instance.gameConfig.GetLanguage();
 
