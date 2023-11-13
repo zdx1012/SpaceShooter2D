@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LauangeShow : MonoBehaviour
+public class TextLanguageAdaptation : MonoBehaviour
 {
     private Text text;
 

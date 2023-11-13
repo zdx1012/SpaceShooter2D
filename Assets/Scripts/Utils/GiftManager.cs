@@ -12,7 +12,7 @@ public class GiftManager
     private static GiftManager _instance = null;
 
     private float successSendGiftTime = 0f;
-    private float IntervalTime = 3f; // 退礼间隔时间
+    private float IntervalTime = 1f; // 退礼间隔时间
     public static GiftManager Instance => _instance ?? (_instance = new GiftManager());
 
     public GiftManager()

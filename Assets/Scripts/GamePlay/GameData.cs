@@ -71,7 +71,6 @@ public class GameData
         {
             currentGameCoin -= valueGame;
             Debug.Log("-- 当前可用游戏币：" + currentGameCoin);
-            Debug.Log("valueGame = " + valueGame);
             return true;
         }
         return false;

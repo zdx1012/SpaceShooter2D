@@ -84,7 +84,6 @@ public class Init : MonoBehaviour
         currentCoinNum = GameData.Instance.GetCurrentGameCoin();
         if (GameData.Instance.GetShowCoinString() != coinNumText.text.ToString())
         {
-            Debug.Log("update coin num to: " + currentCoinNum);
             coinNumText.text = GameData.Instance.GetShowCoinString();
             showVideoPlayer(false);
             pressKeyTime = Time.time;

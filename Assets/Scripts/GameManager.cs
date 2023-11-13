@@ -375,6 +375,7 @@ public class GameManager : MonoBehaviour
         _gameGiftbject.SetActive(true);
         float sendGiftStartTime = Time.time;
         float sendGiftMaxTime = 10f;
+        int currentReturnOK = 0;
         while (true)
         {
             _gameGiftReturnCountText.text = GiftManager.Instance.GetPlayerGetCount(
@@ -384,13 +385,12 @@ public class GameManager : MonoBehaviour
                  LocalConfig.instance.gameConfig.GetBoolGiftAdd()
                  ).ToString();
             _gameGiftReturnOkText.text = GiftManager.Instance.GetPlayerOkCount().ToString();
-            Debug.Log("_gameGiftReturnCountText.text = " + _gameGiftReturnCountText.text);
-            Debug.Log("_gameGiftReturnOkText.text = " + _gameGiftReturnOkText.text);
+            Debug.Log("return = " + _gameGiftReturnCountText.text + " ok = " + _gameGiftReturnOkText.text);
             GiftManager.Instance.StartReturnGift();
             if (_gameGiftReturnCountText.text == _gameGiftReturnOkText.text)
             {
                 // _gameNoGiftbject.SetActive(false);
-                yield return new WaitForSeconds(2);
+                yield return new WaitForSeconds(1);
                 StartCoroutine(GotoGameInit());
                 yield break;
             }
@@ -399,6 +399,12 @@ public class GameManager : MonoBehaviour
                 Debug.Log("退礼失败");
                 _gameNoGiftbject.SetActive(true);
                 yield break;
+            }
+            // 退礼成功一个，刷新退礼起始时间
+            if (currentReturnOK.ToString() != _gameGiftReturnOkText.text)
+            {
+                sendGiftStartTime = Time.time;
+                currentReturnOK = int.Parse(_gameGiftReturnOkText.text);
             }
 
             yield return null; // 等待下一帧

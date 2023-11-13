@@ -22,6 +22,7 @@ public class GamePlayerPrefs
     private void SetIntData(string key, int value)
     {
         PlayerPrefs.SetInt(key, value);
+        PlayerPrefs.Save();
     }
     private int GetIntData(string key)
     {

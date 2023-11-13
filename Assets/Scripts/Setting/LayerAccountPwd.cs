@@ -117,7 +117,7 @@ public class LayerAccountPwd : SettingLayers
     {
         if (currentIndex == 6 && isSenterOkPressed)
         {
-            if (pwdText[0].text == "4" && pwdText[1].text == "5" && pwdText[2].text == "5" && pwdText[3].text == "5" && pwdText[4].text == "5" && pwdText[5].text == "5")
+            if (pwdText[0].text == "0" && pwdText[1].text == "0" && pwdText[2].text == "0" && pwdText[3].text == "0" && pwdText[4].text == "0" && pwdText[5].text == "0")
             {
                 transform.gameObject.SetActive(false);
             }

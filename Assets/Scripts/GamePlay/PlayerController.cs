@@ -64,12 +64,13 @@ public class PlayerController : GamePlayObject
         // 重新设置生命值
         Health = GameData.Instance.GetPlayerInitHealthy();
     }
-    public void ResetHealth(int health){
+    public void ResetHealth(int health)
+    {
         Health = health;
     }
     public bool RunHealthyCheck()
     {
-        if (Health <= 0) { base.Update(); PlayerPrefs.DeleteAll(); return true; }
+        if (Health <= 0) { base.Update(); return true; }
         return false;
     }
 
