@@ -1505,6 +1505,7 @@ MonoBehaviour:
   Loop: 1
   IsRevert: 1
   ShowOnEveryActivate: 1
+  HideAfterShow: 0
 --- !u!1 &554571667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1923,6 +1924,7 @@ MonoBehaviour:
   Loop: -1
   IsRevert: 0
   ShowOnEveryActivate: 1
+  HideAfterShow: 0
 --- !u!1 &687147937
 GameObject:
   m_ObjectHideFlags: 0
@@ -2460,6 +2462,7 @@ MonoBehaviour:
   Loop: -1
   IsRevert: 0
   ShowOnEveryActivate: 1
+  HideAfterShow: 0
 --- !u!1 &917496226
 GameObject:
   m_ObjectHideFlags: 0
@@ -2662,6 +2665,7 @@ MonoBehaviour:
   gameSuccessClip: {fileID: 8300000, guid: 7f3338463486d554f843db2dc9816a57, type: 3}
   gameOverClip: {fileID: 8300000, guid: 0007ab2b42cec0c4aa0ea1f2c6f1233b, type: 3}
   audioBGMSource: {fileID: 0}
+  audioTip: {fileID: 0}
 --- !u!1 &934848942
 GameObject:
   m_ObjectHideFlags: 0

@@ -11,8 +11,8 @@ public class GiftManager
 
     private static GiftManager _instance = null;
 
-    private float sendGiftTime = 0f;
-    private float IntervalTime = 3f;
+    private float successSendGiftTime = 0f;
+    private float IntervalTime = 3f; // 退礼间隔时间
     public static GiftManager Instance => _instance ?? (_instance = new GiftManager());
 
     public GiftManager()
@@ -63,14 +63,10 @@ public class GiftManager
         if (CanReturnGift())
         {
             Debug.Log("发送礼物 do something ");
-            if (UnityEngine.Random.Range(1, 10) > 5)
+            if (InputUtil.instance.IsGiftPressed())
             {
                 Debug.Log("发送礼物成功");
                 return true;
-            }
-            else
-            {
-                Debug.Log("发送礼物失败");
             }
         }
         return false;
@@ -79,13 +75,13 @@ public class GiftManager
     // 开始退礼
     public void StartReturnGift()
     {
-        if (Time.time - sendGiftTime > IntervalTime && CanReturnGift())
+        if (Time.time - successSendGiftTime > IntervalTime && CanReturnGift())
         {
-            if (SendGift())
+            if (SendGift()) // 退礼状态
             {
                 playerGiftInfo.OkCount += 1;
+                successSendGiftTime = Time.time;
             }
-            sendGiftTime = Time.time;
         }
     }
 }

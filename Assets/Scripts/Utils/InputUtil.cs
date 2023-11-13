@@ -112,7 +112,6 @@ public class InputUtil
     {
         KEY_Old = 0xffffffff;
         KEY_Down = 0;
-        Debug.Log("run ClearKey");
     }
 
 
@@ -316,6 +315,11 @@ public class InputUtil
     public void SetSound(bool isOpen)
     {
         Uart.GetInstance().SendSound(isOpen);
+    }
+
+    public void SendGift(bool isOpen)
+    {
+        Uart.GetInstance().SendSSR(isOpen);
     }
 
     public bool IsSettingKeyHold()

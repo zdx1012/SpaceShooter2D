@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
     public GameObject _gameGiftbject;
     public Text _gameGiftReturnCountText;
     public Text _gameGiftReturnOkText;
-
+    public GameObject _gameNoGiftbject;
 
     void Awake()
     {
@@ -373,7 +373,8 @@ public class GameManager : MonoBehaviour
     IEnumerator ShowGiftObject()
     {
         _gameGiftbject.SetActive(true);
-
+        float sendGiftStartTime = Time.time;
+        float sendGiftMaxTime = 10f;
         while (true)
         {
             _gameGiftReturnCountText.text = GiftManager.Instance.GetPlayerGetCount(
@@ -388,8 +389,15 @@ public class GameManager : MonoBehaviour
             GiftManager.Instance.StartReturnGift();
             if (_gameGiftReturnCountText.text == _gameGiftReturnOkText.text)
             {
+                // _gameNoGiftbject.SetActive(false);
                 yield return new WaitForSeconds(2);
                 StartCoroutine(GotoGameInit());
+                yield break;
+            }
+            else if (Time.time - sendGiftStartTime > sendGiftMaxTime)
+            {
+                Debug.Log("退礼失败");
+                _gameNoGiftbject.SetActive(true);
                 yield break;
             }
 
