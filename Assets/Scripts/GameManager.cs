@@ -75,7 +75,7 @@ public class GameManager : MonoBehaviour
     private WaveManager _waveManager;
 
     private GameState gameState;
-    private bool allowsDuplicates;
+    private bool isDuplicates; // 当前状态是否是重复的状态
 
     [Header("游戏失败界面")]
     public GameObject _gameOverObject;
@@ -159,16 +159,16 @@ public class GameManager : MonoBehaviour
 
 
         // s生成boss后，检测是否还有BOSS，没有则提示游戏结束
-        if (_waveManager.BossCreated && ((BossObject != null && BossObject.Health == 0) || BossObject == null) && !allowsDuplicates)
+        if (_waveManager.BossCreated && ((BossObject != null && BossObject.Health == 0) || BossObject == null) && !isDuplicates)
         {
             SetGameState(GameState.Success);
-            allowsDuplicates = true; // 游戏成功后，已跳转场景，这个值可不用再设置为false
+            isDuplicates = true; // 游戏成功后，已跳转场景，这个值可不用再设置为false
             return;
         }
-        if (Game.Current.Player.Health <= 0 && !allowsDuplicates)
+        if (Game.Current.Player.Health <= 0 && !isDuplicates)
         {
             SetGameState(GameState.Contiunue);
-            allowsDuplicates = true;
+            isDuplicates = true;
         }
 
         _waveManager.ExecuteCurrentWave();
@@ -211,7 +211,7 @@ public class GameManager : MonoBehaviour
             _gameContinueObject.SetActive(false);
             SetGameState(GameState.None, true);
             Time.timeScale = 1f;
-            allowsDuplicates = false;
+            isDuplicates = false;
         }
     }
 
