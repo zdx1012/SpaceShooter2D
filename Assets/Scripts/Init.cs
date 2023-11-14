@@ -52,7 +52,6 @@ public class Init : MonoBehaviour
         insertCoinTipTransform = GameObject.Find("InsertCoin").GetComponent<RectTransform>();
 
         currentCoinNum = GameData.Instance.GetCurrentGameCoin();
-        Debug.Log("start currentCoinNum = " + currentCoinNum);
         if (currentCoinNum <= 0)
         {
             StartCoroutine(ShowInsertCoin());
@@ -129,7 +128,7 @@ public class Init : MonoBehaviour
             if (show)
             {
                 videoPlayer.gameObject.SetActive(true);
-
+                logo.SetActive(false);
                 if (!vp.isPlaying) vp.Play();
             }
             else

@@ -59,7 +59,6 @@ public class AudioManage : MonoBehaviour
     }
     void Start()
     {
-        Debug.Log("start");
         GameData.Instance.insertCoinAction = delegate
         {
             PlayClip(coinAudioClip);
