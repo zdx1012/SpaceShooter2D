@@ -15,10 +15,10 @@ namespace Assets.Scripts.GamePlay
         {
         }
 
-        public void ReadPlayerInfoData(){
-            Current.Score = PlayerInfo.instance.GetScore();
-            Current.Player.Health = PlayerInfo.instance.GetHealthy();
-            Current.Player.ShootingPower = PlayerInfo.instance.GetShootingPower();
+        public void ReadPlayerTmpInfoData(){
+            Current.Score = PlayerTmpInfo.instance.GetScore();
+            Current.Player.ExtraHealth = PlayerTmpInfo.instance.GetHealthy();
+            Current.Player.ExtraShootPower = PlayerTmpInfo.instance.GetShootingPower();
         }
 
         public void StartNew()

@@ -122,24 +122,26 @@ public class GameManager : MonoBehaviour
         GameObject prefabInstance = Instantiate(AllPlanes[GameData.Instance.GetCurrentPlane()]);
         prefabInstance.transform.position = new Vector3(0f, -3f, 0f);
 
-        // 设置生命值
-        Game.Current.Player.Health = LocalConfig.instance.gameConfig.initHealth;
-
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
         Game.Current.StartNew();
         gameState = GameState.Start;
 
-        // 读取上次通关保存的玩家数据
-        if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
 
     }
 
     void Start()
     {
+        // 读取上次通关保存的玩家数据
+        if (PlayerTmpInfo.instance.hasUpdate) Game.Current.ReadPlayerTmpInfoData();
+
         AudioManage.Instance.PlayBgm(AudioManage.Instance.gameNormalClip);
         AudioManage.Instance.PlayClip(AudioManage.Instance.gameStartClip);
+        GameData.Instance.insertCoinUpdateTextAction = delegate
+        {
+            CoinText.text = GameData.Instance.GetShowCoinString();
+        };
     }
 
 
@@ -172,16 +174,17 @@ public class GameManager : MonoBehaviour
         }
 
         _waveManager.ExecuteCurrentWave();
-        // 
-        if (_waveManager.CurrentWave.IsHalfCreated && _waveManager.CurrentWave.Definition.HasPowerUp && !_waveManager.CurrentWave.HasCreatePowerUp && Random.Range(-10000, 10) > 7)
+        // 随机生成道具
+        if (_waveManager.CurrentWave.IsHalfCreated && _waveManager.CurrentWave.Definition.HasPowerUp)
         {
-            for (int i = 0; i < _waveManager.CurrentWave.Definition.PowupCount; i++)
+            if (_waveManager.CurrentWave.HasCreatePowerUp < _waveManager.CurrentWave.Definition.PowupCount && Random.Range(-10000, 20) > 0)
             {
                 var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
                 var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
                 _powerUpFactory.Create(powerUpType, pos);
+                _waveManager.CurrentWave.HasCreatePowerUp += 1;
             }
-            _waveManager.CurrentWave.HasCreatePowerUp = true;
+
         }
 
         // 当前一波敌人生成完成，自动生成下一波
@@ -311,7 +314,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
         // 清空通关数据
-        PlayerInfo.instance.Reset();
+        PlayerTmpInfo.instance.Reset();
         SceneManager.LoadScene(CurrentGameScene.Init.GetDescription());
         yield break;
     }
@@ -333,7 +336,7 @@ public class GameManager : MonoBehaviour
             targetSceneName = CurrentGameScene.Init.GetDescription();
             yield break;
         }
-        PlayerInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
+        PlayerTmpInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
         Debug.Log("goto scene " + targetSceneName);
         SceneManager.LoadScene(targetSceneName);
         yield break;

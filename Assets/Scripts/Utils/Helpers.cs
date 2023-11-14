@@ -146,13 +146,13 @@ namespace Assets.Scripts.GamePlay
 
     }
 
-    public class PlayerInfo
+    public class PlayerTmpInfo
     {
 
-        private static PlayerInfo _instance = null;
-        public static PlayerInfo instance => _instance ?? (_instance = new PlayerInfo());
+        private static PlayerTmpInfo _instance = null;
+        public static PlayerTmpInfo instance => _instance ?? (_instance = new PlayerTmpInfo());
 
-        private int Health = 1;
+        private int Health = 0;
         private int Score = 0;
         private int ShootingPower = 1;
 

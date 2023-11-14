@@ -11,7 +11,8 @@ public class GameData
 
 
     public int currentGameCoin;
-    public Action insertCoinAction;
+    public Action insertCoinPlayClipAction;
+    public Action insertCoinUpdateTextAction;
     private int coinValue;
     private int valueGame;
 
@@ -56,7 +57,8 @@ public class GameData
     public void AddGameCoin()
     {
         currentGameCoin += coinValue;
-        insertCoinAction?.Invoke();
+        insertCoinPlayClipAction?.Invoke();
+        insertCoinUpdateTextAction?.Invoke();
         GamePlayerPrefs.Instance.AddCoinRecord();
         Debug.Log("++ 当前可用游戏币：" + currentGameCoin);
     }

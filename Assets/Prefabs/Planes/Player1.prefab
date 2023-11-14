@@ -345,12 +345,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b08160dee5fdedd49a15c6d5ff2c6f4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 1
+  Health: 10
   Speed: 7
   ExplosionTemplate: {fileID: 100008, guid: e9fd47bd83d954547a096ac63024c3a9, type: 3}
   HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
     type: 3}
-  ShootingPower: 4
+  ShootingPower: 1
+  ExtraHealth: 0
+  ExtraShootPower: 0
   CanTakeDamage: 1
   ShootRate: 2
   ShieldPower: 1

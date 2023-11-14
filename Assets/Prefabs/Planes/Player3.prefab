@@ -352,7 +352,7 @@ MonoBehaviour:
     type: 3}
   ShootingPower: 1
   CanTakeDamage: 1
-  ShootRate: 4
+  ShootRate: 3
   ShieldPower: 1
   ShieldEffect: {fileID: 3936511404714628773}
   ShieldColor: {r: 0.84313726, g: 0.9056604, b: 0.8895371, a: 1}

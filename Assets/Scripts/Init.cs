@@ -91,7 +91,7 @@ public class Init : MonoBehaviour
         // 跳转设置页面
         if (InputUtil.instance.IsSettingCenterOnceClicked())
         {
-            SceneManager.LoadScene("SettingMain");
+            SceneManager.LoadScene(CurrentGameScene.SettingMain.GetDescription());
         }
         // 隐藏 请投币
         if (GameData.Instance.CanPlayGame())
@@ -168,7 +168,7 @@ public class Init : MonoBehaviour
     void showPlane()
     {
         // 避免一直切换
-        if (Time.time - pressKeyTime < 0.5f || !selectPlaneObject.activeInHierarchy)
+        if (Time.time - pressKeyTime < 0.3f || !selectPlaneObject.activeInHierarchy)
         {
             return;
         }
@@ -218,6 +218,6 @@ public class Init : MonoBehaviour
     {
         selectPlaneObject.SetActive(value: false);
         yield return new WaitForSeconds(2f);
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(CurrentGameScene.Part1.GetDescription());
     }
 }

@@ -194,12 +194,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6731468fc9defe42bf205701dbd37db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Health: 3
+  Health: 4
   Speed: 1.5
   ExplosionTemplate: {fileID: 100012, guid: 7edb547341019e24a94684da87860bf8, type: 3}
   HitTemplate: {fileID: 1256001557233130, guid: ccb33949c7c1148489e05f87ebc32fb7,
     type: 3}
-  ScoreValue: 30
+  ScoreValue: 40
   MaxHealth: 100
   CanShoot: 1
   ShootRate: 1

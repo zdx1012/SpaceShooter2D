@@ -9,7 +9,8 @@ using UnityEngine.SceneManagement;
 public class PlayerController : GamePlayObject
 {
     private const float SHIELD_USAGE_POWER = 0.20f;
-    private const float SHIELD_MAX_POWER = 3f;
+    private const float SHIELD_ONE_POWER = 1.5f;
+    private const float SHIELD_MAX_POWER = 5f;
     private const int SHOOT_MAX_POWER = 4;
     private const int HEALTH_MAX_POINTS = 99;
 
@@ -25,6 +26,8 @@ public class PlayerController : GamePlayObject
     private bool _shielded;
     private float _nextShootTime;
     public int ShootingPower = 1;
+    public int ExtraHealth = 0;
+    public int ExtraShootPower = 0;
     private readonly Dictionary<int, int[]> _shootingPointsPerPower = new Dictionary<int, int[]>
     {
         { 1, new [] { 0 } },
@@ -46,8 +49,7 @@ public class PlayerController : GamePlayObject
 
     public PlayerController()
     {
-        Health = 3;
-        Speed = 6;
+        Debug.Log("PlayerController init");
     }
 
     // game events
@@ -63,6 +65,8 @@ public class PlayerController : GamePlayObject
 
         // 重新设置生命值
         Health = GameData.Instance.GetPlayerInitHealthy();
+        if (ExtraHealth > 0) { Health = ExtraHealth; ExtraHealth = 0; }
+        if (ExtraShootPower > 0) { ShootingPower = ExtraShootPower; ExtraShootPower = 0; }
     }
     public void ResetHealth(int health)
     {
@@ -161,7 +165,7 @@ public class PlayerController : GamePlayObject
                 ShootingPower = Mathf.Clamp(ShootingPower + 1, 1, SHOOT_MAX_POWER);
                 break;
             case PowerUpType.Shield:
-                ShieldPower = Mathf.Clamp(ShieldPower + 1f, 0, SHIELD_MAX_POWER);
+                ShieldPower = Mathf.Clamp(ShieldPower + SHIELD_ONE_POWER, 0, SHIELD_MAX_POWER);
                 break;
             case PowerUpType.Health:
                 Health = Mathf.Clamp(Health + 1, 1, HEALTH_MAX_POINTS);
