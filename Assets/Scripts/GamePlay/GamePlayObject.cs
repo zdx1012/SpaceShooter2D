@@ -97,6 +97,7 @@ namespace Assets.Scripts.GamePlay
             var explosionFX = Instantiate(ExplosionTemplate, transform.position, transform.rotation);
             Destroy(explosionFX, explosionFX.GetComponent<ParticleSystem>().main.duration);
             Destroy(gameObject);
+            // Debug.Log(gameObject.name);
         }
 
         public virtual void SelfDestroy(){}

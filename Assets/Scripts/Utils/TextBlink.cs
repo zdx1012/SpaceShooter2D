@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-public class TextBlink : MonoBehaviour
+public class Blink : MonoBehaviour
 {
     public Text textComponent;
     public float blinkSpeed = 1.0f;  // 控制闪烁速度

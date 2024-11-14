@@ -16,6 +16,7 @@ namespace Assets.Scripts.GamePlay
         private CurrentWave _currentWave;
         internal CurrentWave CurrentWave => _currentWave;
         internal int WaveLength;
+        public bool BossCreated { get; private set; }
         public bool Ended { get; private set; } = false;
 
         public WaveManager(EnemyWave[] waves, DifficultyManager difficultyManager, GameObject defaultSpawnPoint)
@@ -37,7 +38,7 @@ namespace Assets.Scripts.GamePlay
             if (Ended) return;
             if (_currentWave.IsFullyCreated) return;
             if (_currentWave.Delaying) return;
-            Debug.Log($"当前敌人进度： {_currentWave.Index} / {_waves.Length}  {_difficultyManager.Difficulty}");
+            // Debug.Log($"当前敌人进度： {_currentWave.Index + 1} / {_waves.Length}  {_difficultyManager.Difficulty}");
             // 循环生成每一波的敌人
             foreach (var obj in _currentWave.Definition.Sets)
             {
@@ -62,11 +63,11 @@ namespace Assets.Scripts.GamePlay
             var nextWaveIndex = _currentWave.Index + 1;
             Ended = nextWaveIndex >= _waves.Length;
             // 生成6波 升级技能后，将下标置0，才能重新生成 Enemy
-            if (Ended){
+            if (Ended)
+            {
                 Ended = false;
                 return false;
             }
-                
             _currentWave = new CurrentWave(nextWaveIndex, _waves[nextWaveIndex]);
             return true;
         }
@@ -84,9 +85,19 @@ namespace Assets.Scripts.GamePlay
             {
                 _difficultyManager.NotifyEnemyTypeSelected(set.EnemyType, set.Mode);
                 var position = ScreenHelper.GetRandomScreenPoint(y: _defaultSpawnPoint.transform.position.y);
+                if (set.EnemyType >= EnemyType.Boss0) { BossCreated = true; position.x = 0; }
                 return _enemyFactory.Create(set.EnemyType, position);
             }
             return null;
+        }
+        public bool IsLastWave()
+        {
+            return _currentWave.Index + 1 == _waves.Length;
+        }
+
+        public string GetWaveInfo()
+        {
+            return $"{_currentWave.Index + 1}/{_waves.Length}";
         }
     }
 
@@ -99,8 +110,10 @@ namespace Assets.Scripts.GamePlay
         public int Index { get; }
         public int EnemiesCreated { get; private set; }
         public bool IsFullyCreated => EnemiesCreated >= _totalEnemies;
+        public bool IsHalfCreated => EnemiesCreated >= _totalEnemies / 4;
         public bool Ended => IsFullyCreated && _enemies.All(kv => kv.Value.All(e => e?.Destroyed ?? true));
         public bool Delaying => _creationTime + Definition.Delay > Time.time;
+        public int HasCreatePowerUp = 0;
         public EnemyWave Definition { get; }
 
         public CurrentWave(int index, EnemyWave definition)

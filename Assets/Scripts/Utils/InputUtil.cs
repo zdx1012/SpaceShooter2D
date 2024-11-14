@@ -58,17 +58,6 @@ public class InputUtil
 
     private Dictionary<int, int> keyPressedFrame; // 按下的帧数
 
-    private bool StartKeyPressed;
-    private bool UpKeyPressed;
-    private bool DownKeyPressed;
-    private bool LeftKeyPressed;
-    private bool RightKeyPressed;
-    private bool SettingCenterKeyPessed;
-    private bool SettingUpKeyPessed;
-    private bool SettingDownKeyPessed;
-    private bool SettingLeftKeyPessed;
-    private bool SettingRightKeyPessed;
-
     private float stepAxis = 0.1f;
     private float xAxis = 0.0f;
     private float yAxis = 0.0f;
@@ -116,28 +105,6 @@ public class InputUtil
             keyPressedFrame[keyName] = 0;
         }
 
-        // keyStatus[KeyStart] = false;
-        // keyStatus[KeyUp] = false;
-        // keyStatus[KeyDown] = false;
-        // keyStatus[KeyLeft] = false;
-        // keyStatus[KeyRight] = false;
-        // keyStatus[keySettingCenter] = false;
-        // keyStatus[keySettingUp] = false;
-        // keyStatus[keySettingDown] = false;
-        // keyStatus[keySettingLeft] = false;
-        // keyStatus[keySettingRight] = false;
-
-        // keyLastStatus[KeyStart] = false;
-        // keyLastStatus[KeyUp] = false;
-        // keyLastStatus[KeyDown] = false;
-        // keyLastStatus[KeyLeft] = false;
-        // keyLastStatus[KeyRight] = false;
-        // keyLastStatus[keySettingCenter] = false;
-        // keyLastStatus[keySettingUp] = false;
-        // keyLastStatus[keySettingDown] = false;
-        // keyLastStatus[keySettingLeft] = false;
-        // keyLastStatus[keySettingRight] = false;
-
         ClearKey();
     }
 
@@ -145,7 +112,6 @@ public class InputUtil
     {
         KEY_Old = 0xffffffff;
         KEY_Down = 0;
-        Debug.Log("run ClearKey");
     }
 
 
@@ -173,119 +139,8 @@ public class InputUtil
         // }
     }
 
-    // public string GetStr()
-    // {
-    //     string str = "";
-    //     for (int i1 = 0; i1 < 31; i1++)
-    //     {
-    //         if (IO_Pressed(i1))
-    //         {
-    //             Uart.GetInstance().errorValue[0] = i1;
-    //             break;
-    //         }
-    //     }
-    //     return str;
-    // }
-
-    // public bool IO_Pressed(int no)
-    // {
-    //     no = (1 << no);
-    //     if ((KEY_Down & no) > 0)
-    //     {
-    //         KEY_Down &= ~(UInt32)no;
-    //         return true;
-    //     }
-    //     return false;
-    // }
-
     public void Run()
     {
-        // StartKeyPressed = KEY_Start_Pressed();
-        // UpKeyPressed = KEY_Up_Pressed();
-        // DownKeyPressed = KEY_Down_Pressed();
-        // LeftKeyPressed = KEY_Left_Pressed();
-        // RightKeyPressed = KEY_Right_Pressed();
-        // SettingCenterKeyPessed = KEY_SettingCenter_pressed();
-        // SettingUpKeyPessed = KEY_SettingUp_pressed();
-        // SettingDownKeyPessed = KEY_SettingDown_pressed();
-        // SettingLeftKeyPessed = KEY_SettingLeft_pressed();
-        // SettingRightKeyPessed = KEY_SettingRight_pressed();
-
-
-        // 设置X轴的偏移
-        // if (LeftKeyPressed || RightKeyPressed)
-        // {
-
-        //     if (RightKeyPressed)
-        //     {
-        //         xAxis += stepAxis;
-        //         if (xAxis >= 1) xAxis = 1;
-        //     }
-        //     else
-        //     {
-        //         xAxis -= stepAxis;
-        //         if (xAxis <= -1) xAxis = -1;
-        //     }
-        // }
-        // else
-        // {
-        //     if (xAxis > 0) xAxis -= stepAxis;
-        //     if (xAxis < 0) xAxis += stepAxis;
-        //     if (Math.Abs(xAxis) < stepAxis * 2) xAxis = 0;
-        // }
-
-
-        // 设置Y轴的偏移
-        // if (UpKeyPressed || DownKeyPressed)
-        // {
-
-        //     if (UpKeyPressed)
-        //     {
-        //         yAxis += stepAxis;
-        //         if (yAxis >= 1) yAxis = 1;
-        //     }
-        //     else
-        //     {
-        //         yAxis -= stepAxis;
-        //         if (yAxis <= -1) yAxis = -1;
-        //     }
-        // }
-        // else
-        // {
-        //     if (yAxis > 0) yAxis -= stepAxis;
-        //     if (yAxis < 0) yAxis += stepAxis;
-        //     if (Math.Abs(yAxis) < stepAxis * 2) yAxis = 0;
-        // }
-
-
-
-        // 记录上一帧的状态
-        // keyLastStatus[AllKey.KeyStart] = keyStatus[AllKey.KeyStart];
-        // keyLastStatus[AllKey.KeyUp] = keyStatus[AllKey.KeyUp];
-        // keyLastStatus[AllKey.KeyDown] = keyStatus[AllKey.KeyDown];
-        // keyLastStatus[AllKey.KeyLeft] = keyStatus[AllKey.KeyLeft];
-        // keyLastStatus[AllKey.KeyRight] = keyStatus[AllKey.KeyRight];
-        // keyLastStatus[AllKey.keySettingCenter] = keyStatus[AllKey.keySettingCenter];
-        // keyLastStatus[AllKey.keySettingUp] = keyStatus[AllKey.keySettingUp];
-        // keyLastStatus[AllKey.keySettingDown] = keyStatus[AllKey.keySettingDown];
-        // keyLastStatus[AllKey.keySettingLeft] = keyStatus[AllKey.keySettingLeft];
-        // keyLastStatus[AllKey.keySettingRight] = keyStatus[AllKey.keySettingRight];
-
-
-        // // 记录当前帧的状态
-        // keyStatus[AllKey.KeyStart] = StartKeyPressed;
-        // keyStatus[AllKey.KeyUp] = UpKeyPressed;
-        // keyStatus[AllKey.KeyDown] = DownKeyPressed;
-        // keyStatus[AllKey.KeyLeft] = LeftKeyPressed;
-        // keyStatus[AllKey.KeyRight] = RightKeyPressed;
-        // keyStatus[AllKey.keySettingCenter] = SettingCenterKeyPessed;
-        // keyStatus[AllKey.keySettingUp] = SettingUpKeyPessed;
-        // keyStatus[AllKey.keySettingDown] = SettingDownKeyPessed;
-        // keyStatus[AllKey.keySettingLeft] = SettingLeftKeyPessed;
-        // keyStatus[AllKey.keySettingRight] = SettingRightKeyPessed;
-
-
-
         // 遍历字段并输出它们的名称和值
         int keyName = 0;
         foreach (FieldInfo field in fields)
@@ -359,16 +214,8 @@ public class InputUtil
         {
             CoinTotalNum += 1;
             CoinCurrentNum += 1;
+            GameData.Instance.AddGameCoin();
         }
-
-        // 按下 设置 中心键，清空币数
-        // TODO: DELETE THIS CODE
-        // if (SettingCenterKeyPessed && Config.isAndroid)
-        // {
-        //     Uart.GetInstance().SendClearAccount();
-        // }
-        // Debug.Log($"111 {Config.isAndroid} StartKeyPressed = {keyStatus[AllKey.KeyStart]}, UpKeyPressed = {keyStatus[AllKey.KeyUp]}, DownKeyPressed = {keyStatus[AllKey.KeyDown]}, LeftKeyPressed = {keyStatus[AllKey.KeyLeft]}, RightKeyPressed = {keyStatus[AllKey.KeyRight]}");
-        // Debug.Log($"222 {Config.isAndroid} SettingCenterKeyPessed = {SettingCenterKeyPessed} SettingUpKeyPessed = {SettingUpKeyPessed} SettingDownKeyPessed = {SettingDownKeyPessed} SettingLeftKeyPessed = {SettingLeftKeyPessed} SettingRightKeyPessed = {SettingRightKeyPessed}");
     }
 
     private int IOStatue(int no)
@@ -387,90 +234,13 @@ public class InputUtil
             return Input.GetKey(keyToKey.keyMap[key]);
     }
 
-    // private bool KEY_Start_Pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.KeyStart);
-    //     else
-    //         return Input.GetKey(KeyCode.P);
-    // }
-
-
-    // private bool KEY_Up_Pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.KeyUp);
-    //     else
-    //         return Input.GetKey(KeyCode.Y);
-    // }
-
-    // private bool KEY_Down_Pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.KeyDown);
-    //     else
-    //         return Input.GetKey(KeyCode.U);
-    // }
-
-    // private bool KEY_Left_Pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.KeyLeft);
-    //     else
-    //         return Input.GetKey(KeyCode.I);
-    // }
-
-    // private bool KEY_Right_Pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.KeyRight);
-    //     else
-    //         return Input.GetKey(KeyCode.O);
-    // }
-
-    // private bool KEY_SettingCenter_pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.keySettingCenter);
-    //     else
-    //         return Input.GetKey(KeyCode.Q);
-    // }
-    // private bool KEY_SettingUp_pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.keySettingUp);
-    //     else
-    //         return Input.GetKey(KeyCode.W);
-    // }
-    // private bool KEY_SettingDown_pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.keySettingDown);
-    //     else
-    //         return Input.GetKey(KeyCode.S);
-    // }
-    // private bool KEY_SettingLeft_pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.keySettingLeft);
-    //     else
-    //         return Input.GetKey(KeyCode.A);
-    // }
-    // private bool KEY_SettingRight_pressed()
-    // {
-    //     if (Config.isAndroid)
-    //         return 0 == IOStatue(AllKey.keySettingRight);
-    //     else
-    //         return Input.GetKey(KeyCode.D);
-    // }
-
-
     public bool SetCoinNum(int n)
     {
         if (CoinTotalNum != n)
         {
             CoinTotalNum = n;
             CoinCurrentNum += 1;
+            GameData.Instance.AddGameCoin();
             return true;
         }
         return false;
@@ -481,14 +251,7 @@ public class InputUtil
     // 长按视作点击一次
     public bool AnyAxisPressed()
     {
-        // if (Config.isAndroid)
-        // {
         return (keyStatus[AllKey.KeyUp] && !keyLastStatus[AllKey.KeyUp]) || (keyStatus[AllKey.KeyDown] && !keyLastStatus[AllKey.KeyDown]) || (keyStatus[AllKey.KeyLeft] && !keyLastStatus[AllKey.KeyLeft]) || (keyStatus[AllKey.KeyRight] && !keyLastStatus[AllKey.KeyRight]);
-        // }
-        // else
-        // {
-        //     return Input.GetKeyDown(KeyCode.Y) || Input.GetKeyDown(KeyCode.U) || Input.GetKeyDown(KeyCode.I) || Input.GetKeyDown(KeyCode.O);
-        // }
     }
 
     // // 长按 每次都有响应
@@ -500,72 +263,29 @@ public class InputUtil
     // 长按视作点击一次
     public bool IsStartOnceClicked()
     {
-        // if (Config.isAndroid)
-        // {
         return keyStatus[AllKey.KeyStart] && !keyLastStatus[AllKey.KeyStart];
-        // }
-        // else
-        // {
-        //     return Input.GetKeyDown(KeyCode.P);
-        // }
-
     }
 
     public bool IsSettingCenterOnceClicked()
     {
-        // if (Config.isAndroid)
-        // {
         return keyStatus[AllKey.keySettingCenter] && !keyLastStatus[AllKey.keySettingCenter];
-        // }
-        // else
-        // {
-        //     return Input.GetKeyDown(KeyCode.Q);
-        // }
     }
 
     public bool IsSettingUpOnceClicked()
     {
-        // if (Config.isAndroid)
-        // {
         return keyStatus[AllKey.keySettingUp] && !keyLastStatus[AllKey.keySettingUp];
-        // }
-        // else
-        // {
-        //     return Input.GetKeyDown(KeyCode.W);
-        // }
     }
     public bool IsSettingDownOnceClicked()
     {
-        // if (Config.isAndroid)
-        // {
         return keyStatus[AllKey.keySettingDown] && !keyLastStatus[AllKey.keySettingDown];
-        // }
-        // else
-        // {
-        //     return Input.GetKeyDown(KeyCode.S);
-        // }
     }
     public bool IsSettingLeftOnceClicked()
     {
-        // if (Config.isAndroid)
-        // {
         return keyStatus[AllKey.keySettingLeft] && !keyLastStatus[AllKey.keySettingLeft];
-        // }
-        // else
-        // {
-        //     return Input.GetKeyDown(KeyCode.A);
-        // }
     }
     public bool IsSettingRightOnceClicked()
     {
-        // if (Config.isAndroid)
-        // {
         return keyStatus[AllKey.keySettingRight] && !keyLastStatus[AllKey.keySettingRight];
-        // }
-        // else
-        // {
-        //     return Input.GetKeyDown(KeyCode.D);
-        // }
     }
 
 
@@ -597,6 +317,11 @@ public class InputUtil
         Uart.GetInstance().SendSound(isOpen);
     }
 
+    public void SendGift(bool isOpen)
+    {
+        Uart.GetInstance().SendSSR(isOpen);
+    }
+
     public bool IsSettingKeyHold()
     {
         if (keyPressedFrame[AllKey.keySettingCenter] >= 5 * 60)
@@ -605,5 +330,28 @@ public class InputUtil
             return true;
         }
         return false;
+    }
+
+    public bool IO_Pressed(int no)
+    {
+        no = 1 << no;
+        if ((KEY_Down & no) > 0)
+        {
+            KEY_Down &= (uint)(~no);
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsGiftPressed()
+    {
+        if (Config.isAndroid)
+        {
+            return IO_Pressed(3);
+        }
+        else
+        {
+            return Input.GetKeyDown(KeyCode.F3);
+        }
     }
 }

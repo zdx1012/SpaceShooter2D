@@ -6,8 +6,9 @@ using UnityEngine;
 public class SpaceShipEnemy : Enemy
 {
     private float _nextShootTime;
-    private GameObject _bulletPoint;
+    private GameObject[] _bulletPoint;
     private AudioSource _bulletAudio;
+    public int MaxHealth = 100;
 
     public bool CanShoot = true;
     public float ShootRate = 1;
@@ -24,7 +25,7 @@ public class SpaceShipEnemy : Enemy
     {
         base.Start();
         // 查找当前对象的子物体,即敌人子弹的发射位置
-        _bulletPoint = gameObject.FindComponentInChildWithTag<Component>(ObjectTags.BulletPoints).gameObject;
+        _bulletPoint = gameObject.FindComponentsInChildWithTag(ObjectTags.BulletPoints);
         _bulletAudio = GetComponent<AudioSource>();
     }
 
@@ -40,11 +41,14 @@ public class SpaceShipEnemy : Enemy
 
     public void Shoot()
     {
-        // 初始化 敌人的子弹，根据敌人的位置和方向 确定子弹的位置和方向
-        var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, _bulletPoint.transform.rotation); // rotation.z为1，即-180度，
-        // var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, Quaternion.identity);
-        bullet.GetComponent<BulletController>().SetAsEnemyBullet();
-        _bulletAudio.Play();
+        for (int i = 0; i < _bulletPoint.Length; i++)
+        {
+            // 初始化 敌人的子弹，根据敌人的位置和方向 确定子弹的位置和方向
+            var bullet = Instantiate(BulletTemplate, _bulletPoint[i].transform.position, _bulletPoint[i].transform.rotation); // rotation.z为1，即-180度，
+                                                                                                                              // var bullet = Instantiate(BulletTemplate, _bulletPoint.transform.position, Quaternion.identity);
+            bullet.GetComponent<BulletController>().SetAsEnemyBullet();
+        }
+        if (_bulletAudio != null &&  _bulletAudio.enabled) _bulletAudio.Play();
 
         _nextShootTime = Time.time + (1f / ShootRate) + Random.Range(0f, 0.5f); // add some randomness time while shooting
     }

@@ -6,10 +6,6 @@ namespace Assets.Scripts.GamePlay
     {
         private PlayerController _player;
         private static Game _game = null;
-
-        public int currentGameLevel = 0;
-        public int totalGameLevel = 0;
-
         public int Score { get; private set; }
         public int EnemiesKilled { get; private set; }
         public PlayerController Player => _player ?? (_player = GameObject.FindGameObjectWithTag(ObjectTags.Player).GetComponent<PlayerController>());
@@ -19,10 +15,10 @@ namespace Assets.Scripts.GamePlay
         {
         }
 
-        public void ReadPlayerInfoData(){
-            Current.Score = PlayerInfo.instance.GetScore();
-            Current.Player.Health = PlayerInfo.instance.GetHealthy();
-            Current.Player.ShootingPower = PlayerInfo.instance.GetShootingPower();
+        public void ReadPlayerTmpInfoData(){
+            Current.Score = PlayerTmpInfo.instance.GetScore();
+            Current.Player.ExtraHealth = PlayerTmpInfo.instance.GetHealthy();
+            Current.Player.ExtraShootPower = PlayerTmpInfo.instance.GetShootingPower();
         }
 
         public void StartNew()

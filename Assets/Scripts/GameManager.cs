@@ -11,6 +11,7 @@ using System.IO;
 using System.Collections.Generic;
 using Random = UnityEngine.Random;
 
+
 [Serializable]
 public class EnemyWave
 {
@@ -37,6 +38,10 @@ public class EnemyWaveSet
 
 public class GameManager : MonoBehaviour
 {
+    [Header("飞机预制体")]
+    public GameObject[] AllPlanes;
+
+    [Header("难度（读取设置生成）")]
     public DifficultyLevel Difficulty = DifficultyLevel.Normal;
     //public bool IncreaseDifficultyOverTime = true;
     [Header("提供生成敌人的Y坐标")]
@@ -48,13 +53,19 @@ public class GameManager : MonoBehaviour
     [Header("提供生成 升级技能 的类型 《给Factory使用》")]
     public GameObject[] PowerUpsTemplates;
 
-    [Header("提供生成每一波敌人的相关设置<具体数量，以设置中配置的数量为准，从这里随机抽取进行组成>")]
+    [Header("提供生成每一波敌人的相关设置")]
     public EnemyWave[] EnemyWaves;
     [Header("UI提示文本")]
     public Text ScoreText;
-    public Text ShieldText;
     public Text HealthText;
-    public Text LevelText;
+    public Text CoinText;
+    [Header("boss生命")]
+    public GameObject BossHP;
+    [Header("boss当前生命")]
+    public GameObject BossCurrentHP;
+    // 当前BOSSS对象，获取生命信息
+    private SpaceShipEnemy BossObject;
+    public GameObject BossCome;
 
     [Header("读取已存储的玩家生命值，子弹等级等信息")]
 
@@ -63,121 +74,123 @@ public class GameManager : MonoBehaviour
     private DifficultyManager _difficultyManager;
     private WaveManager _waveManager;
 
-    private GameObject _gameOverImage;
-    private GameObject _gameSucessImage;
-    private bool _waveIsOver = false;
-    // 是否暂停，0-暂停，1-正常
-    // private int _timeScale = 1;
+    private GameState gameState;
+    private bool isDuplicates; // 当前状态是否是重复的状态
+
+    [Header("游戏失败界面")]
+    public GameObject _gameOverObject;
+
+    [Header("游戏成功界面")]
+    public GameObject _gameSuccessObject;
+
+    [Header("游戏开始界面")]
+    public GameObject _gameStartbject;
+
+
+    [Header("继续界面")]
+    public GameObject _gameContinueObject;
+
+    [Header("退礼界面")]
+    public GameObject _gameGiftbject;
+    public Text _gameGiftReturnCountText;
+    public Text _gameGiftReturnOkText;
+    public GameObject _gameNoGiftbject;
 
     void Awake()
     {
+        switch (LocalConfig.instance.gameConfig.GetDifficulty())
+        {
+            case 0:
+                Difficulty = DifficultyLevel.Easy;
+                break;
+            case 1:
+                Difficulty = DifficultyLevel.Normal;
+                break;
+            case 2:
+                Difficulty = DifficultyLevel.Hard;
+                break;
+        }
         _enemyFactory = EnemyFactory.Instance;
         _enemyFactory.LoadTemplates(EnemiesTemplates);
 
         _powerUpFactory = PowerUpFactory.Instance;
         _powerUpFactory.LoadTemplates(PowerUpsTemplates);
-        // 读取本地配置文件，设置游戏难度
-        Debug.Assert(LocalConfig.instance.gameConfig.data.Length > Game.Current.currentGameLevel, "游戏关卡配置有误(当前关卡未配置)");
-        Difficulty = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].difficultyLevel;
         _difficultyManager = new DifficultyManager(Difficulty, _enemyFactory.AvailableTypes().ToList());
-        // 设置生命值
-        Game.Current.Player.Health = LocalConfig.instance.gameConfig.initHealth;
 
-        // 设置敌人波数<读取配置文件敌人数据>
-        List<EnemyWave> newEnemyWaves = new List<EnemyWave>();
-        if (EnemyWaves.Length > 0)
-        {
-            int maxEnemyCount = LocalConfig.instance.gameConfig.data[Game.Current.currentGameLevel].EnemyCount;
-            newEnemyWaves.Clear(); // 清空列表
 
-            for (int i = 0; i < maxEnemyCount; i++)
-            {
-                int randomIndex = Random.Range(0, EnemyWaves.Length);
-                newEnemyWaves.Add(EnemyWaves[randomIndex]);
-            }
-        }
-        EnemyWaves = newEnemyWaves.ToArray();
+        // 读取配置，选择飞机模型
+        GameObject prefabInstance = Instantiate(AllPlanes[GameData.Instance.GetCurrentPlane()]);
+        prefabInstance.transform.position = new Vector3(0f, -3f, 0f);
+
         _waveManager = new WaveManager(EnemyWaves, _difficultyManager, EnemySpawnPoint);
 
         Effetcs.Load();
         Game.Current.StartNew();
-        // 读取上次通关保存的玩家数据
-        if (PlayerInfo.instance.hasUpdate) Game.Current.ReadPlayerInfoData();
+        gameState = GameState.Start;
+
+
     }
 
     void Start()
     {
-        _gameSucessImage = GameObject.Find("GameSuccessImage").gameObject;
-        _gameSucessImage.SetActive(false);
+        // 读取上次通关保存的玩家数据
+        if (PlayerTmpInfo.instance.hasUpdate) Game.Current.ReadPlayerTmpInfoData();
 
-        _gameOverImage = GameObject.Find("GameOverImage").gameObject;
-        _gameOverImage.SetActive(false);
+        AudioManage.Instance.PlayBgm(AudioManage.Instance.gameNormalClip);
+        AudioManage.Instance.PlayClip(AudioManage.Instance.gameStartClip);
+        GameData.Instance.insertCoinUpdateTextAction = delegate
+        {
+            CoinText.text = GameData.Instance.GetShowCoinString();
+        };
     }
 
 
     void Update()
     {
-
-
-        // Select 键 暂停
-        // if (Input.GetKeyDown(KeyCode.Pause))
-        // {
-        //     _timeScale = _timeScale == 1 ? 0 : 1;
-        //     Time.timeScale = _timeScale;
-        // }
-        // // Select + Start 键 关卡选择界面
-        // if (Input.GetKey(KeyCode.Pause) && Input.GetKey(KeyCode.Return)){
-        //     SceneManager.LoadScene(0);
-        // }
-
+        if (Time.timeScale == 0f)
+        {
+            ContinueGame();
+            return;
+        }
+        else if (InputUtil.instance.IsSettingCenterOnceClicked())
+        {
+            SceneManager.LoadScene(CurrentGameScene.SettingMain.GetDescription());
+        }
+        // 更新U元素
         UpdateUI();
 
-        // if ((Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.JoystickButton2)) && !_waveIsOver)
-        // {
-        //     SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        // }
 
-        // 所有敌人生成完毕后,检测是否还有敌人，没有则提示游戏结束
-        if (_waveIsOver)
+        // s生成boss后，检测是否还有BOSS，没有则提示游戏结束
+        if (_waveManager.BossCreated && ((BossObject != null && BossObject.Health == 0) || BossObject == null) && !isDuplicates)
         {
-            if (GameObject.FindGameObjectsWithTag(ObjectTags.Enemy).ToArray().Length == 0)
-            {
-                _gameSucessImage.SetActive(true);
-                if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
-                {
-                    StartCoroutine(GotoNextGameLevel());
-                }
-                return;
-            }
+            SetGameState(GameState.Success);
+            isDuplicates = true; // 游戏成功后，已跳转场景，这个值可不用再设置为false
+            return;
         }
-
-        if (Game.Current.Player.Health <= 0)
+        if (Game.Current.Player.Health <= 0 && !isDuplicates)
         {
-            _gameOverImage.SetActive(true);
-            if (InputUtil.instance.IsStartOnceClicked() || InputUtil.instance.AnyAxisPressed())
-            {
-                StartCoroutine(GotoGameLevel());
-            }
+            SetGameState(GameState.Contiunue);
+            isDuplicates = true;
         }
 
         _waveManager.ExecuteCurrentWave();
-
-        // 每一波结束并且非最后一波敌人生成完成后， 随机升级技能点《可拾取》
-        if (_waveManager.CurrentWave.Ended && !_waveIsOver)
+        // 随机生成道具
+        if (_waveManager.CurrentWave.IsHalfCreated && _waveManager.CurrentWave.Definition.HasPowerUp)
         {
-            // handle wave powerUp if present
-            if (_waveManager.CurrentWave.Definition.HasPowerUp)
+            if (_waveManager.CurrentWave.HasCreatePowerUp < _waveManager.CurrentWave.Definition.PowupCount && Random.Range(-10000, 20) > 0)
             {
-                for (int i = 0; i < _waveManager.CurrentWave.Definition.PowupCount; i++)
-                {
-                    var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
-                    var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
-                    _powerUpFactory.Create(powerUpType, pos);
-                }
-
+                var pos = ScreenHelper.GetRandomScreenPoint(y: EnemySpawnPoint.transform.position.y);
+                var powerUpType = _waveManager.CurrentWave.Definition.PowerUp;
+                _powerUpFactory.Create(powerUpType, pos);
+                _waveManager.CurrentWave.HasCreatePowerUp += 1;
             }
 
-            _waveIsOver = !_waveManager.MoveNext();
+        }
+
+        // 当前一波敌人生成完成，自动生成下一波
+        if (_waveManager.CurrentWave.Ended)
+        {
+            _waveManager.MoveNext();
         }
         // 生成小行星
         if (_difficultyManager.CanCreateAsteroid())
@@ -188,6 +201,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 继续游戏
+    /// </summary>
+    private void ContinueGame()
+    {
+        if (InputUtil.instance.IsStartOnceClicked() && GameData.Instance.CanPlayGame())
+        {
+            GameData.Instance.ReduceGameCoin();
+            Game.Current.Player.ResetHealth(LocalConfig.instance.gameConfig.GetHealthy());
+            Debug.Log("重置生命值 " + Game.Current.Player.Health);
+            _gameContinueObject.SetActive(false);
+            SetGameState(GameState.None, true);
+            Time.timeScale = 1f;
+            isDuplicates = false;
+        }
+    }
 
     private void UpdateUI()
     {
@@ -195,48 +224,193 @@ public class GameManager : MonoBehaviour
         {
             ScoreText.text = Game.Current.Score.ToString();
         }
-        if (ShieldText)
-        {
-            ShieldText.text = Game.Current.Player.ShieldPower.ToString();
-            // ShieldText.text = $"{_waveManager.CurrentWave.Index} / {_waveManager.WaveLength}";
-        }
         if (HealthText)
         {
             HealthText.text = Game.Current.Player.Health.ToString();
         }
-        if (LevelText)
+        if (CoinText)
         {
-            LevelText.text = Game.Current.Player.ShootingPower.ToString();
+            CoinText.text = GameData.Instance.GetShowCoinString();
         }
+        switch (gameState)
+        {
+            case GameState.Start:
+                _gameStartbject.SetActive(true);
+                gameState = GameState.None;
+                break;
+            case GameState.Success:
+                _gameSuccessObject.SetActive(true);
+                AudioManage.Instance.PlayClip(AudioManage.Instance.gameSuccessClip);
+                // 非第三关则跳转下一关，否则弹出礼品
+                if (SceneManager.GetActiveScene().name != CurrentGameScene.Part3.GetDescription())
+                {
+                    StartCoroutine(GotoNextGameLevel());
+                }
+                else
+                {
+                    StartCoroutine(ReadyChangeGameState(GameState.Gift, 3));
+                }
+                gameState = GameState.None;
+                break;
+            case GameState.GameOver:
+                _gameOverObject.SetActive(true);
+                AudioManage.Instance.PlayClip(AudioManage.Instance.gameOverClip);
+                gameState = GameState.None;
+                StartCoroutine(ReadyChangeGameState(GameState.Gift, 3));
+                break;
+            case GameState.Contiunue:
+                _gameContinueObject.SetActive(true);
+                Debug.Log("goto coninue");
+                CountDownCallBack countDownCallBack = delegate ()
+                {
+                    _gameContinueObject.SetActive(false);
+                    Game.Current.Player.RunHealthyCheck();
+                    SetGameState(GameState.GameOver, true);
+                    Time.timeScale = 1f;
+                };
+                _gameContinueObject.GetComponent<CountDown>().StartCountDown(GameData.Instance.GetContinueTime(), countDownCallBack);
+                Time.timeScale = 0f;
+                break;
+            case GameState.Gift:
+                StartCoroutine(ShowGiftObject());
+                gameState = GameState.None;
+                break;
+            case GameState.NoGift:
+                break;
+            case GameState.None:
+                break;
+        }
+        if (_waveManager.IsLastWave() && BossCome.activeSelf == false && !_waveManager.BossCreated)
+        {
+            BossCome.SetActive(true);
+            AudioManage.Instance.PlayClip(AudioManage.Instance.bossAppearClip);
+            AudioManage.Instance.PlayBgm(AudioManage.Instance.gameBossClip);
+        }
+        if (_waveManager.BossCreated)
+        {
 
+            if (BossObject is null)
+            {
+                GameObject[] tmp = GameObject.FindGameObjectsWithTag(ObjectTags.Enemy);
+                for (int i = 0; i < tmp.Length; i++)
+                {
+                    if (tmp[i].name.StartsWith("Boss"))
+                    {
+                        BossObject = tmp[i].GetComponent<SpaceShipEnemy>();
+                        BossHP.SetActive(true);
+                    }
+                }
+            }
+            else
+            {
+                float width = BossHP.GetComponent<RectTransform>().rect.width * BossObject.Health / BossObject.MaxHealth;
+                float Height = BossCurrentHP.GetComponent<RectTransform>().rect.height;
+                BossCurrentHP.GetComponent<RectTransform>().sizeDelta = new Vector2(width, Height);
+            }
+        }
     }
 
-    IEnumerator GotoGameLevel()
+    IEnumerator GotoGameInit()
     {
         yield return new WaitForSeconds(3f);
         // 清空通关数据
-        PlayerInfo.instance.Reset();
-        SceneManager.LoadScene(0);
+        PlayerTmpInfo.instance.Reset();
+        SceneManager.LoadScene(CurrentGameScene.Init.GetDescription());
         yield break;
     }
 
     IEnumerator GotoNextGameLevel()
     {
-        Debug.Log("currentGameLevel : " + Game.Current.currentGameLevel + "/" + Game.Current.totalGameLevel);
         yield return new WaitForSeconds(3f);
-        if (Game.Current.currentGameLevel + 1 < Game.Current.totalGameLevel)
+        string targetSceneName = "";
+        if (SceneManager.GetActiveScene().name == CurrentGameScene.Part1.GetDescription())
         {
-            Game.Current.currentGameLevel += 1;
-            // 保存通关数据
-            PlayerInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
-            Debug.Log("load scene " + (Game.Current.currentGameLevel + 1));
-            SceneManager.LoadScene(Game.Current.currentGameLevel + 1);
+            targetSceneName = CurrentGameScene.Part2.GetDescription();
         }
-        else if (Game.Current.currentGameLevel + 1 == Game.Current.totalGameLevel)
+        else if (SceneManager.GetActiveScene().name == CurrentGameScene.Part2.GetDescription())
         {
-            Debug.Log("load scene 0");
-            SceneManager.LoadScene(0);
+            targetSceneName = CurrentGameScene.Part3.GetDescription();
         }
+        else if (SceneManager.GetActiveScene().name == CurrentGameScene.Part3.GetDescription())
+        {
+            targetSceneName = CurrentGameScene.Init.GetDescription();
+            yield break;
+        }
+        PlayerTmpInfo.instance.SaveData(Game.Current.Player.Health, Game.Current.Score, Game.Current.Player.ShootingPower);
+        Debug.Log("goto scene " + targetSceneName);
+        SceneManager.LoadScene(targetSceneName);
         yield break;
+    }
+
+    /// <summary>
+    /// 即时设置游戏状态
+    /// </summary>
+    /// <param name="state">状态</param>
+    /// <param name="isForce">强制更改(当前状态不为None,且没有设置强制更新，则不会更新)</param>
+    void SetGameState(GameState state, bool isForce = false)
+    {
+        if (gameState == GameState.None || isForce)
+        {
+            Debug.Log("set to " + state);
+            gameState = state;
+        }
+    }
+
+    /// <summary>
+    /// 延时更改状态
+    /// </summary>
+    /// <param name="state">状态</param>
+    /// <param name="Seconds">时间</param>
+    /// <returns></returns>
+    IEnumerator ReadyChangeGameState(GameState state, int Seconds)
+    {
+        yield return new WaitForSeconds(Seconds);
+        SetGameState(state);
+    }
+
+
+    /// <summary>
+    ///  显示退礼物弹窗
+    /// </summary>
+    /// <returns></returns>
+    IEnumerator ShowGiftObject()
+    {
+        _gameGiftbject.SetActive(true);
+        float sendGiftStartTime = Time.time;
+        float sendGiftMaxTime = 10f;
+        int currentReturnOK = 0;
+        while (true)
+        {
+            _gameGiftReturnCountText.text = GiftManager.Instance.GetPlayerGetCount(
+                Game.Current.Score,
+                 LocalConfig.instance.gameConfig.GetGiftScore(),
+                 LocalConfig.instance.gameConfig.GetGiftCount(),
+                 LocalConfig.instance.gameConfig.GetBoolGiftAdd()
+                 ).ToString();
+            _gameGiftReturnOkText.text = GiftManager.Instance.GetPlayerOkCount().ToString();
+            Debug.Log("return = " + _gameGiftReturnCountText.text + " ok = " + _gameGiftReturnOkText.text);
+            GiftManager.Instance.StartReturnGift();
+            if (_gameGiftReturnCountText.text == _gameGiftReturnOkText.text)
+            {
+                // _gameNoGiftbject.SetActive(false);
+                yield return new WaitForSeconds(1);
+                StartCoroutine(GotoGameInit());
+                yield break;
+            }
+            else if (Time.time - sendGiftStartTime > sendGiftMaxTime)
+            {
+                Debug.Log("退礼失败");
+                _gameNoGiftbject.SetActive(true);
+                yield break;
+            }
+            // 退礼成功一个，刷新退礼起始时间
+            if (currentReturnOK.ToString() != _gameGiftReturnOkText.text)
+            {
+                sendGiftStartTime = Time.time;
+                currentReturnOK = int.Parse(_gameGiftReturnOkText.text);
+            }
+
+            yield return null; // 等待下一帧
+        }
     }
 }

@@ -9,8 +9,9 @@ using UnityEngine.SceneManagement;
 public class PlayerController : GamePlayObject
 {
     private const float SHIELD_USAGE_POWER = 0.20f;
-    private const float SHIELD_MAX_POWER = 3f;
-    private const int SHOOT_MAX_POWER = 6;
+    private const float SHIELD_ONE_POWER = 1.5f;
+    private const float SHIELD_MAX_POWER = 5f;
+    private const int SHOOT_MAX_POWER = 4;
     private const int HEALTH_MAX_POINTS = 99;
 
     private Rigidbody2D _rb;
@@ -25,6 +26,8 @@ public class PlayerController : GamePlayObject
     private bool _shielded;
     private float _nextShootTime;
     public int ShootingPower = 1;
+    public int ExtraHealth = 0;
+    public int ExtraShootPower = 0;
     private readonly Dictionary<int, int[]> _shootingPointsPerPower = new Dictionary<int, int[]>
     {
         { 1, new [] { 0 } },
@@ -40,14 +43,13 @@ public class PlayerController : GamePlayObject
     public float ShootRate = 4f;
     public float ShieldPower = 1f;
     public GameObject ShieldEffect;
-    public Color ShieldColor = new Color(130, 255, 250);
+    public Color ShieldColor = new Color(216, 255, 250);
     public GameObject BulletTemplate;
     public Ease ShieldEasyFX = Ease.Linear;
 
     public PlayerController()
     {
-        Health = 3;
-        Speed = 6;
+        Debug.Log("PlayerController init");
     }
 
     // game events
@@ -60,17 +62,33 @@ public class PlayerController : GamePlayObject
         _bulletPoints = gameObject.FindComponentsInChildWithTag(ObjectTags.BulletPoints);
         _bulletAudio = GetComponent<AudioSource>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
+
+        // 重新设置生命值
+        Health = GameData.Instance.GetPlayerInitHealthy();
+        if (ExtraHealth > 0) { Health = ExtraHealth; ExtraHealth = 0; }
+        if (ExtraShootPower > 0) { ShootingPower = ExtraShootPower; ExtraShootPower = 0; }
+    }
+    public void ResetHealth(int health)
+    {
+        Health = health;
+    }
+    public bool RunHealthyCheck()
+    {
+        if (Health <= 0) { base.Update(); return true; }
+        return false;
     }
 
     protected override void Update()
     {
-        base.Update();
-
-        if (Health < 0)
+        if (Health > 0)
         {
-            Debug.Log("Destroy Player all Saved Data");
-            PlayerPrefs.DeleteAll();
+            base.Update();
         }
+        // if (Health < 0)
+        // {
+        //     Debug.Log("Destroy Player all Saved Data");
+        //     PlayerPrefs.DeleteAll();
+        // }
 
 
         // inputs
@@ -81,7 +99,7 @@ public class PlayerController : GamePlayObject
         // attack
         _canShoot = Time.time >= _nextShootTime;
         // _shootPressed = Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0);
-        _shootPressed = InputUtil.instance.IsStartPressed();
+        _shootPressed = InputUtil.instance.IsStartPressed() || GameData.Instance.GetPlayerAutoFire();
         if (_canShoot && _shootPressed)
         {
             Shoot();
@@ -92,7 +110,7 @@ public class PlayerController : GamePlayObject
         // }
 
         // 使用保护罩
-        var shieldPressed = false;
+        var shieldPressed = true;
         // var shieldPressed = Input.GetKey(KeyCode.Z) || Input.GetKey(KeyCode.JoystickButton3);
         _shielded = shieldPressed && ShieldPower > 0 && !IsInvulnerable();
         ProcessShieldDefense();
@@ -147,7 +165,7 @@ public class PlayerController : GamePlayObject
                 ShootingPower = Mathf.Clamp(ShootingPower + 1, 1, SHOOT_MAX_POWER);
                 break;
             case PowerUpType.Shield:
-                ShieldPower = Mathf.Clamp(ShieldPower + 1f, 0, SHIELD_MAX_POWER);
+                ShieldPower = Mathf.Clamp(ShieldPower + SHIELD_ONE_POWER, 0, SHIELD_MAX_POWER);
                 break;
             case PowerUpType.Health:
                 Health = Mathf.Clamp(Health + 1, 1, HEALTH_MAX_POINTS);
